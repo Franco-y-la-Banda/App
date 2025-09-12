@@ -1,0 +1,76 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.LeptonXLiteTheme": {
+      "version": "4.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.3.2",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {}
+    }
+  },
+  "packages": {
+    "ViajeHonesto.Application": {
+      "path": "src/ViajeHonesto.Application/ViajeHonesto.Application.abppkg",
+      "folder": "src"
+    },
+    "ViajeHonesto.Domain.Shared": {
+      "path": "src/ViajeHonesto.Domain.Shared/ViajeHonesto.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "ViajeHonesto.Application.Contracts": {
+      "path": "src/ViajeHonesto.Application.Contracts/ViajeHonesto.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "ViajeHonesto.HttpApi": {
+      "path": "src/ViajeHonesto.HttpApi/ViajeHonesto.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "ViajeHonesto.HttpApi.Client": {
+      "path": "src/ViajeHonesto.HttpApi.Client/ViajeHonesto.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "ViajeHonesto.EntityFrameworkCore": {
+      "path": "src/ViajeHonesto.EntityFrameworkCore/ViajeHonesto.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "ViajeHonesto.DbMigrator": {
+      "path": "src/ViajeHonesto.DbMigrator/ViajeHonesto.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "ViajeHonesto.HttpApi.Host": {
+      "path": "src/ViajeHonesto.HttpApi.Host/ViajeHonesto.HttpApi.Host.abppkg",
+      "folder": "src"
+    },
+    "ViajeHonesto.Domain": {
+      "path": "src/ViajeHonesto.Domain/ViajeHonesto.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}
