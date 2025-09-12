@@ -1,0 +1,28 @@
+﻿{
+  "applications": {
+    "ViajeHonesto.HttpApi.Host": {
+      "type": "dotnet-project",
+      "launchUrl": "https://localhost:44383",
+      "path": "../../../src/ViajeHonesto.HttpApi.Host/ViajeHonesto.HttpApi.Host.csproj",
+      "kubernetesService": ".*-httpapihost$",
+      "healthCheckEndpoint": "/health-status",
+      "healthUiEndpoint": "/health-ui",
+      "execution": {
+        "order": 4
+      }
+    },
+    "ViajeHonesto.Angular": {
+      "type": "cli",
+      "workingDirectory": "../../../angular",
+      "startCommand": "./start.ps1",
+      "launchUrl": "http://localhost:4200",
+      "kubernetesService": ".*-angular$",
+      "execution": {
+        "order": 2
+      }    
+    }
+  },
+  "containers": {
+    "serviceName": "ViajeHonesto-Containers",
+  }
+}
