@@ -1,0 +1,55 @@
+{
+  "id": "5ad06581-9297-45b2-a315-e125b8a33227",
+  "template": "app",
+  "versions": {
+    "AbpFramework": "9.3.2",
+    "AbpStudio": "1.2.2",
+    "TargetDotnetFramework": "net9.0"
+  },
+  "modules": {
+    "ViajeHonesto": {
+      "path": "ViajeHonesto.abpmdl"
+    }
+  },
+  "runProfiles": {
+    "Default": {
+      "path": "etc/abp-studio/run-profiles/Default.abprun.json"
+    }
+  },
+  "options": {
+    "httpRequests": {
+      "ignoredUrls": [
+      
+      ]
+    }
+  },
+  "creatingStudioConfiguration": {
+    "template": "app",
+    "createdAbpStudioVersion": "1.2.2",
+    "tiered": "false",
+    "runInstallLibs": "true",
+    "useLocalReferences": "false",
+    "multiTenancy": "false",
+    "includeTests": "false",
+    "kubernetesConfiguration": "false",
+    "uiFramework": "angular",
+    "mobileFramework": "none",
+    "distributedEventBus": "none",
+    "databaseProvider": "ef",
+    "runDbMigrator": "false",
+    "databaseManagementSystem": "sqlserver",
+    "separateTenantSchema": "false",
+    "createInitialMigration": "false",
+    "theme": "leptonx-lite",
+    "themeStyle": "",
+    "themeMenuPlacement": "",
+    "mobileFramework": "none",
+    "progressiveWebApp": "false",
+    "runProgressiveWebAppSupport": "false",
+    "publicWebsite": "false",
+    "socialLogin": "false",
+    "selectedLanguages": ["English", "English (United Kingdom)", "Spanish", ],
+    "defaultLanguage": "English",
+    "createCommand": "abp new ViajeHonesto -t app --ui-framework angular --database-provider ef --database-management-system sqlserver --theme leptonx-lite --skip-migration  --skip-migrator  --no-tests --without-cms-kit --dont-run-bundling --no-multi-tenancy --no-social-logins -no-gdpr -no-openiddict-admin-ui -no-audit-logging -no-file-management -no-language-management -no-text-template-management"
+  }
+}
