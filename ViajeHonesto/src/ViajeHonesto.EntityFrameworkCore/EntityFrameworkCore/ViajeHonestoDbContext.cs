@@ -23,7 +23,6 @@ public class ViajeHonestoDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
-
     #region Entities from the modules
 
     /* Notice: We only implemented IIdentityProDbContext 
@@ -48,6 +47,7 @@ public class ViajeHonestoDbContext :
     public DbSet<IdentitySession> Sessions { get; set; }
 
     #endregion
+    public DbSet<Destination> Destinations { get; set; }
 
     public ViajeHonestoDbContext(DbContextOptions<ViajeHonestoDbContext> options)
         : base(options)
@@ -71,7 +71,15 @@ public class ViajeHonestoDbContext :
         builder.ConfigureBlobStoring();
         
         /* Configure your own tables/entities inside here */
-
+        builder.Entity<Destination>(b =>
+        {
+            b.ToTable(ViajeHonestoConsts.DbTablePrefix + "Destinations", ViajeHonestoConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Country).IsRequired().HasMaxLength(512);
+            b.Property(x => x.Region).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Population).IsRequired();
+        });
         //builder.Entity<YourEntity>(b =>
         //{
         //    b.ToTable(ViajeHonestoConsts.DbTablePrefix + "YourEntities", ViajeHonestoConsts.DbSchema);
