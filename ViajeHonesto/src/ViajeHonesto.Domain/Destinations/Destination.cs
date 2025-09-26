@@ -1,6 +1,8 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities.Auditing;
 
+namespace ViajeHonesto.Destinations;
+
 public class Destination : AuditedAggregateRoot<Guid>
 {
     public string Name { get; set; }
