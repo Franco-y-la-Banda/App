@@ -35,7 +35,7 @@ public class ViajeHonestoDataSeederContributor
             await _destinationRepository.InsertAsync(
                 new Destination
                 {
-                    Name = "Concepcion del Uruguay",
+                    Name = "Concepción del Uruguay",
 					Country = "Argentina",
 					Region = "Entre Ríos",
 					Population = 300000
