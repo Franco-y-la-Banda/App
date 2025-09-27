@@ -18,6 +18,7 @@ namespace ViajeHonesto.Destinations
         public string Country { get; set; } = string.Empty;
 
         [Required]
+        [Range(0, long.MaxValue)]
         public long Population { get; set; } = long.MinValue;
      }
 }
