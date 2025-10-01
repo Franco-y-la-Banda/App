@@ -76,9 +76,9 @@ public class ViajeHonestoDbContext :
         {
             b.ToTable(ViajeHonestoConsts.DbTablePrefix + "Destinations", ViajeHonestoConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
-            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
-            b.Property(x => x.Country).IsRequired().HasMaxLength(512);
-            b.Property(x => x.Region).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(DestinationConsts.MaxNameLength);
+            b.Property(x => x.Country).IsRequired().HasMaxLength(DestinationConsts.MaxCountryLength);
+            b.Property(x => x.Region).IsRequired().HasMaxLength(DestinationConsts.MaxRegionLength);
             b.Property(x => x.Population).IsRequired();
         });
         //builder.Entity<YourEntity>(b =>
