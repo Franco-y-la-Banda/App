@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ViajeHonesto.Destinations;
 using Volo.Abp.Data;
@@ -21,6 +22,13 @@ public class ViajeHonestoDataSeederContributor
     {
         if (await _destinationRepository.GetCountAsync() <= 0)
         {
+            // TODO: Dejarlo bonito
+            var photos = new List<DestinationPhoto>();
+            var photo1 = new DestinationPhoto("aaaaaa");
+            var photo2 = new DestinationPhoto("bbbbbb");
+            photos.Add(photo1);
+            photos.Add(photo2);
+
             await _destinationRepository.InsertAsync(
                 new Destination
                 {
@@ -28,7 +36,8 @@ public class ViajeHonestoDataSeederContributor
                     Country = "Argentina",
                     Region = "Buenos Aires",
                     Population = 5000,
-                    Coordinate = new Coordinate(-34.6083f, -58.3636f)
+                    Coordinate = new Coordinate(-34.6083f, -58.3636f),
+                    Photos = photos
                 },
                 autoSave: true
             );
@@ -37,9 +46,9 @@ public class ViajeHonestoDataSeederContributor
                 new Destination
                 {
                     Name = "Concepción del Uruguay",
-					Country = "Argentina",
-					Region = "Entre Ríos",
-					Population = 300000,
+                    Country = "Argentina",
+                    Region = "Entre Ríos",
+                    Population = 300000,
                     Coordinate = new Coordinate(-32.4833f, -58.2333f)
                 },
                 autoSave: true

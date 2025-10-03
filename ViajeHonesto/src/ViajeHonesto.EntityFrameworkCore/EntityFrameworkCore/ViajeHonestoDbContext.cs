@@ -85,6 +85,22 @@ public class ViajeHonestoDbContext :
                 coord.Property(c => c.Latitude).HasColumnName("Latitude").IsRequired();
                 coord.Property(c => c.Longitude).HasColumnName("Longitude").IsRequired();
             });
+            b.OwnsMany(p => p.Photos, a =>
+            {
+                a.ToTable(ViajeHonestoConsts.DbTablePrefix + "DestinationsPhotos", ViajeHonestoConsts.DbSchema);
+                a.WithOwner().HasForeignKey("DestinationId");
+                a.Property<int>("Id");
+            });
+
+            /*
+             * modelBuilder.Entity<Distributor>().OwnsMany(
+                p => p.ShippingCenters, a =>
+                {
+                    a.WithOwner().HasForeignKey("OwnerId");
+                    a.Property<int>("Id");
+                    a.HasKey("Id");
+                });
+             */
         });
         //builder.Entity<YourEntity>(b =>
         //{

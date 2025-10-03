@@ -12,5 +12,8 @@ public class ViajeHonestoApplicationAutoMapperProfile : Profile
 
         CreateMap<Coordinate, CoordinateDto>();
         CreateMap<CoordinateDto, Coordinate>();
+
+        CreateMap<DestinationPhoto, DestinationPhotoDto>();
+        CreateMap<DestinationPhotoDto, DestinationPhoto>();
     }
 }

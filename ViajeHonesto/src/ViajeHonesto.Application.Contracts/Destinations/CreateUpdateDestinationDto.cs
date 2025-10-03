@@ -23,5 +23,7 @@ namespace ViajeHonesto.Destinations
 
         [Required]
         public CoordinateDto Coordinate { get; set; }
+
+        public DestinationPhotoDto[] Photos { get; set; }
     }
 }

@@ -14,4 +14,6 @@ public class DestinationDto : AuditedEntityDto<Guid>
     public long Population { get; set; }
 
     public CoordinateDto Coordinate { get; set; }
+
+    public DestinationPhotoDto[] Photos { get; set; }
 }
