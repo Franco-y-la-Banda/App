@@ -12,4 +12,6 @@ public class DestinationDto : AuditedEntityDto<Guid>
     public string Region { get; set; }
 
     public long Population { get; set; }
+
+    public CoordinateDto Coordinate { get; set; }
 }

@@ -25,9 +25,10 @@ public class ViajeHonestoDataSeederContributor
                 new Destination
                 {
                     Name = "Puerto Madero",
-					Country = "Argentina",
-					Region = "Buenos Aires",
-					Population = 5000
+                    Country = "Argentina",
+                    Region = "Buenos Aires",
+                    Population = 5000,
+                    Coordinate = new Coordinate(-34.6083f, -58.3636f)
                 },
                 autoSave: true
             );
@@ -38,7 +39,8 @@ public class ViajeHonestoDataSeederContributor
                     Name = "Concepción del Uruguay",
 					Country = "Argentina",
 					Region = "Entre Ríos",
-					Population = 300000
+					Population = 300000,
+                    Coordinate = new Coordinate(-32.4833f, -58.2333f)
                 },
                 autoSave: true
             );

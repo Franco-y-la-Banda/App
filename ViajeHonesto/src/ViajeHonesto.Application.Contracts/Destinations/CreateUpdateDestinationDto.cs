@@ -20,5 +20,8 @@ namespace ViajeHonesto.Destinations
         [Required]
         [Range(0, DestinationConsts.MaxPopulation)]
         public long Population { get; set; } = long.MinValue;
-     }
+
+        [Required]
+        public CoordinateDto Coordinate { get; set; }
+    }
 }

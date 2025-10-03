@@ -80,6 +80,11 @@ public class ViajeHonestoDbContext :
             b.Property(x => x.Country).IsRequired().HasMaxLength(DestinationConsts.MaxCountryLength);
             b.Property(x => x.Region).IsRequired().HasMaxLength(DestinationConsts.MaxRegionLength);
             b.Property(x => x.Population).IsRequired();
+            b.OwnsOne(x => x.Coordinate, coord =>
+            {
+                coord.Property(c => c.Latitude).HasColumnName("Latitude").IsRequired();
+                coord.Property(c => c.Longitude).HasColumnName("Longitude").IsRequired();
+            });
         });
         //builder.Entity<YourEntity>(b =>
         //{

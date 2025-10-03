@@ -9,4 +9,5 @@ public class Destination : AuditedAggregateRoot<Guid>
     public required string Country { get; set; }
     public required string Region { get; set; }
     public required long Population { get; set; }
+    public required Coordinate Coordinate { get; set; }
 }
