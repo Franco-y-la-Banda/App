@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Values;
 
-public class DestinationPhoto : ValueObject
+public class DestinationPhoto : Entity<Guid>
 {
+
     public string Path { get; private set; }
 
 
@@ -12,14 +14,8 @@ public class DestinationPhoto : ValueObject
 
     }
 
-    public DestinationPhoto(
-        string path)
+    public DestinationPhoto(string path)
     {
         Path = path;
-    }
-
-    protected override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Path;
     }
 }

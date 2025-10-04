@@ -49,6 +49,7 @@ public class ViajeHonestoDbContext :
 
     #endregion
     public DbSet<Destination> Destinations { get; set; }
+    public DbSet<DestinationPhoto> DestinationPhotos { get; set; }
 
     public ViajeHonestoDbContext(DbContextOptions<ViajeHonestoDbContext> options)
         : base(options)
@@ -85,12 +86,7 @@ public class ViajeHonestoDbContext :
                 coord.Property(c => c.Latitude).HasColumnName("Latitude").IsRequired();
                 coord.Property(c => c.Longitude).HasColumnName("Longitude").IsRequired();
             });
-            b.OwnsMany(p => p.Photos, a =>
-            {
-                a.ToTable(ViajeHonestoConsts.DbTablePrefix + "DestinationsPhotos", ViajeHonestoConsts.DbSchema);
-                a.WithOwner().HasForeignKey("DestinationId");
-                a.Property<int>("Id");
-            });
+            b.HasMany(x => x.Photos).WithOne().IsRequired().OnDelete(DeleteBehavior.Cascade).HasForeignKey("DestinationId");
 
             /*
              * modelBuilder.Entity<Distributor>().OwnsMany(
@@ -102,6 +98,7 @@ public class ViajeHonestoDbContext :
                 });
              */
         });
+
         //builder.Entity<YourEntity>(b =>
         //{
         //    b.ToTable(ViajeHonestoConsts.DbTablePrefix + "YourEntities", ViajeHonestoConsts.DbSchema);

@@ -22,13 +22,6 @@ public class ViajeHonestoDataSeederContributor
     {
         if (await _destinationRepository.GetCountAsync() <= 0)
         {
-            // TODO: Dejarlo bonito
-            var photos = new List<DestinationPhoto>();
-            var photo1 = new DestinationPhoto("aaaaaa");
-            var photo2 = new DestinationPhoto("bbbbbb");
-            photos.Add(photo1);
-            photos.Add(photo2);
-
             await _destinationRepository.InsertAsync(
                 new Destination
                 {
@@ -36,8 +29,7 @@ public class ViajeHonestoDataSeederContributor
                     Country = "Argentina",
                     Region = "Buenos Aires",
                     Population = 5000,
-                    Coordinate = new Coordinate(-34.6083f, -58.3636f),
-                    Photos = photos
+                    Coordinate = new Coordinate(-34.6083f, -58.3636f)
                 },
                 autoSave: true
             );

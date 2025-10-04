@@ -11,5 +11,5 @@ public class Destination : AuditedAggregateRoot<Guid>
     public required string Region { get; set; }
     public required long Population { get; set; }
     public Coordinate Coordinate { get; set; }
-    public List<DestinationPhoto> Photos { get; set; }
+    public List<DestinationPhoto> Photos { get; set; } = new List<DestinationPhoto>();
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViajeHonesto.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace ViajeHonesto.Migrations
 {
     [DbContext(typeof(ViajeHonestoDbContext))]
-    partial class ViajeHonestoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251003225544_Changed_DestinationPhoto_VO_To_Entity")]
+    partial class Changed_DestinationPhoto_VO_To_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace ViajeHonesto.Migrations
 
                     b.HasIndex("DestinationId");
 
-                    b.ToTable("DestinationPhotos");
+                    b.ToTable("AppDestinationPhotos", (string)null);
                 });
 
             modelBuilder.Entity("ViajeHonesto.Destinations.Destination", b =>
