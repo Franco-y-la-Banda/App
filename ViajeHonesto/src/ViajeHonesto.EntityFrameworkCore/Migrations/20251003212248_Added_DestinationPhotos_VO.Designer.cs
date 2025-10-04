@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViajeHonesto.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace ViajeHonesto.Migrations
 {
     [DbContext(typeof(ViajeHonestoDbContext))]
-    partial class ViajeHonestoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251003212248_Added_DestinationPhotos_VO")]
+    partial class Added_DestinationPhotos_VO
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,25 +26,6 @@ namespace ViajeHonesto.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("DestinationPhoto", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DestinationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DestinationId");
-
-                    b.ToTable("DestinationPhotos");
-                });
 
             modelBuilder.Entity("ViajeHonesto.Destinations.Destination", b =>
                 {
@@ -1868,15 +1852,6 @@ namespace ViajeHonesto.Migrations
                     b.ToTable("AbpSettingDefinitions", (string)null);
                 });
 
-            modelBuilder.Entity("DestinationPhoto", b =>
-                {
-                    b.HasOne("ViajeHonesto.Destinations.Destination", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("DestinationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ViajeHonesto.Destinations.Destination", b =>
                 {
                     b.OwnsOne("Coordinate", "Coordinate", b1 =>
@@ -1900,8 +1875,33 @@ namespace ViajeHonesto.Migrations
                                 .HasForeignKey("DestinationId");
                         });
 
+                    b.OwnsMany("DestinationPhoto", "Photos", b1 =>
+                        {
+                            b1.Property<Guid>("DestinationId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Path")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("DestinationId", "Id");
+
+                            b1.ToTable("AppDestinationsPhotos", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("DestinationId");
+                        });
+
                     b.Navigation("Coordinate")
                         .IsRequired();
+
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
@@ -2044,11 +2044,6 @@ namespace ViajeHonesto.Migrations
                     b.HasOne("Volo.Abp.OpenIddict.Authorizations.OpenIddictAuthorization", null)
                         .WithMany()
                         .HasForeignKey("AuthorizationId");
-                });
-
-            modelBuilder.Entity("ViajeHonesto.Destinations.Destination", b =>
-                {
-                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
