@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace ViajeHonesto.Destinations;
@@ -23,8 +24,32 @@ public class Destination : AuditedAggregateRoot<Guid>
         Photos = new List<DestinationPhoto>();
     }
 
-    public void addPhoto(Guid photoId, string path)
+    public void AddPhoto(Guid photoId, string path)
     {
+        if (photoId == Guid.Empty)
+        {
+            throw new ArgumentException("Photo ID cannot be empty.", nameof(photoId));
+        }
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentException("Photo path cannot be null or empty.", nameof(path));
+        }
+        if (Photos.Any(p => p.PhotoId == photoId))
+        {
+            throw new InvalidOperationException($"A photo with ID {photoId} already exists.");
+        }
+
         Photos.Add(new DestinationPhoto(photoId, this.Id, this, path));
+    }
+
+    public void RemovePhoto(Guid photoId)
+    {
+        var photo = Photos.FirstOrDefault(p => p.PhotoId == photoId);
+        if (photo == null)
+        {
+            throw new InvalidOperationException($"Photo with ID {photoId} not found.");
+        }
+
+        Photos.Remove(photo);
     }
 }

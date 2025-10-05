@@ -32,8 +32,10 @@ public class ViajeHonestoDataSeederContributor
                 Coordinate = new Coordinate(-34.6083f, -58.3636f)
             };
 
-            destination.addPhoto(Guid.NewGuid(), "Esto es una foto de prueba");
-            destination.addPhoto(Guid.NewGuid(), "Prueba es una foto de");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/puerto-madero/puente-de-la-mujer.jpg");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/puerto-madero/dique-de-noche.jpg");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/puerto-madero/skyline-rio.jpg");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/puerto-madero/restaurantes-costanera.jpg");
 
 
             await _destinationRepository.InsertAsync(
@@ -41,15 +43,22 @@ public class ViajeHonestoDataSeederContributor
                 autoSave: true
             );
 
+            destination = new Destination(Guid.NewGuid())
+            {
+                Name = "Concepción del Uruguay",
+                Country = "Argentina",
+                Region = "Entre Ríos",
+                Population = 300000,
+                Coordinate = new Coordinate(-32.4833f, -58.2333f)
+            };
+
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/concepcion-del-uruguay/ramblas-costanera.jpg");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/concepcion-del-uruguay/plaza-ramirez.jpg");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/concepcion-del-uruguay/palacio-san-jose.jpg");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/concepcion-del-uruguay/playa-banco-pelay.jpg");
+
             await _destinationRepository.InsertAsync(
-                new Destination(Guid.NewGuid())
-                {
-                    Name = "Concepción del Uruguay",
-                    Country = "Argentina",
-                    Region = "Entre Ríos",
-                    Population = 300000,
-                    Coordinate = new Coordinate(-32.4833f, -58.2333f)
-                },
+                destination,
                 autoSave: true
             );
         }
