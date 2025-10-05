@@ -5,6 +5,7 @@ using ViajeHonesto.Destinations;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Guids;
 
 namespace ViajeHonesto;
 
@@ -22,20 +23,26 @@ public class ViajeHonestoDataSeederContributor
     {
         if (await _destinationRepository.GetCountAsync() <= 0)
         {
+            var destination = new Destination(Guid.NewGuid())
+            {
+                Name = "Puerto Madero",
+                Country = "Argentina",
+                Region = "Buenos Aires",
+                Population = 5000,
+                Coordinate = new Coordinate(-34.6083f, -58.3636f)
+            };
+
+            destination.addPhoto(Guid.NewGuid(), "Esto es una foto de prueba");
+            destination.addPhoto(Guid.NewGuid(), "Prueba es una foto de");
+
+
             await _destinationRepository.InsertAsync(
-                new Destination
-                {
-                    Name = "Puerto Madero",
-                    Country = "Argentina",
-                    Region = "Buenos Aires",
-                    Population = 5000,
-                    Coordinate = new Coordinate(-34.6083f, -58.3636f)
-                },
+                destination,
                 autoSave: true
             );
 
             await _destinationRepository.InsertAsync(
-                new Destination
+                new Destination(Guid.NewGuid())
                 {
                     Name = "Concepción del Uruguay",
                     Country = "Argentina",

@@ -17,10 +17,24 @@ public class DestinationAppService :
         CreateUpdateDestinationDto>, //Used to create/update a Destination
     IDestinationAppService //implement the IDestinationAppService
 {
+    private readonly IRepository<Destination, Guid> _destinationRepository;
     public DestinationAppService(IRepository<Destination, Guid> repository)
         : base(repository)
     {
+        _destinationRepository = repository;
+    }
 
+    public async Task<DestinationDto> GetWithDetails(Guid id)
+    {
+        //Get a IQueryable<T> by including sub collections
+        var queryable = await _destinationRepository.WithDetailsAsync(x => x.Photos);
+
+        //Apply additional LINQ extension methods
+        var query = queryable.Where(x => x.Id == id);
+
+        //Execute the query and get the result
+        var order = await AsyncExecuter.FirstOrDefaultAsync(query);
+        return ObjectMapper.Map<Destination, DestinationDto>(order);
     }
 
     public override async Task<DestinationDto> GetAsync(Guid id)

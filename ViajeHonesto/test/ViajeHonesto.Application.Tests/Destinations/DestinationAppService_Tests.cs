@@ -47,12 +47,12 @@ public abstract class DestinationAppService_Tests<TStartupModule> : ViajeHonesto
         {
             new DestinationPhotoDto
             {
-                Id = Guid.NewGuid(),
+                PhotoId = Guid.NewGuid(),
                 Path = "https://example.com/photo1.jpg"
             },
             new DestinationPhotoDto
             {
-                Id = Guid.NewGuid(),
+                PhotoId = Guid.NewGuid(),
                 Path = "https://example.com/photo2.jpg"
             }
         }
@@ -121,7 +121,7 @@ public abstract class DestinationAppService_Tests<TStartupModule> : ViajeHonesto
                 {
                     new DestinationPhotoDto
                     {
-                        Id = Guid.NewGuid(),
+                        PhotoId = Guid.NewGuid(),
                         Path = savedDestination.Photos[0].Path + "Updated"
                     }
                 }
