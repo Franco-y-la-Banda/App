@@ -18,13 +18,17 @@ public class DestinationAppService :
     IDestinationAppService //implement the IDestinationAppService
 {
     private readonly IRepository<Destination, Guid> _destinationRepository;
-    public DestinationAppService(IRepository<Destination, Guid> repository)
+    private readonly IRepository<DestinationPhoto> _photoRepository;
+    public DestinationAppService(
+        IRepository<Destination, Guid> repository,
+        IRepository<DestinationPhoto> photoRepository)
         : base(repository)
     {
         _destinationRepository = repository;
+        _photoRepository = photoRepository;
     }
 
-    public async Task<DestinationDto> GetWithDetails(Guid id)
+    private async Task<Destination> GetDestinationWithDetailsAsync(Guid id)
     {
         //Get a IQueryable<T> by including sub collections
         var queryable = await _destinationRepository.WithDetailsAsync(x => x.Photos);
@@ -34,15 +38,27 @@ public class DestinationAppService :
 
         //Execute the query and get the result
         var order = await AsyncExecuter.FirstOrDefaultAsync(query);
-        return ObjectMapper.Map<Destination, DestinationDto>(order);
+        if (order == null)
+            throw new EntityNotFoundException(typeof(Destination), id);
+        return order;
     }
 
-    public override async Task<DestinationDto> GetAsync(Guid id)
+    public async Task<DestinationDto> GetWithDetailsAsync(Guid id)
     {
-        var entity = await Repository.GetAsync(id, includeDetails: true); // trae Photos si WithDetails incluye Photos
-        if (entity == null)
-            throw new EntityNotFoundException(typeof(Destination), id);
-        return ObjectMapper.Map<Destination, DestinationDto>(entity);
+        return ObjectMapper.Map<Destination, DestinationDto>(
+            await GetDestinationWithDetailsAsync(id));
+    }
+
+    public override async Task<DestinationDto> UpdateAsync(Guid id, CreateUpdateDestinationDto input)
+    {
+        var savedDestination = await GetDestinationWithDetailsAsync(id);
+        
+        // NOTA: Puede ser que no mapee todos los datos de las fotos
+        // No sé si es un problema, pero funca. tkm ef core
+        await MapToEntityAsync(input, savedDestination);
+        await _destinationRepository.UpdateAsync(savedDestination, autoSave: true);
+
+        return await MapToGetOutputDtoAsync(savedDestination);
     }
 
     // Para GetList:

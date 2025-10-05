@@ -6,7 +6,7 @@ namespace ViajeHonesto.Destinations;
 
 public class DestinationPhotoDto : EntityDto
 {
-    public Guid? PhotoId { get; set; }
+    public Guid PhotoId { get; set; }
     public string Path { get; set; }
 
 }
