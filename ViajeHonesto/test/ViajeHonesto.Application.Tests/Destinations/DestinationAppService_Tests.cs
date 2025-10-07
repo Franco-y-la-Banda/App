@@ -67,6 +67,7 @@ public abstract class DestinationAppService_Tests<TStartupModule> : ViajeHonesto
         //Assert
         destinationDtos.TotalCount.ShouldBeGreaterThan(0);
         destinationDtos.Items.ShouldContain(x => x.Name == "Concepción del Uruguay");
+        destinationDtos.Items.ShouldContain(x => x.Name == "Puerto Madero");
     }
 
     [Fact]
@@ -121,7 +122,7 @@ public abstract class DestinationAppService_Tests<TStartupModule> : ViajeHonesto
                 {
                     new DestinationPhotoDto
                     {
-                        PhotoId = Guid.NewGuid(),
+                        PhotoId = savedDestination.Photos[0].PhotoId,
                         Path = savedDestination.Photos[0].Path + "Updated"
                     }
                 }
@@ -140,7 +141,8 @@ public abstract class DestinationAppService_Tests<TStartupModule> : ViajeHonesto
             savedUpdatedDestination.Coordinate.Latitude.ShouldBe(updatedDestination.Coordinate.Latitude);
             savedUpdatedDestination.Coordinate.Longitude.ShouldBe(updatedDestination.Coordinate.Longitude);
             savedUpdatedDestination.Photos.Count.ShouldBe(1);
-            savedUpdatedDestination.Photos.ShouldContain(p => p.Path == "https://example.com/photo1.jpgUpdated");
+            savedUpdatedDestination.Photos.ShouldContain(p => p.PhotoId == savedDestination.Photos[0].PhotoId);
+            savedUpdatedDestination.Photos.ShouldContain(p => p.Path == savedDestination.Photos[0].Path + "Updated");
         }
     }
 
