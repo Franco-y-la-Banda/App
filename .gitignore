@@ -53,3 +53,11 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 /.vs
+
+# Asta
+design/*.lock
+design/*.bak
+design/*.~astah
+design/*.png
+design/*.jpg
+design/*.pdf
