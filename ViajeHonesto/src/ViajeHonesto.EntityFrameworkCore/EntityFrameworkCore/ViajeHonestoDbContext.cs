@@ -86,17 +86,19 @@ public class ViajeHonestoDbContext :
                 coord.Property(c => c.Latitude).HasColumnName("Latitude").IsRequired();
                 coord.Property(c => c.Longitude).HasColumnName("Longitude").IsRequired();
             });
-            b.HasMany(x => x.Photos).WithOne().IsRequired().OnDelete(DeleteBehavior.Cascade).HasForeignKey("DestinationId");
+            b.HasMany(x => x.Photos)
+                .WithOne(x => x.Destination)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasForeignKey(x => x.DestinationId);
+        });
 
-            /*
-             * modelBuilder.Entity<Distributor>().OwnsMany(
-                p => p.ShippingCenters, a =>
-                {
-                    a.WithOwner().HasForeignKey("OwnerId");
-                    a.Property<int>("Id");
-                    a.HasKey("Id");
-                });
-             */
+        builder.Entity<DestinationPhoto>(b =>
+        {
+            b.ToTable(ViajeHonestoConsts.DbTablePrefix + "DestinationPhotos", ViajeHonestoConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Path).IsRequired();
+            b.HasKey(dp => new { dp.PhotoId, dp.DestinationId });
         });
 
         //builder.Entity<YourEntity>(b =>

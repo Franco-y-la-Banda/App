@@ -4,9 +4,9 @@ using Volo.Abp.Application.Dtos;
 
 namespace ViajeHonesto.Destinations;
 
-public class DestinationPhotoDto : EntityDto<Guid>
+public class DestinationPhotoDto : EntityDto
 {
-    [Required]
+    public Guid PhotoId { get; set; }
     public string Path { get; set; }
 
 }
