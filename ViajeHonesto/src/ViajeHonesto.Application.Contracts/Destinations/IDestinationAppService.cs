@@ -11,5 +11,4 @@ public interface IDestinationAppService :
         PagedAndSortedResultRequestDto, //Used for sorting
         CreateUpdateDestinationDto> //Used to create/update a Destination
 {
-
 }

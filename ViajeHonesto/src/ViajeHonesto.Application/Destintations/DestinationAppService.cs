@@ -19,13 +19,17 @@ public class DestinationAppService :
 {
     private readonly IRepository<Destination, Guid> _destinationRepository;
     private readonly IRepository<DestinationPhoto> _photoRepository;
+    private readonly ICitySearchService _citySearchService;
+
     public DestinationAppService(
         IRepository<Destination, Guid> repository,
-        IRepository<DestinationPhoto> photoRepository)
+        IRepository<DestinationPhoto> photoRepository,
+        ICitySearchService citySearchService)
         : base(repository)
     {
         _destinationRepository = repository;
         _photoRepository = photoRepository;
+        _citySearchService = citySearchService;
     }
 
     private async Task<Destination> GetDestinationWithDetailsAsync(Guid id)
@@ -65,5 +69,11 @@ public class DestinationAppService :
     protected override async Task<IQueryable<Destination>> CreateFilteredQueryAsync(PagedAndSortedResultRequestDto input)
     {
         return (await Repository.WithDetailsAsync(x => x.Photos));
+    }
+
+
+    public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
+    {
+        return await _citySearchService.SearchCitiesByNameAsync(request);
     }
 }
