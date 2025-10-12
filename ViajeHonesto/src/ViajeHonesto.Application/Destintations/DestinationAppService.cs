@@ -56,7 +56,7 @@ public class DestinationAppService :
     public override async Task<DestinationDto> UpdateAsync(Guid id, CreateUpdateDestinationDto input)
     {
         var savedDestination = await GetDestinationWithDetailsAsync(id);
-        
+
         // NOTA: Puede ser que no mapee todos los datos de las fotos
         // No sé si es un problema, pero funca. tkm ef core
         await MapToEntityAsync(input, savedDestination);
@@ -70,7 +70,6 @@ public class DestinationAppService :
     {
         return (await Repository.WithDetailsAsync(x => x.Photos));
     }
-
 
     public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
     {

@@ -3,22 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
-using ViajeHonesto.Destinations;
-using Volo.Abp.Application.Services;
+using System.Threading.Tasks;
+using Volo.Abp.DependencyInjection;
 
-namespace ViajeHonesto.Destintations
+namespace ViajeHonesto.Destinations
 {
-    public class GeoDbCitySearchServices : ApplicationService, ICitySearchService
+    public class GeoDbCitySearchService : ICitySearchService, ITransientDependency
     {
-        private readonly ICitySearchService _citySearchService;
-
-        public GeoDbCitySearchServices(ICitySearchService citySearchService)
-        {
-            _citySearchService = citySearchService;
-        }
-
         private static readonly string apiKey = "0d591376bamsh69ea0c8ddcb541ep152145jsn345c066e6f52";
         private static readonly int resultLimit = 5;
         private static readonly string baseUrl = "https://wft-geo-db.p.rapidapi.com/v1/geo";
@@ -26,9 +18,21 @@ namespace ViajeHonesto.Destintations
         public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
         {
             // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview
-            var jsonResult = await SearchCities(request);
-            CitySearchResultDto? citySearchResultDto = JsonSerializer.Deserialize<CitySearchResultDto>(jsonResult);
-            return citySearchResultDto ?? new CitySearchResultDto { CityNames = new List<CityDto>() };
+            var jsonResult = JsonDocument.Parse(await SearchCities(request));
+            var jsonCities = jsonResult.RootElement.GetProperty("data");
+
+            var citySearchResultDto = new CitySearchResultDto();
+            foreach (var city in jsonCities.EnumerateArray())
+            {
+                citySearchResultDto.CityNames.Add(
+                    new CityDto
+                    {
+                        Name = city.GetProperty("name").GetString(),
+                        Country = city.GetProperty("country").GetString(),
+                    });
+            }
+
+            return citySearchResultDto;
         }
 
         static async Task<string> SearchCities(CitySearchRequestDto request)
