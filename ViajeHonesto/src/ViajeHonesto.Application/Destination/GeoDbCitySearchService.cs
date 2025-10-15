@@ -21,6 +21,11 @@ namespace ViajeHonesto.Destinations
 
         public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
         {
+            if (request.PartialCityName.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentException("El nombre parcial de la ciudad no puede estar vacío.");
+            };
+
             var jsonRaw = await _geoDbApiClient.SearchCitiesRawAsync(request.PartialCityName, resultLimit);
             var jsonDocument = JsonDocument.Parse(jsonRaw);
             var jsonCities = jsonDocument.RootElement.GetProperty("data");
@@ -28,11 +33,13 @@ namespace ViajeHonesto.Destinations
             var citySearchResultDto = new CitySearchResultDto();
             foreach (var city in jsonCities.EnumerateArray())
             {
+                string? cityName = city.GetProperty("name").GetString();
+                string? cityCountry = city.GetProperty("country").GetString();
                 citySearchResultDto.CityNames.Add(
                     new CityDto
                     {
-                        Name = city.GetProperty("name").GetString(),
-                        Country = city.GetProperty("country").GetString(),
+                        Name = cityName,
+                        Country = cityCountry,
                     });
             }
 

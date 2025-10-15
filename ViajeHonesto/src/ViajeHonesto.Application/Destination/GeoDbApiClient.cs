@@ -9,6 +9,12 @@ namespace ViajeHonesto.Destinations
     {
         private static readonly string apiKey = "0d591376bamsh69ea0c8ddcb541ep152145jsn345c066e6f52";
         private static readonly string baseUrl = "https://wft-geo-db.p.rapidapi.com/v1/geo";
+
+        public GeoDbApiClient()
+        {
+
+        }
+
         public async Task<string> SearchCitiesRawAsync(string partialCityName, int limit)
         {
             using (HttpClient client = new HttpClient())

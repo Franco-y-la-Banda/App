@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
@@ -11,4 +12,5 @@ public interface IDestinationAppService :
         PagedAndSortedResultRequestDto, //Used for sorting
         CreateUpdateDestinationDto> //Used to create/update a Destination
 {
+    public Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request);
 }
