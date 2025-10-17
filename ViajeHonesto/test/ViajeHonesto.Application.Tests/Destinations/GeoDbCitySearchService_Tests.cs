@@ -26,7 +26,8 @@ public class GeoDbCitySearchService_Tests
         // ARRANGE
         var request = new CitySearchRequestDto
         {
-            PartialCityName = "Concepción"
+            PartialCityName = "Concepción",
+            ResultLimit = 5
         };
 
         // Respuesta JSON simulada para que la lógica de deserialización funcione
@@ -144,7 +145,7 @@ public class GeoDbCitySearchService_Tests
         result.CityNames[4].Country.ShouldBe("Argentina");
         // Verificar que la dependencia externa fue llamada.
         await _mockGeoDbApiClient.Received(1).SearchCitiesRawAsync(
-            request.PartialCityName, 5
+            request.PartialCityName, request.ResultLimit
         );
     }
     [Fact]
