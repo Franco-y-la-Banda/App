@@ -1,10 +1,14 @@
 ﻿using Shouldly;
 using System;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.Modularity;
 using Xunit;
 
 namespace ViajeHonesto.Destinations;
+
+[Collection("NoParallelization")]
 public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> : ViajeHonestoApplicationTestBase<TStartupModule>
     where TStartupModule : IAbpModule
 {
@@ -13,6 +17,8 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
     protected GeoDbCitySearchService_Integration_Tests()
     {
         _destinationAppService = GetRequiredService<IDestinationAppService>();
+
+        Task.Delay(1500).GetAwaiter().GetResult();
     }
 
     [Fact]
@@ -34,7 +40,7 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
     public async Task SearchCitiesByNameAsync_Should_Map_Fields_Correctly()
     {
         // ACT
-        var request = new CitySearchRequestDto { PartialCityName = "Concepción" };
+        var request = new CitySearchRequestDto { PartialCityName = "Paraná" };
         var result = await _destinationAppService.SearchCitiesByNameAsync(request);
 
         // ASSERT
@@ -44,7 +50,7 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
         first.Name.ShouldNotBeNullOrWhiteSpace();
         first.Country.ShouldNotBeNullOrWhiteSpace();
     }
-    /*
+
     [Fact]
     [Trait("Category", "IntegrationTest")]
     public async Task SearchCitiesByNameAsync_Should_Handle_Network_Error_Gracefully()
@@ -95,5 +101,4 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
             return Task.FromResult(msg);
         }
     }
-    */
 }
