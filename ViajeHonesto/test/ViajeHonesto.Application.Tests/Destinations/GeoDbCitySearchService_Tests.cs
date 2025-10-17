@@ -1,11 +1,12 @@
-﻿using Xunit;
-using System;
-using System.Threading.Tasks;
-using NSubstitute;
-using System.Collections.Generic;
+﻿using NSubstitute;
 using Shouldly;
-using Volo.Abp;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 using ViajeHonesto.Destinations;
+using Volo.Abp;
+using Xunit;
 
 namespace ViajeHonesto.Destinations;
 public class GeoDbCitySearchService_Tests
@@ -192,11 +193,11 @@ public class GeoDbCitySearchService_Tests
 
         _mockGeoDbApiClient
         .SearchCitiesRawAsync(Arg.Is("Roma"), Arg.Is(5))
-        .Returns(Task.FromException<string>(new TimeoutException("API tardó demasiado")));
+        .Returns(Task.FromException<string>(new HttpRequestException("Error fetching city data")));
 
         // ACT + ASSERT
-        var ex = await Should.ThrowAsync<TimeoutException>(() => _citySearchService.SearchCitiesByNameAsync(request));
-        ex.Message.ShouldContain("tardó");
+        var ex = await Should.ThrowAsync<HttpRequestException>(() => _citySearchService.SearchCitiesByNameAsync(request));
+        ex.Message.ShouldContain("Error");
 
         await _mockGeoDbApiClient.Received(1).SearchCitiesRawAsync("Roma", 5);
     }
