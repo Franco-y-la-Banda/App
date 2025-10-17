@@ -13,6 +13,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using ViajeHonesto.Destinations;
+using ViajeHonesto.Reviews;
 
 namespace ViajeHonesto.EntityFrameworkCore;
 
@@ -86,6 +87,7 @@ public class ViajeHonestoDbContext :
                 coord.Property(c => c.Latitude).HasColumnName("Latitude").IsRequired();
                 coord.Property(c => c.Longitude).HasColumnName("Longitude").IsRequired();
             });
+
             b.HasMany(x => x.Photos)
                 .WithOne(x => x.Destination)
                 .IsRequired()
@@ -99,6 +101,27 @@ public class ViajeHonestoDbContext :
             b.ConfigureByConvention();
             b.Property(x => x.Path).IsRequired();
             b.HasKey(dp => new { dp.PhotoId, dp.DestinationId });
+        });
+
+
+        builder.Entity<Review>(b =>
+        {
+            b.ToTable(ViajeHonestoConsts.DbTablePrefix + "Review", ViajeHonestoConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.HasKey(x => new { x.DestinationId, x.UserId });
+
+            b.OwnsOne(x => x.Rating, rating =>
+            {
+                rating.Property(c => c.Value).HasColumnName("Value");
+            });
+
+            b.OwnsOne(x => x.Comment, comment =>
+            {
+                comment.Property(c => c.Comment).HasColumnName("Comment");
+            });
+
+            b.HasOne<Destination>().WithMany().HasForeignKey(x => x.DestinationId);
+            b.HasOne<IdentityUser>().WithMany().HasForeignKey(x => x.UserId);
         });
 
         //builder.Entity<YourEntity>(b =>
