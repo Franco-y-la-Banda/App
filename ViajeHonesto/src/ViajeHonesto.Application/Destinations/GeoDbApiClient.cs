@@ -8,8 +8,6 @@ namespace ViajeHonesto.Destinations
 {
     public class GeoDbApiClient : IGeoDbApiClient, ITransientDependency
     {
-        private static readonly string apiKey = "0d591376bamsh69ea0c8ddcb541ep152145jsn345c066e6f52";
-        private static readonly string baseUrl = "https://wft-geo-db.p.rapidapi.com/v1/geo";
         private readonly HttpClient _client;
 
         public GeoDbApiClient(HttpClient httpClient)
@@ -19,8 +17,8 @@ namespace ViajeHonesto.Destinations
 
         public async Task<string> SearchCitiesRawAsync(string partialCityName, int limit)
         {
-            // Endpoint con query params
-            string url = $"{baseUrl}/cities?namePrefix={Uri.EscapeDataString(partialCityName)}&limit={limit}";
+            // Endpoint con query 
+            string url = $"{_client.BaseAddress}cities?namePrefix={Uri.EscapeDataString(partialCityName)}&limit={limit}";
 
             HttpResponseMessage response = await _client.GetAsync(url);
 
