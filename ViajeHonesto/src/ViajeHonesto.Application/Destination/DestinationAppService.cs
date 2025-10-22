@@ -19,13 +19,17 @@ public class DestinationAppService :
 {
     private readonly IRepository<Destination, Guid> _destinationRepository;
     private readonly IRepository<DestinationPhoto> _photoRepository;
+    private readonly ICitySearchService _citySearchService;
+
     public DestinationAppService(
         IRepository<Destination, Guid> repository,
-        IRepository<DestinationPhoto> photoRepository)
+        IRepository<DestinationPhoto> photoRepository,
+        ICitySearchService citySearchService)
         : base(repository)
     {
         _destinationRepository = repository;
         _photoRepository = photoRepository;
+        _citySearchService = citySearchService;
     }
 
     private async Task<Destination> GetDestinationWithDetailsAsync(Guid id)
@@ -52,7 +56,7 @@ public class DestinationAppService :
     public override async Task<DestinationDto> UpdateAsync(Guid id, CreateUpdateDestinationDto input)
     {
         var savedDestination = await GetDestinationWithDetailsAsync(id);
-        
+
         // NOTA: Puede ser que no mapee todos los datos de las fotos
         // No sé si es un problema, pero funca. tkm ef core
         await MapToEntityAsync(input, savedDestination);
@@ -65,5 +69,10 @@ public class DestinationAppService :
     protected override async Task<IQueryable<Destination>> CreateFilteredQueryAsync(PagedAndSortedResultRequestDto input)
     {
         return (await Repository.WithDetailsAsync(x => x.Photos));
+    }
+
+    public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
+    {
+        return await _citySearchService.SearchCitiesByNameAsync(request);
     }
 }
