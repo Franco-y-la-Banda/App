@@ -5,9 +5,14 @@ namespace ViajeHonesto.Reviews
 {
     public class CreateUpdateReviewDto
     {
-        [Range(0, 5)]
+        [Required]
+        public Guid UserId { get; set; }
+
+        [Required]
+        public Guid DestinationId { get; set; }
+
         public RatingDto Rating { get; set; }
-        [StringLength(350)]
+
         public CommentDto Comment { get; set; }
     }
 }
