@@ -20,7 +20,7 @@ public class ReviewAppService :
         ReviewKey,
         PagedAndSortedResultRequestDto,
         CreateReviewDto,
-        UpdateReviewDto>
+        UpdateReviewDto>, IReviewAppService
 {
     public ReviewAppService(IRepository<Review> repository)
         : base(repository)
