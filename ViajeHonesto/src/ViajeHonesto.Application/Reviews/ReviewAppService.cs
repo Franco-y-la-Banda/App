@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,14 @@ using Volo.Abp.Linq;
 
 namespace ViajeHonesto.Reviews;
 
-public class ReviewAppService : AbstractKeyCrudAppService<Review, ReviewDto, ReviewKey>
+[Authorize]
+public class ReviewAppService : 
+    AbstractKeyCrudAppService<
+        Review, 
+        ReviewDto, 
+        ReviewKey, 
+        PagedAndSortedResultRequestDto, 
+        CreateUpdateReviewDto>
 {
     public ReviewAppService(IRepository<Review> repository)
         : base(repository)
@@ -27,19 +35,5 @@ public class ReviewAppService : AbstractKeyCrudAppService<Review, ReviewDto, Rev
         var queryable = await Repository.GetQueryableAsync();
         return await AsyncExecuter.FirstOrDefaultAsync(
             queryable.Where(d => d.DestinationId == id.DestinationId && d.UserId == id.UserId));
-    }
-
-    protected ReviewKey GetKeyAsObject(Review entity)
-    {
-        return new ReviewKey
-        {
-            DestinationId = entity.DestinationId,
-            UserId = entity.UserId
-        };
-    }
-    public async Task<List<Review>> GetAllReviewsAsync()
-    {
-        var queryable = await Repository.GetQueryableAsync();
-        return await AsyncExecuter.ToListAsync(queryable);
     }
 }
