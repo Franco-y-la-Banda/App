@@ -51,6 +51,7 @@ public class ViajeHonestoDbContext :
     #endregion
     public DbSet<Destination> Destinations { get; set; }
     public DbSet<DestinationPhoto> DestinationPhotos { get; set; }
+    public DbSet<Review> Reviews { get; set; }
 
     public ViajeHonestoDbContext(DbContextOptions<ViajeHonestoDbContext> options)
         : base(options)
@@ -72,7 +73,7 @@ public class ViajeHonestoDbContext :
         builder.ConfigureIdentity();
         builder.ConfigureOpenIddict();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
         builder.Entity<Destination>(b =>
         {
