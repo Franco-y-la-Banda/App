@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViajeHonesto.Destinations;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
@@ -12,13 +13,14 @@ using Volo.Abp.Linq;
 namespace ViajeHonesto.Reviews;
 
 [Authorize]
-public class ReviewAppService : 
+public class ReviewAppService :
     AbstractKeyCrudAppService<
-        Review, 
-        ReviewDto, 
-        ReviewKey, 
-        PagedAndSortedResultRequestDto, 
-        CreateUpdateReviewDto>
+        Review,
+        ReviewDto,
+        ReviewKey,
+        PagedAndSortedResultRequestDto,
+        CreateReviewDto,
+        UpdateReviewDto>
 {
     public ReviewAppService(IRepository<Review> repository)
         : base(repository)

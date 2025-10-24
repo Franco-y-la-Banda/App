@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ViajeHonesto.Reviews
 {
-    public class CreateUpdateReviewDto
+    public class CreateReviewDto
     {
         [Required]
         public Guid UserId { get; set; }

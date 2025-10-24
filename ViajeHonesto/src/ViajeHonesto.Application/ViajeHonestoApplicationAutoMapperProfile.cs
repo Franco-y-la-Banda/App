@@ -18,7 +18,8 @@ public class ViajeHonestoApplicationAutoMapperProfile : Profile
         CreateMap<DestinationPhotoDto, DestinationPhoto>();
 
         CreateMap<Review, ReviewDto>();        
-        CreateMap<CreateUpdateReviewDto, Review>();
+        CreateMap<CreateReviewDto, Review>();
+        CreateMap<UpdateReviewDto, Review>();
         
         CreateMap<Rating, RatingDto>();
         CreateMap<RatingDto, Rating>();
