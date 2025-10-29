@@ -12,6 +12,7 @@ public class ReviewDto : AuditedEntityDto
     [Required]
     public Guid DestinationId { get; set; }
 
+    [Required]
     public RatingDto Rating { get; set; }
     public CommentDto Comment { get; set; }
 }
