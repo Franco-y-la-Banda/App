@@ -5,8 +5,6 @@ namespace ViajeHonesto.Reviews
 {
     public class CreateReviewDto
     {
-        [Required]
-        public Guid UserId { get; set; }
 
         [Required]
         public Guid DestinationId { get; set; }

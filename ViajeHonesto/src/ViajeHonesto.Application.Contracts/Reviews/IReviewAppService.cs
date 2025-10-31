@@ -13,4 +13,6 @@ public interface IReviewAppService :
         CreateReviewDto,                //Used to create a Review
         UpdateReviewDto>                //Used to update a Review
 {
+    public Task<ReviewDto> UpdateAsync(Guid destinationId, UpdateReviewDto input);
+    public Task DeleteAsync(Guid destinationId);
 }
