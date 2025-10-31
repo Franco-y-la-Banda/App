@@ -24,7 +24,7 @@ class ReviewsDataSeederContributor: ITransientDependency
         if (await _reviewRepository.GetCountAsync() <= 0)
         {
             var review = new Review(
-            TestGuids.DestinationGuid(0),
+            TestGuids.DestinationGuid(1),
             TestGuids.UserGuid(0),
             new Rating(5),
             new CComment("Muy buena"));

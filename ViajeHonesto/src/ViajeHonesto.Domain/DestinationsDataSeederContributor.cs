@@ -26,6 +26,27 @@ public class DestinationsDataSeederContributor : ITransientDependency
 
             var destination = new Destination(TestGuids.DestinationGuid(guidIndex))
             {
+                Name = "El Chaltén",
+                Country = "Argentina",
+                Region = "Santa Cruz",
+                Population = 1600,
+                Coordinate = new Coordinate(-49.3315f, -72.8863f)
+            };
+
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/el-chalten/fitz-roy.jpg");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/el-chalten/laguna-capri.jpg");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/el-chalten/sendero-laguna-torre.jpg");
+            destination.AddPhoto(Guid.NewGuid(), "/images/destinations/el-chalten/pueblo-niebla.jpg");
+
+            await _destinationRepository.InsertAsync(
+                destination,
+                autoSave: true
+            );
+
+            guidIndex++;
+
+            destination = new Destination(TestGuids.DestinationGuid(guidIndex))
+            {
                 Name = "Puerto Madero",
                 Country = "Argentina",
                 Region = "Buenos Aires",
