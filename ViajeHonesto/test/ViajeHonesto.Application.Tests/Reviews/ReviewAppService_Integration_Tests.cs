@@ -186,7 +186,7 @@ public abstract class ReviewAppService_Integration_Tests<TStartupModule> : Viaje
     }
 
     [Fact]
-    public async Task Should_Throw_When_User_Is_Not_Authenticated()
+    public async Task Should_Throw_When_Creating_Review_Without_Authentication()
     {
         _currentUser.Id.Returns((Guid?)null);
         _currentUser.IsAuthenticated.Returns(false);
@@ -198,7 +198,34 @@ public abstract class ReviewAppService_Integration_Tests<TStartupModule> : Viaje
             Comment = new CommentDto { Comment = "Intento sin login" }
         };
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _reviewAppService.CreateAsync(input));
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            _reviewAppService.CreateAsync(input));
+    }
+
+    [Fact]
+    public async Task Should_Throw_When_Updating_Review_Without_Authentication()
+    {
+        _currentUser.Id.Returns((Guid?)null);
+        _currentUser.IsAuthenticated.Returns(false);
+
+        var input = new UpdateReviewDto
+        {
+            Rating = new RatingDto { Value = 5 },
+            Comment = new CommentDto { Comment = "Intento sin login" }
+        };
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            _reviewAppService.UpdateAsync(_destinationId, input));
+    }
+
+    [Fact]
+    public async Task Should_Throw_When_Deleting_Review_Without_Authentication()
+    {
+        _currentUser.Id.Returns((Guid?)null);
+        _currentUser.IsAuthenticated.Returns(false);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            _reviewAppService.DeleteAsync(_destinationId));
     }
 
     [Fact]
