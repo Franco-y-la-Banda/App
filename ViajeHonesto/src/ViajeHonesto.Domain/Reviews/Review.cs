@@ -25,6 +25,16 @@ public class Review : AuditedAggregateRoot, IUserOwned
         Comment = comment;
     }
 
+    public void SetRating(Rating rating)
+    {
+        Rating = rating;
+    }
+
+    public void SetComment(CComment? comment)
+    {
+        Comment = comment;
+    }
+
     public override object?[] GetKeys()
     {
         return new Object[] { DestinationId, UserId };
