@@ -151,7 +151,7 @@ public class ViajeHonestoDbContext :
 
             b.OwnsOne(x => x.Rating, rating =>
             {
-                rating.Property(c => c.Value).HasColumnName("Value");
+                rating.Property(c => c.Value).HasColumnName("Value").IsRequired();
             });
 
             b.OwnsOne(x => x.Comment, comment =>
