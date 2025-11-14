@@ -1,4 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System;
+using System.Linq.Expressions;
+using ViajeHonesto.Destinations;
+using ViajeHonesto.Filtering;
+using ViajeHonesto.Reviews;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
@@ -9,10 +15,10 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
+using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
-using Volo.Abp.OpenIddict.EntityFrameworkCore;
-using ViajeHonesto.Destinations;
+using Volo.Abp.Users;
 
 namespace ViajeHonesto.EntityFrameworkCore;
 
@@ -50,11 +56,45 @@ public class ViajeHonestoDbContext :
     #endregion
     public DbSet<Destination> Destinations { get; set; }
     public DbSet<DestinationPhoto> DestinationPhotos { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+
+
+    private readonly ICurrentUser _currentUser;
+    protected bool IsUserOwnedFilterEnabled => DataFilter?.IsEnabled<IUserOwned>() ?? false;
 
     public ViajeHonestoDbContext(DbContextOptions<ViajeHonestoDbContext> options)
         : base(options)
     {
 
+    }
+
+    public ViajeHonestoDbContext(DbContextOptions<ViajeHonestoDbContext> options, ICurrentUser currentUser)
+        : base(options)
+    {
+        _currentUser = currentUser;
+    }
+
+    protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
+    {
+        if (typeof(IUserOwned).IsAssignableFrom(typeof(TEntity)))
+        {
+            return true;
+        }
+
+        return base.ShouldFilterEntity<TEntity>(entityType);
+    }
+
+    protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>(ModelBuilder modelBuilder)
+    {
+        var expression = base.CreateFilterExpression<TEntity>(modelBuilder);
+
+        if (typeof(IUserOwned).IsAssignableFrom(typeof(TEntity)))
+        {
+            Expression<Func<TEntity, bool>> isActiveFilter = e => !IsUserOwnedFilterEnabled || ((IUserOwned)e).UserId == _currentUser.Id;
+            expression = expression == null ? isActiveFilter : QueryFilterExpressionHelper.CombineExpressions(expression, isActiveFilter);
+        }
+
+        return expression;
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -71,7 +111,7 @@ public class ViajeHonestoDbContext :
         builder.ConfigureIdentity();
         builder.ConfigureOpenIddict();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
         builder.Entity<Destination>(b =>
         {
@@ -86,6 +126,7 @@ public class ViajeHonestoDbContext :
                 coord.Property(c => c.Latitude).HasColumnName("Latitude").IsRequired();
                 coord.Property(c => c.Longitude).HasColumnName("Longitude").IsRequired();
             });
+
             b.HasMany(x => x.Photos)
                 .WithOne(x => x.Destination)
                 .IsRequired()
@@ -99,6 +140,27 @@ public class ViajeHonestoDbContext :
             b.ConfigureByConvention();
             b.Property(x => x.Path).IsRequired();
             b.HasKey(dp => new { dp.PhotoId, dp.DestinationId });
+        });
+
+
+        builder.Entity<Review>(b =>
+        {
+            b.ToTable(ViajeHonestoConsts.DbTablePrefix + "Review", ViajeHonestoConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.HasKey(x => new { x.DestinationId, x.UserId });
+
+            b.OwnsOne(x => x.Rating, rating =>
+            {
+                rating.Property(c => c.Value).HasColumnName("Value").IsRequired();
+            });
+
+            b.OwnsOne(x => x.Comment, comment =>
+            {
+                comment.Property(c => c.Comment).HasColumnName("Comment");
+            });
+
+            b.HasOne<Destination>().WithMany().HasForeignKey(x => x.DestinationId);
+            b.HasOne<IdentityUser>().WithMany().HasForeignKey(x => x.UserId);
         });
 
         //builder.Entity<YourEntity>(b =>
