@@ -37,6 +37,20 @@
     "Unspecified": "Sistema",
     "SeeAllUsers": "Ver todos los usuarios",
     "TakePhoto": "Tomar foto",
-    "ChoosePhoto": "Escoge una foto"
+    "ChoosePhoto": "Escoge una foto",
+
+    "Menu:Destinations": "Destinos",
+    "Destinations:SearchQuery": "Buscar destino",
+    "Destinations:SearchPlaceholder": "Ingrese el nombre de la ciudad",
+    "Destinations:Country": "País",
+    "Destinations:CountryPlaceholder": "Ingrese el país",
+    "Clear": "Limpiar",
+    "Loading": "Cargando...",
+    "Destinations:Population": "Población",
+    "Destinations:Coordinates": "Coordenadas",
+    "Destinations:ViewOnMap": "Ver en el mapa",
+    "Destinations:NoResults": "No se encontraron resultados",
+    "Destinations:NoResultsMessage": "Intente con otros criterios de búsqueda",
+    "Destinations:ShowAll": "Mostrar todos"
   }
 }

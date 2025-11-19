@@ -19,4 +19,9 @@ export const APP_ROUTES: Routes = [
     path: 'setting-management',
     loadChildren: () => import('@abp/ng.setting-management').then(c => c.createRoutes()),
   },
+  {
+    path: 'destinations',
+    loadChildren: () =>
+      import('./destinations/destinations.routes').then(m => m.DESTINATIONS_ROUTES),
+  },
 ];

@@ -4,6 +4,21 @@
     "AppName": "ViajeHonesto",
     "Menu:Home": "Home",
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information visit",
-    "Welcome": "Welcome"
+    "Welcome": "Welcome",
+
+    "Menu:Destinations": "Destinations",
+    "Destinations:SearchQuery": "Search destination",
+    "Destinations:SearchPlaceholder": "Enter city name",
+    "Destinations:Country": "Country",
+    "Destinations:CountryPlaceholder": "Enter country",
+    "Search": "Search",
+    "Clear": "Clear",
+    "Loading": "Loading...",
+    "Destinations:Population": "Population",
+    "Destinations:Coordinates": "Coordinates",
+    "Destinations:ViewOnMap": "View on map",
+    "Destinations:NoResults": "No results found",
+    "Destinations:NoResultsMessage": "Try different search criteria",
+    "Destinations:ShowAll": "Show all"
   }
 }
