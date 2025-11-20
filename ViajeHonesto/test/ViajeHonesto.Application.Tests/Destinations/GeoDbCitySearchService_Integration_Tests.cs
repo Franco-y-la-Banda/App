@@ -31,8 +31,8 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
 
         // ASSERT
         result.ShouldNotBeNull();
-        result.CityNames.Count.ShouldBeGreaterThan(0);
-        result.CityNames.ShouldContain(c => c.Name.Contains("Concepción", StringComparison.OrdinalIgnoreCase));
+        result.TotalCount.ShouldBeGreaterThan(0);
+        result.Items.ShouldContain(c => c.Name.Contains("Concepción", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -44,9 +44,9 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
         var result = await _destinationAppService.SearchCitiesByNameAsync(request);
 
         // ASSERT
-        result.CityNames.ShouldNotBeEmpty();
+        result.Items.ShouldNotBeEmpty();
 
-        var first = result.CityNames[0];
+        var first = result.Items[0];
         first.Name.ShouldNotBeNullOrWhiteSpace();
         first.Country.ShouldNotBeNullOrWhiteSpace();
     }

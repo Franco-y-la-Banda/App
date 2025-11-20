@@ -12,5 +12,5 @@ public interface IDestinationAppService :
         PagedAndSortedResultRequestDto, //Used for sorting
         CreateUpdateDestinationDto> //Used to create/update a Destination
 {
-    public Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request);
+    public Task<PagedResultDto<CityDto>> SearchCitiesByNameAsync(CitySearchRequestDto request);
 }

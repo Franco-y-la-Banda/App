@@ -71,8 +71,9 @@ public class DestinationAppService :
         return (await Repository.WithDetailsAsync(x => x.Photos));
     }
 
-    public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
+    public async Task<PagedResultDto<CityDto>> SearchCitiesByNameAsync(CitySearchRequestDto request)
     {
-        return await _citySearchService.SearchCitiesByNameAsync(request);
+        var result = await _citySearchService.SearchCitiesByNameAsync(request);
+        return new PagedResultDto<CityDto>(result.TotalCount, result.CityNames);
     }
 }
