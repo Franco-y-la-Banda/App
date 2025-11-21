@@ -12,21 +12,21 @@
     <div class="card-body">
       <!-- Barra de herramientas con búsqueda y filtros -->
       <div class="search-container">
-      <!-- Campo de búsqueda libre -->
-      <div class="search-field">
-        <label for="search-query">{{ '::Destinations:SearchQuery' | abpLocalization }}</label>
-        <input
-          id="search-query"
-          type="text"
-          class="form-control"
-          [(ngModel)]="searchParams.partialCityName"
-          (keyup.enter)="onSearch()"
-          [placeholder]="'::Destinations:SearchPlaceholder' | abpLocalization"
-        />
-      </div>
+        <!-- Campo de búsqueda libre -->
+        <div class="search-field">
+          <label for="search-query">{{ '::Destinations:SearchQuery' | abpLocalization }}</label>
+          <input
+            id="search-query"
+            type="text"
+            class="form-control"
+            [(ngModel)]="searchParams.partialCityName"
+            (keyup.enter)="onSearch()"
+            [placeholder]="'::Destinations:SearchPlaceholder' | abpLocalization"
+          />
+        </div>
 
-      <!-- Filtro por país -->
-      <!-- <div class="search-field">
+        <!-- Filtro por país -->
+        <!-- <div class="search-field">
         <label for="search-country">{{ '::Destinations:Country' | abpLocalization }}</label>
         <input
           id="search-country"
@@ -38,67 +38,67 @@
         />
       </div> -->
 
-      <!-- Botones de acción -->
-      <div class="search-actions">
-        <button type="button" class="btn btn-primary" (click)="onSearch()">
-          <i class="fa fa-search"></i>
-          {{ '::Search' | abpLocalization }}
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="clearSearch()">
-          <i class="fa fa-times"></i>
-          {{ '::Clear' | abpLocalization }}
-        </button>
+        <!-- Botones de acción -->
+        <div class="search-actions">
+          <button type="button" class="btn btn-primary" (click)="onSearch()">
+            <i class="fa fa-search"></i>
+            {{ '::Search' | abpLocalization }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="clearSearch()">
+            <i class="fa fa-times"></i>
+            {{ '::Clear' | abpLocalization }}
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- Contenedor principal del listado -->
-    <div class="destinations-container">
-    <!-- Indicador de carga -->
-    <div *ngIf="loading" class="loading-overlay">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">{{ '::Loading' | abpLocalization }}</span>
-      </div>
-    </div>
+      <!-- Contenedor principal del listado -->
+      <div class="destinations-container">
+        <!-- Indicador de carga -->
+        <div *ngIf="loading" class="loading-overlay">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">{{ '::Loading' | abpLocalization }}</span>
+          </div>
+        </div>
 
-    <!-- Grid de destinos -->
-    <div class="destinations-grid" *ngIf="!loading && destinations.cityNames.length > 0">
-      <!-- Card de cada destino -->
-      <div class="destination-card" *ngFor="let destination of destinations.cityNames">
-        <!-- Imagen del destino -->
-        <!-- <div class="destination-image">
+        <!-- Grid de destinos -->
+        <div class="destinations-grid" *ngIf="!loading && destinations.length > 0">
+          <!-- Card de cada destino -->
+          <div class="destination-card" *ngFor="let destination of destinations">
+            <!-- Imagen del destino -->
+            <!-- <div class="destination-image">
           <img
             [src]="getDestinationImage(destination.imageUrl)"
             [alt]="destination.name"
             (error)="onImageError($event)"
             loading="lazy"
           /> -->
-          <!-- Badge del país -->
-          <!-- <div class="country-badge">
+            <!-- Badge del país -->
+            <!-- <div class="country-badge">
             <i class="fa fa-map-marker-alt me-1"></i>
             {{ destination.country }}
           </div>
         </div> -->
 
-        <!-- Contenido del card -->
-        <div class="destination-content">
-          <!-- Nombre del destino -->
-          <h3 class="destination-name" [title]="destination.name">
-            {{ destination.name }}
-          </h3>
+            <!-- Contenido del card -->
+            <div class="destination-content">
+              <!-- Nombre del destino -->
+              <h3 class="destination-name" [title]="destination.name">
+                {{ destination.name }}
+              </h3>
 
-          <!-- Información del destino -->
-          <div class="destination-info">
-            <!-- País -->
-            <div class="info-row">
-              <span class="info-label">
-                <i class="fa fa-globe me-2"></i>
-                {{ '::Destinations:Country' | abpLocalization }}:
-              </span>
-              <span class="info-value">{{ destination.country }}</span>
-            </div>
+              <!-- Información del destino -->
+              <div class="destination-info">
+                <!-- País -->
+                <div class="info-row">
+                  <span class="info-label">
+                    <i class="fa fa-globe me-2"></i>
+                    {{ '::Destinations:Country' | abpLocalization }}:
+                  </span>
+                  <span class="info-value">{{ destination.country }}</span>
+                </div>
 
-            <!-- Población -->
-            <!-- <div class="info-row">
+                <!-- Población -->
+                <!-- <div class="info-row">
               <span class="info-label">
                 <i class="fa fa-users me-2"></i>
                 {{ '::Destinations:Population' | abpLocalization }}:
@@ -106,8 +106,8 @@
               <span class="info-value">{{ formatPopulation(destination.population) }}</span>
             </div> -->
 
-            <!-- Coordenadas -->
-            <!-- <div class="info-row">
+                <!-- Coordenadas -->
+                <!-- <div class="info-row">
               <span class="info-label">
                 <i class="fa fa-map-pin me-2"></i>
                 {{ '::Destinations:Coordinates' | abpLocalization }}:
@@ -118,8 +118,8 @@
             </div>
           </div> -->
 
-          <!-- Acciones del card -->
-          <!-- <div class="destination-actions">
+                <!-- Acciones del card -->
+                <!-- <div class="destination-actions">
             <button
               type="button"
               class="btn btn-sm btn-outline-primary"
@@ -130,34 +130,34 @@
               {{ '::Destinations:ViewOnMap' | abpLocalization }}
             </button>
           </div> -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Mensaje cuando no hay resultados -->
+          <div *ngIf="!loading && destinations.length === 0" class="empty-state">
+            <i class="fa fa-search fa-3x mb-3"></i>
+            <h4>{{ '::Destinations:NoResults' | abpLocalization }}</h4>
+            <p>{{ '::Destinations:NoResultsMessage' | abpLocalization }}</p>
+            <button type="button" class="btn btn-primary" (click)="clearSearch()">
+              {{ '::Destinations:ShowAll' | abpLocalization }}
+            </button>
+          </div>
+        </div>
+        <!-- Paginación -->
+        <div class="mt-4 d-flex justify-content-center" *ngIf="!loading && destinations.length > 0">
+          <ngb-pagination
+            [collectionSize]="totalCount"
+            [page]="currentPage"
+            [pageSize]="searchParams.resultLimit"
+            [maxSize]="5"
+            [rotate]="true"
+            [ellipses]="false"
+            [boundaryLinks]="true"
+            (pageChange)="onPageChange($event)"
+          ></ngb-pagination>
         </div>
       </div>
-    </div>
-
-    <!-- Mensaje cuando no hay resultados -->
-    <div *ngIf="!loading && destinations.cityNames.length === 0" class="empty-state">
-      <i class="fa fa-search fa-3x mb-3"></i>
-      <h4>{{ '::Destinations:NoResults' | abpLocalization }}</h4>
-      <p>{{ '::Destinations:NoResultsMessage' | abpLocalization }}</p>
-      <button type="button" class="btn btn-primary" (click)="clearSearch()">
-        {{ '::Destinations:ShowAll' | abpLocalization }}
-      </button>
-    </div>
-
-      <!-- Paginación -->
-      <div class="mt-4 d-flex justify-content-center" *ngIf="!loading && destinations.cityNames.length > 0">
-        <ngb-pagination
-          [collectionSize]="totalCount"
-          [page]="currentPage"
-          [pageSize]="searchParams.resultLimit"
-          [maxSize]="5"
-          [rotate]="true"
-          [ellipses]="false"
-          [boundaryLinks]="true"
-          (pageChange)="onPageChange($event)"
-        ></ngb-pagination>
-      </div>
-    </div>
     </div>
   </div>
 </div>

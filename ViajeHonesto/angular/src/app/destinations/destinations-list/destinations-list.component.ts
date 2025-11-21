@@ -6,9 +6,9 @@ import { DestinationService } from '../../proxy/destinations/destination.service
 import {
   DestinationDto,
   CitySearchRequestDto,
-  CitySearchResultDto,
+  CityDto,
 } from '../../proxy/destinations/models';
-import { finalize } from 'rxjs/operators';
+import { finalize, retry } from 'rxjs/operators';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 
@@ -26,7 +26,7 @@ export class DestinationsListComponent implements OnInit {
   /**
    * Lista de destinos obtenidos de la API
    */
-  destinations: CitySearchResultDto;
+  destinations: CityDto[] = [];
 
   /**
    * Indica si hay una petición en curso
@@ -42,7 +42,7 @@ export class DestinationsListComponent implements OnInit {
    */
   searchParams: CitySearchRequestDto = {
     skipCount: 0,
-    resultLimit: 5,
+    resultLimit: 10,
     partialCityName: '',
   };
 
@@ -74,29 +74,34 @@ export class DestinationsListComponent implements OnInit {
 
     if (this.searchParams.partialCityName == '') {
       this.loading = false;
-      this.destinations = { cityNames: [] };
+      this.destinations = [];
       this.totalCount = 0;
     } else {
       this.destinationService
-        .searchCitiesByName(this.searchParams)
-        .pipe(
-          finalize(() => {
-            this.loading = false;
-          })
-        )
-        .subscribe({
-          next: (result: CitySearchResultDto) => {
-            // Asignar los resultados al array de destinos
-            this.destinations = result;
-            this.totalCount = result.cityNames.length || 0;
-          },
-          error: error => {
-            // Manejar errores de la API
-            console.error('Error al cargar destinos:', error);
-            this.destinations.cityNames = [];
-            this.totalCount = 0;
-          },
-        });
+        this.destinationService
+          this.destinationService
+            .searchCitiesByName(this.searchParams, {
+              skipHandleError: true,
+            })
+            .pipe(
+              retry({ count: 1, delay: 2000 }),
+              finalize(() => {
+                this.loading = false;
+              })
+            )
+            .subscribe({
+              next: (result: PagedResultDto<CityDto>) => {
+                // Asignar los resultados al array de destinos
+                this.destinations = result.items || [];
+                this.totalCount = result.totalCount || 0;
+              },
+              error: error => {
+                // Manejar errores de la API
+                console.error('Error al cargar destinos:', error);
+                this.destinations = [];
+                this.totalCount = 0;
+              },
+            });
     }
   }
 

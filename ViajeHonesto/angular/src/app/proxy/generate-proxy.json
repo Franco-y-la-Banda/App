@@ -898,8 +898,8 @@
                     }
                   ],
                   "returnValue": {
-                    "type": "ViajeHonesto.Destinations.CitySearchResultDto",
-                    "typeSimple": "ViajeHonesto.Destinations.CitySearchResultDto"
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>"
                   }
                 },
                 {
@@ -1124,8 +1124,8 @@
                 }
               ],
               "returnValue": {
-                "type": "ViajeHonesto.Destinations.CitySearchResultDto",
-                "typeSimple": "ViajeHonesto.Destinations.CitySearchResultDto"
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>"
               },
               "allowAnonymous": null,
               "implementFrom": "ViajeHonesto.Destinations.IDestinationAppService"
@@ -3580,27 +3580,6 @@
           "jsonName": null,
           "type": "System.Int32",
           "typeSimple": "number",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        }
-      ]
-    },
-    "ViajeHonesto.Destinations.CitySearchResultDto": {
-      "baseType": null,
-      "isEnum": false,
-      "enumNames": null,
-      "enumValues": null,
-      "genericArguments": null,
-      "properties": [
-        {
-          "name": "CityNames",
-          "jsonName": null,
-          "type": "[ViajeHonesto.Destinations.CityDto]",
-          "typeSimple": "[ViajeHonesto.Destinations.CityDto]",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,

@@ -11,10 +11,6 @@ export interface CitySearchRequestDto {
   skipCount: number;
 }
 
-export interface CitySearchResultDto {
-  cityNames: CityDto[];
-}
-
 export interface CoordinateDto {
   latitude: number;
   longitude: number;
