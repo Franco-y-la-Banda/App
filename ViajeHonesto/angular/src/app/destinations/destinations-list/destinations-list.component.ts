@@ -3,14 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PagedResultDto, CoreModule } from '@abp/ng.core';
 import { DestinationService } from '../../proxy/destinations/destination.service';
-import {
-  DestinationDto,
-  CitySearchRequestDto,
-  CityDto,
-} from '../../proxy/destinations/models';
+import { DestinationDto, CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
 import { finalize, retry } from 'rxjs/operators';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-destinations-list',
@@ -19,7 +14,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './destinations-list.component.html',
   styleUrls: ['./destinations-list.component.scss'],
 })
-export class DestinationsListComponent implements OnInit {
+export class DestinationsListComponent {
   // Inyección de dependencias usando la nueva sintaxis de inject()
   private readonly destinationService = inject(DestinationService);
 
@@ -32,6 +27,11 @@ export class DestinationsListComponent implements OnInit {
    * Indica si hay una petición en curso
    */
   loading = false;
+
+  /**
+   * Indica si el usuario ya realizó una búsqueda
+   */
+  submitted = false;
 
   /**
    * Parámetros de búsqueda y paginación
@@ -59,12 +59,17 @@ export class DestinationsListComponent implements OnInit {
   /**
    * Imagen por defecto cuando el destino no tiene imageUrl
    */
-  readonly defaultImage = 'assets/images/destination-placeholder.svg';
+  // readonly defaultImage = 'assets/images/destination-placeholder.svg';
 
-  ngOnInit(): void {
-    // Cargar los destinos al inicializar el componente
-    this.loadDestinations();
-  }
+  /**
+   * Manejo de errores
+   */
+  errorMessage: string | null = null;
+
+  // ngOnInit(): void {
+  //   // Cargar los destinos al inicializar el componente
+  //   this.loadDestinations();
+  // }
 
   /**
    * Carga los destinos desde la API
@@ -72,44 +77,52 @@ export class DestinationsListComponent implements OnInit {
   private loadDestinations(): void {
     this.loading = true;
 
-    if (this.searchParams.partialCityName == '') {
-      this.loading = false;
-      this.destinations = [];
-      this.totalCount = 0;
-    } else {
-      this.destinationService
-        this.destinationService
-          this.destinationService
-            .searchCitiesByName(this.searchParams, {
-              skipHandleError: true,
-            })
-            .pipe(
-              retry({ count: 1, delay: 2000 }),
-              finalize(() => {
-                this.loading = false;
-              })
-            )
-            .subscribe({
-              next: (result: PagedResultDto<CityDto>) => {
-                // Asignar los resultados al array de destinos
-                this.destinations = result.items || [];
-                this.totalCount = result.totalCount || 0;
-              },
-              error: error => {
-                // Manejar errores de la API
-                console.error('Error al cargar destinos:', error);
-                this.destinations = [];
-                this.totalCount = 0;
-              },
-            });
-    }
+    this.destinationService
+      .searchCitiesByName(this.searchParams, {
+        skipHandleError: true,
+      })
+      .pipe(
+        retry({ count: 1, delay: 1000 }),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (result: PagedResultDto<CityDto>) => {
+          // Asignar los resultados al array de destinos
+          this.destinations = result.items || [];
+          this.totalCount = result.totalCount || 0;
+          this.errorMessage = null;
+        },
+        error: error => {
+          // Manejar errores de la API
+          console.error('Error al cargar destinos:', error);
+          this.errorMessage = '::Destinations:LoadError';
+          this.destinations = [];
+          this.totalCount = 0;
+        },
+      });
   }
 
   /**
    * Maneja el evento de búsqueda
    * Reinicia la paginación y recarga los datos
    */
+
   onSearch(): void {
+    this.submitted = true;
+
+    const name = this.searchParams.partialCityName?.trim() ?? '';
+    if (!name) {
+      this.errorMessage = '::Destinations:EmptySearch';
+      this.destinations = [];
+      this.totalCount = 0;
+      return;
+    }
+
+    // Sin errores previos
+    this.errorMessage = null;
+
     // Reiniciar a la primera página
     this.searchParams.skipCount = 0;
     this.currentPage = 1;
@@ -123,7 +136,10 @@ export class DestinationsListComponent implements OnInit {
    */
   clearSearch(): void {
     this.searchParams.partialCityName = '';
-    this.onSearch();
+    this.errorMessage = null;
+    this.destinations = [];
+    this.totalCount = 0;
+    this.submitted = false;
   }
 
   /**

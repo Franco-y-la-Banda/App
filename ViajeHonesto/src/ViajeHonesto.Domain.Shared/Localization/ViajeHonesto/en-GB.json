@@ -19,6 +19,8 @@
     "Destinations:ViewOnMap": "View on map",
     "Destinations:NoResults": "No results found",
     "Destinations:NoResultsMessage": "Please try different search criteria",
-    "Destinations:ShowAll": "Show all"
+    "Destinations:ShowAll": "Show all",
+    "Destinations:EmptySearch": "Please enter a city name before searching",
+    "Destinations:LoadError": "Destinations could not be loaded. Please try again"
   }
 }
