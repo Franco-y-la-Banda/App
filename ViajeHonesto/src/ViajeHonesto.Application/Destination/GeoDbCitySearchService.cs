@@ -32,13 +32,14 @@ namespace ViajeHonesto.Destinations
             var citySearchResultDto = new CitySearchResultDto();
             foreach (var city in jsonCities.EnumerateArray())
             {
-                string? cityName = city.GetProperty("name").GetString();
-                string? cityCountry = city.GetProperty("country").GetString();
                 citySearchResultDto.CityNames.Add(
                     new CityDto
                     {
-                        Name = cityName,
-                        Country = cityCountry,
+                        WikiDataId = city.GetProperty("wikiDataId").ToString(),
+                        Name = city.GetProperty("name").GetString(),
+                        Country = city.GetProperty("country").GetString(),
+                        Region = city.GetProperty("region").GetString(),
+                        Population = city.GetProperty("population").GetInt64(),
                     });
             }
 
