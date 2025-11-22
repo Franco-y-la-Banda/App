@@ -53,6 +53,7 @@
     "Destinations:NoResultsMessage": "Intente con otros criterios de búsqueda",
     "Destinations:ShowAll": "Mostrar todos",
     "Destinations:EmptySearch": "Por favor ingrese un nombre de ciudad antes de buscar",
-    "Destinations:LoadError": "No se pudieron cargar los destinos. Por favor intente nuevamente"
+    "Destinations:LoadError": "No se pudieron cargar los destinos. Por favor intente nuevamente",
+    "Destinations:Region": "Región"
   }
 }

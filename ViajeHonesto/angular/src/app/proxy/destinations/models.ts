@@ -1,8 +1,11 @@
 import type { AuditedEntityDto, EntityDto } from '@abp/ng.core';
 
 export interface CityDto {
+  wikiDataId?: string;
   name?: string;
   country?: string;
+  region?: string;
+  population: number;
 }
 
 export interface CitySearchRequestDto {

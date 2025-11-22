@@ -21,6 +21,7 @@
     "Destinations:NoResultsMessage": "Try different search criteria",
     "Destinations:ShowAll": "Show all",
     "Destinations:EmptySearch": "Please enter a city name before searching",
-    "Destinations:LoadError": "Destinations could not be loaded. Please try again"
+    "Destinations:LoadError": "Destinations could not be loaded. Please try again",
+    "Destinations:Region": "Region"
   }
 }

@@ -97,14 +97,23 @@
                   <span class="info-value">{{ destination.country }}</span>
                 </div>
 
+                <!-- Región -->
+                <div class="info-row">
+                  <span class="info-label">
+                    <i class="fa fa-map-marked-alt me-2"></i>
+                    {{ '::Destinations:Region' | abpLocalization }}:
+                  </span>
+                  <span class="info-value">{{ destination.region }}</span>
+                </div>
+
                 <!-- Población -->
-                <!-- <div class="info-row">
+                <div class="info-row">
               <span class="info-label">
                 <i class="fa fa-users me-2"></i>
                 {{ '::Destinations:Population' | abpLocalization }}:
               </span>
-              <span class="info-value">{{ formatPopulation(destination.population) }}</span>
-            </div> -->
+              <span class="info-value">{{ destination.population | number }}</span>
+            </div>
 
                 <!-- Coordenadas -->
                 <!-- <div class="info-row">

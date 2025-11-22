@@ -3519,6 +3519,18 @@
       "genericArguments": null,
       "properties": [
         {
+          "name": "WikiDataId",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
           "name": "Name",
           "jsonName": null,
           "type": "System.String",
@@ -3535,6 +3547,30 @@
           "jsonName": null,
           "type": "System.String",
           "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Region",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Population",
+          "jsonName": null,
+          "type": "System.Int64",
+          "typeSimple": "number",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,
