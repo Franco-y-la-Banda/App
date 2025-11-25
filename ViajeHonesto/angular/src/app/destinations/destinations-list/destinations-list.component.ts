@@ -110,25 +110,28 @@ export class DestinationsListComponent {
    */
 
   onSearch(): void {
-    this.submitted = true;
+    if (!this.loading)
+    {
+      this.submitted = true;
 
-    const name = this.searchParams.partialCityName?.trim() ?? '';
-    if (!name) {
-      this.errorMessage = '::Destinations:EmptySearch';
-      this.destinations = [];
-      this.totalCount = 0;
-      return;
+      const name = this.searchParams.partialCityName?.trim() ?? '';
+      if (!name) {
+        this.errorMessage = '::Destinations:EmptySearch';
+        this.destinations = [];
+        this.totalCount = 0;
+        return;
+      }
+
+      // Sin errores previos
+      this.errorMessage = null;
+
+      // Reiniciar a la primera página
+      this.searchParams.skipCount = 0;
+      this.currentPage = 1;
+
+      // Recargar los datos
+      this.loadDestinations();
     }
-
-    // Sin errores previos
-    this.errorMessage = null;
-
-    // Reiniciar a la primera página
-    this.searchParams.skipCount = 0;
-    this.currentPage = 1;
-
-    // Recargar los datos
-    this.loadDestinations();
   }
 
   /**
