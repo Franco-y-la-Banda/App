@@ -24,22 +24,26 @@ namespace ViajeHonesto.Destinations
                 throw new ArgumentException("El nombre parcial de la ciudad no puede estar vacío.");
             };
 
-            var jsonRaw = await _geoDbApiClient.SearchCitiesRawAsync(request.PartialCityName, request.ResultLimit);
+            var jsonRaw = await _geoDbApiClient.SearchCitiesRawAsync(request.PartialCityName, request.ResultLimit, request.SkipCount);
             var jsonDocument = JsonDocument.Parse(jsonRaw);
             var jsonCities = jsonDocument.RootElement.GetProperty("data");
+            var jsonMetadata = jsonDocument.RootElement.GetProperty("metadata");
 
             var citySearchResultDto = new CitySearchResultDto();
             foreach (var city in jsonCities.EnumerateArray())
             {
-                string? cityName = city.GetProperty("name").GetString();
-                string? cityCountry = city.GetProperty("country").GetString();
                 citySearchResultDto.CityNames.Add(
                     new CityDto
                     {
-                        Name = cityName,
-                        Country = cityCountry,
+                        WikiDataId = city.GetProperty("wikiDataId").ToString(),
+                        Name = city.GetProperty("name").GetString(),
+                        Country = city.GetProperty("country").GetString(),
+                        Region = city.GetProperty("region").GetString(),
+                        Population = city.GetProperty("population").GetInt64(),
                     });
             }
+
+            citySearchResultDto.TotalCount = jsonMetadata.GetProperty("totalCount").GetInt32();
 
             return citySearchResultDto;
         }

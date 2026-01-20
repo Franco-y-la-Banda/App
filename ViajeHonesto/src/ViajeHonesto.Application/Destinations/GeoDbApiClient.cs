@@ -15,10 +15,10 @@ namespace ViajeHonesto.Destinations
             _client = httpClient;
         }
 
-        public async Task<string> SearchCitiesRawAsync(string partialCityName, int limit)
+        public async Task<string> SearchCitiesRawAsync(string partialCityName, int limit, int skipCount)
         {
-            // Endpoint con query 
-            string url = $"{_client.BaseAddress}cities?namePrefix={Uri.EscapeDataString(partialCityName)}&limit={limit}";
+            // Endpoint con query params
+            string url = $"{_client.BaseAddress}cities?namePrefix={Uri.EscapeDataString(partialCityName)}&limit={limit}&offset={skipCount}";
 
             HttpResponseMessage response = await _client.GetAsync(url);
 
