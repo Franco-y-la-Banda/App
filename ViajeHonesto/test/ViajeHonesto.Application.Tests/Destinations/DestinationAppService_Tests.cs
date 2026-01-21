@@ -312,4 +312,51 @@ public abstract class DestinationAppService_Tests<TStartupModule> : ViajeHonesto
         exception.ValidationErrors.Count.ShouldBe(1);
         exception.ValidationErrors.ShouldContain(e => e.MemberNames.Contains("WikiDataId"));
     }
+
+    [Fact]
+    public async Task Should_Not_Create_A_Destination_With_Duplicate_WikiDataId()
+    {
+        // Arrange
+        var wikiDataId = "Q1234";
+
+        var destination = validDestination;
+
+        destination.WikiDataId = wikiDataId;
+
+        await _destinationAppService.CreateAsync(destination);
+
+        // Act
+        var exception = await Assert.ThrowsAsync<DbUpdateException>(async () =>
+        {
+            await _destinationAppService.CreateAsync(destination);
+        });
+
+        // Assert
+        exception.InnerException.ShouldNotBeNull();
+        exception.InnerException.Message.ShouldContain("WikiDataId");
+    }
+
+    [Fact]
+    public async Task Should_Create_Multiple_Destination_Without_WikiDataId()
+    {
+        // Arrange
+        string? wikiDataId = null;
+
+        var destination = validDestination;
+
+        destination.WikiDataId = wikiDataId;
+
+        // Act
+        var savedDestination1 = await _destinationAppService.CreateAsync(destination);
+        var savedDestination2 = await _destinationAppService.CreateAsync(destination);
+
+        // Assert
+        using (var uow = _unitOfWorkManager.Begin())
+        {
+            var dbContext = await _dbContextProvider.GetDbContextAsync();
+
+            Assert.Null(dbContext.Destinations.First(d => d.Id == savedDestination1.Id).WikiDataId);
+            Assert.Null(dbContext.Destinations.First(d => d.Id == savedDestination2.Id).WikiDataId);
+        };
+    }
 }
