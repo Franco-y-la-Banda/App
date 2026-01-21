@@ -26,6 +26,7 @@ public class DestinationsDataSeederContributor : ITransientDependency
 
             var destination = new Destination(TestGuids.DestinationGuid(guidIndex))
             {
+                WikiDataId = "Q1323978",
                 Name = "El Chaltén",
                 Country = "Argentina",
                 Region = "Santa Cruz",
@@ -47,6 +48,7 @@ public class DestinationsDataSeederContributor : ITransientDependency
 
             destination = new Destination(TestGuids.DestinationGuid(guidIndex))
             {
+                WikiDataId = "Q781553",
                 Name = "Puerto Madero",
                 Country = "Argentina",
                 Region = "Buenos Aires",
@@ -69,6 +71,7 @@ public class DestinationsDataSeederContributor : ITransientDependency
 
             destination = new Destination(TestGuids.DestinationGuid(guidIndex))
             {
+                WikiDataId = "Q727464",
                 Name = "Concepción del Uruguay",
                 Country = "Argentina",
                 Region = "Entre Ríos",
@@ -90,6 +93,7 @@ public class DestinationsDataSeederContributor : ITransientDependency
 
             destination = new Destination(TestGuids.DestinationGuid(guidIndex))
             {
+                WikiDataId = "Q106096",
                 Name = "Villa La Angostura",
                 Country = "Argentina",
                 Region = "Neuquén",
@@ -111,6 +115,7 @@ public class DestinationsDataSeederContributor : ITransientDependency
 
             destination = new Destination(TestGuids.DestinationGuid(guidIndex))
             {
+                WikiDataId = "Q604722",
                 Name = "Tilcara",
                 Country = "Argentina",
                 Region = "Jujuy",
