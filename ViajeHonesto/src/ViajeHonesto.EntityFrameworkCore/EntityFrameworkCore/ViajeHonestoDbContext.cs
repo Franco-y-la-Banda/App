@@ -132,6 +132,8 @@ public class ViajeHonestoDbContext :
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasForeignKey(x => x.DestinationId);
+
+            b.HasIndex(x => x.WikiDataId).IsUnique();
         });
 
         builder.Entity<DestinationPhoto>(b =>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViajeHonesto.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace ViajeHonesto.Migrations
 {
     [DbContext(typeof(ViajeHonestoDbContext))]
-    partial class ViajeHonestoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260120224702_Added_WikiDataId_Index_To_Destination")]
+    partial class Added_WikiDataId_Index_To_Destination
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

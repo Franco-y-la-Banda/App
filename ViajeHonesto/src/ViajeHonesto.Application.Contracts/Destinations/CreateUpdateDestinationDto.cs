@@ -5,6 +5,16 @@ namespace ViajeHonesto.Destinations
 {
     public class CreateUpdateDestinationDto
     {
+        private string? _wikiDataId = null;
+
+        [RegularExpression(@"^[Qq][1-9]\d*$")]
+        public string? WikiDataId
+        {
+            get => _wikiDataId;
+
+            set => _wikiDataId = string.IsNullOrWhiteSpace(value) ? null : value.ToUpper();
+        }
+
         [Required]
         [StringLength(DestinationConsts.MaxNameLength)]
         public string Name { get; set; } = string.Empty;
