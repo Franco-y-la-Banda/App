@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 using static System.Net.WebRequestMethods;
 
@@ -30,6 +31,23 @@ namespace ViajeHonesto.Destinations
             else
             {
                 throw new HttpRequestException("Error fetching city data");
+            }
+        }
+
+        public async Task<string> SearchCityDetailsRawAsync(string wikiDataId)
+        {
+            string url = $"{_client.BaseAddress}cities/{Uri.EscapeDataString(wikiDataId)}";
+
+            HttpResponseMessage response = await _client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonResult = await response.Content.ReadAsStringAsync();
+                return jsonResult;
+            }
+            else
+            {
+                throw new UserFriendlyException("Error fetching city details", response.StatusCode.ToString(), response.ToString());
             }
         }
     }
