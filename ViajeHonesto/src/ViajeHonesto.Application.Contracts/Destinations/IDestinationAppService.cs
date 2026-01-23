@@ -13,4 +13,5 @@ public interface IDestinationAppService :
         CreateUpdateDestinationDto> //Used to create/update a Destination
 {
     public Task<PagedResultDto<CityDto>> SearchCitiesByNameAsync(CitySearchRequestDto request);
+    public Task<CityDetailsDto> SearchCityDetailsAsync(CityDetailsSearchRequestDto request);
 }
