@@ -7,7 +7,7 @@ namespace ViajeHonesto.Destinations
         private string? _wikiDataId;
 
         [Required]
-        [RegularExpression(@"^[Qq][1-9]\d*$")]
+        [RegularExpression(DestinationConsts.WikiDataIdRegex)]
         public string? WikiDataId
         {
             get => _wikiDataId;
