@@ -103,4 +103,11 @@ public class DestinationAppService :
 
         return apiCityDetails;
     }
+
+    [HttpGet]
+    public async Task<PagedResultDto<CityDto>> SearchCitiesByRegion([FromQuery] CityRegionSearchRequestDto request)
+    {
+        var result = await _citySearchService.SearchCitiesByRegion(request);
+        return new PagedResultDto<CityDto>(result.TotalCount, result.CityNames);
+    }
 }

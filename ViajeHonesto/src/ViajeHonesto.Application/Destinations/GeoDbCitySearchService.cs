@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using Elders.Iso3166;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
@@ -48,6 +45,7 @@ namespace ViajeHonesto.Destinations
             return citySearchResultDto;
         }
 
+
         public async Task<CityDetailsDto> SearchCityDetailsAsync(CityDetailsSearchRequestDto request)
         {
             if (request.WikiDataId.IsNullOrWhiteSpace())
@@ -74,6 +72,45 @@ namespace ViajeHonesto.Destinations
             };
 
             return cityDetails;
+        }
+
+        public async Task<CitySearchResultDto> SearchCitiesByRegion(CityRegionSearchRequestDto request)
+        {
+            if (request.RegionCode.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentException("The RegionCode must be specified");
+            }
+            if (request.CountryCode.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentException("The CountryCode must be specified");
+            }
+
+            var jsonRaw = await _geoDbApiClient.SearchCitiesRegionRawAsync(request);
+            var jsonDocument = JsonDocument.Parse(jsonRaw);
+            var jsonCities = jsonDocument.RootElement.GetProperty("data");
+            var jsonMetadata = jsonDocument.RootElement.GetProperty("metadata");
+
+            var citySearchResultDto = new CitySearchResultDto();
+
+            var country = new Country(request.CountryCode).Name;
+            var region = new Subdivision($"{request.CountryCode}-{request.RegionCode}").Name;
+
+            foreach (var city in jsonCities.EnumerateArray())
+            {
+                citySearchResultDto.CityNames.Add(
+                    new CityDto
+                    {
+                        WikiDataId = city.GetProperty("wikiDataId").ToString(),
+                        Name = city.GetProperty("name").GetString(),
+                        Region = region,
+                        Country = country,
+                        Population = city.GetProperty("population").GetInt64(),
+                    });
+            }
+
+            citySearchResultDto.TotalCount = jsonMetadata.GetProperty("totalCount").GetInt32();
+
+            return citySearchResultDto;
         }
     }
 }

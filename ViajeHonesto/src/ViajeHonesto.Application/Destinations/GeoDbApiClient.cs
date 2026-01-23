@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -79,6 +80,47 @@ namespace ViajeHonesto.Destinations
             else
             {
                 throw new UserFriendlyException("Error fetching city details", response.StatusCode.ToString(), response.ToString());
+            }
+        }
+        public async Task<string> SearchCitiesRegionRawAsync(CityRegionSearchRequestDto input)
+        {
+            var queryParams = new List<string>
+            {
+                $"namePrefix={Uri.EscapeDataString(input.PartialCityName)}"
+            };
+
+            if (input.MinPopulation.HasValue)
+            {
+                queryParams.Add($"minPopulation={input.MinPopulation.Value}");
+            }
+
+            if (input.MaxPopulation.HasValue)
+            {
+                queryParams.Add($"maxPopulation={input.MaxPopulation.Value}");
+            }
+
+            if (!string.IsNullOrEmpty(input.Sort))
+            {
+                queryParams.Add($"sort={input.Sort}");
+            }
+
+            queryParams.Add($"limit={input.ResultLimit}");
+            queryParams.Add($"offset={input.SkipCount}");
+
+            string queryString = string.Join("&", queryParams);
+
+            string fullUrl = $"countries/{input.CountryCode}/regions/{input.RegionCode}/cities?{queryString}";
+
+            HttpResponseMessage response = await _client.GetAsync(fullUrl);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonResult = await response.Content.ReadAsStringAsync();
+                return jsonResult;
+            }
+            else
+            {
+                throw new HttpRequestException("Error fetching city data");
             }
         }
     }
