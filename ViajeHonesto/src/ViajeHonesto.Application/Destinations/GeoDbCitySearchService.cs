@@ -47,5 +47,33 @@ namespace ViajeHonesto.Destinations
 
             return citySearchResultDto;
         }
+
+        public async Task<CityDetailsDto> SearchCityDetailsAsync(CityDetailsSearchRequestDto request)
+        {
+            if (request.WikiDataId.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentException("El WikiDataId de la ciudad no puede estar vacío.");
+            };
+
+            var jsonRaw = await _geoDbApiClient.SearchCityDetailsRawAsync(request.WikiDataId!);
+            var jsonDocument = JsonDocument.Parse(jsonRaw);
+            var jsonCityDetails = jsonDocument.RootElement.GetProperty("data");
+
+            var cityDetails =  new CityDetailsDto
+            {
+                WikiDataId = jsonCityDetails.GetProperty("wikiDataId").ToString(),
+                Name = jsonCityDetails.GetProperty("name").GetString(),
+                Country = jsonCityDetails.GetProperty("country").GetString(),
+                Region = jsonCityDetails.GetProperty("region").GetString(),
+                Population = jsonCityDetails.GetProperty("population").GetInt64(),
+                Coordinate =
+                {
+                    Latitude = jsonCityDetails.GetProperty("latitude").GetSingle(),
+                    Longitude = jsonCityDetails.GetProperty("longitude").GetSingle()
+                }
+            };
+
+            return cityDetails;
+        }
     }
 }

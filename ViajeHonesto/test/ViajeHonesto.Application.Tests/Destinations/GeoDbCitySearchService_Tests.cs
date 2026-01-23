@@ -182,7 +182,6 @@ public class GeoDbCitySearchService_Tests
         var request = new CitySearchRequestDto { PartialCityName = partial };
 
         // ACT + ASSERT
-        // Cambiá ArgumentException por AbpValidationException si tu servicio usa validación de ABP
         await Should.ThrowAsync<ArgumentException>(() => _citySearchService.SearchCitiesByNameAsync(request));
 
         await _mockGeoDbApiClient.DidNotReceiveWithAnyArgs().SearchCitiesRawAsync(default!, default, default);
@@ -217,7 +216,99 @@ public class GeoDbCitySearchService_Tests
             .Returns(malformed);
 
         // ACT + ASSERT
-        // Elegí: o propagás la excepción de JSON, o la convertís en una tuya (p.ej. BusinessException)
         await Should.ThrowAsync<Exception>(() => _citySearchService.SearchCitiesByNameAsync(request));
+    }
+
+    [Fact]
+    public async Task SearchCityDetailsAsync_Should_Handle_Deserialization_Correctly()
+    {
+        // ARRANGE
+        var request = new CityDetailsSearchRequestDto
+        {
+            WikiDataId = "Q60"
+        };
+
+        // Respuesta JSON simulada para que la lógica de deserialización funcione
+        string mockJsonResponse = @"{
+  ""data"": {
+    ""id"": 123214,
+    ""wikiDataId"": ""Q60"",
+    ""type"": ""CITY"",
+    ""city"": ""New York City"",
+    ""name"": ""New York City"",
+    ""country"": ""United States of America"",
+    ""countryCode"": ""US"",
+    ""region"": ""New York"",
+    ""regionCode"": ""NY"",
+    ""elevationMeters"": 10,
+    ""latitude"": 40.7,
+    ""longitude"": -74,
+    ""population"": 8804190,
+    ""timezone"": ""America__New_York"",
+    ""distance"": null,
+    ""deleted"": false,
+    ""placeType"": ""CITY""
+  }
+}
+";
+
+        // Configurar el Mock para que devuelva el JSON.
+        _mockGeoDbApiClient.SearchCityDetailsRawAsync(
+            Arg.Any<string>())
+            .Returns(mockJsonResponse);
+
+        // ACT
+        var result = await _citySearchService.SearchCityDetailsAsync(request);
+
+
+        // ASSERT
+
+        // Verificar que la lógica interna de la clase funcionó correctamente con el JSON.
+        result.ShouldNotBeNull();
+        result.WikiDataId.ShouldBe("Q60");
+        result.Name.ShouldBe("New York City");
+        result.Country.ShouldBe("United States of America");
+        result.Region.ShouldBe("New York");
+        result.Population.ShouldBeGreaterThan(0);
+        result.Coordinate.ShouldNotBeNull();
+        result.Coordinate.Latitude.ShouldBe((float)40.7);
+        result.Coordinate.Longitude.ShouldBe((float)-74);
+
+        // Verificar que la dependencia externa fue llamada.
+        await _mockGeoDbApiClient.Received(1).SearchCityDetailsRawAsync(
+            request.WikiDataId
+        );
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task SearchCityDetailsAsync_Should_Throw_When_WikiDataId_Is_NullOrEmpty(string? wikiDataId)
+    {
+        // ARRANGE
+        var request = new CityDetailsSearchRequestDto { WikiDataId= wikiDataId };
+
+        // ACT + ASSERT
+        await Should.ThrowAsync<ArgumentException>(() => _citySearchService.SearchCityDetailsAsync(request));
+
+        await _mockGeoDbApiClient.DidNotReceiveWithAnyArgs().SearchCityDetailsRawAsync(default!);
+    }
+
+    [Fact]
+    public async Task SearchCityDetailsAsync_Should_Propagate_When_Api_Fails()
+    {
+        // ARRANGE
+        var request = new CityDetailsSearchRequestDto { WikiDataId = "Q60" };
+
+        _mockGeoDbApiClient
+        .SearchCityDetailsRawAsync(Arg.Is(request.WikiDataId))
+        .Returns(Task.FromException<string>(new HttpRequestException("Error fetching city data")));
+
+        // ACT + ASSERT
+        var ex = await Should.ThrowAsync<HttpRequestException>(() => _citySearchService.SearchCityDetailsAsync(request));
+        ex.Message.ShouldContain("Error");
+
+        await _mockGeoDbApiClient.Received(1).SearchCityDetailsRawAsync(request.WikiDataId);
     }
 }

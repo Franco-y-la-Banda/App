@@ -76,4 +76,28 @@ public class DestinationAppService :
         var result = await _citySearchService.SearchCitiesByNameAsync(request);
         return new PagedResultDto<CityDto>(result.TotalCount, result.CityNames);
     }
+
+    public async Task<CityDetailsDto> SearchCityDetailsAsync(CityDetailsSearchRequestDto request)
+    {
+        // Primero ver si la ciudad ya está guardada en la db
+        var localEntity = await _destinationRepository.FirstOrDefaultAsync(d => d.WikiDataId == request.WikiDataId);
+
+        if (localEntity != null)
+        {
+            localEntity = await GetDestinationWithDetailsAsync(localEntity.Id);
+
+            var cityDetails = ObjectMapper.Map<Destination, CityDetailsDto>(localEntity);
+
+            cityDetails.IsSaved = true;
+            cityDetails.LocalId = localEntity.Id;
+
+            return cityDetails;
+        }
+
+        var apiCityDetails = await _citySearchService.SearchCityDetailsAsync(request);
+        apiCityDetails.IsSaved = false;
+        apiCityDetails.LocalId = null;
+
+        return apiCityDetails;
+    }
 }

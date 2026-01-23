@@ -10,6 +10,7 @@ public class ViajeHonestoApplicationAutoMapperProfile : Profile
     {
         CreateMap<Destination, DestinationDto>();
         CreateMap<CreateUpdateDestinationDto, Destination>();
+        CreateMap<Destination, CityDetailsDto>();
 
         CreateMap<Coordinate, CoordinateDto>();
         CreateMap<CoordinateDto, Coordinate>();
