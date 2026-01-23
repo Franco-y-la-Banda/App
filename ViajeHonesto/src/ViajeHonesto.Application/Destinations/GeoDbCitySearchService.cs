@@ -50,6 +50,11 @@ namespace ViajeHonesto.Destinations
 
         public async Task<CityDetailsDto> SearchCityDetailsAsync(CityDetailsSearchRequestDto request)
         {
+            if (request.WikiDataId.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentException("El WikiDataId de la ciudad no puede estar vacío.");
+            };
+
             var jsonRaw = await _geoDbApiClient.SearchCityDetailsRawAsync(request.WikiDataId!);
             var jsonDocument = JsonDocument.Parse(jsonRaw);
             var jsonCityDetails = jsonDocument.RootElement.GetProperty("data");
