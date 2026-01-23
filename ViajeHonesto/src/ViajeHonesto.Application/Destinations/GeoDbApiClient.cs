@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Volo.Abp;
@@ -16,12 +18,41 @@ namespace ViajeHonesto.Destinations
             _client = httpClient;
         }
 
-        public async Task<string> SearchCitiesRawAsync(string partialCityName, int limit, int skipCount)
+        public async Task<string> SearchCitiesRawAsync(CitySearchRequestDto input)
         {
-            // Endpoint con query params
-            string url = $"{_client.BaseAddress}cities?namePrefix={Uri.EscapeDataString(partialCityName)}&limit={limit}&offset={skipCount}";
+            var queryParams = new List<string>
+            {
+                $"namePrefix={Uri.EscapeDataString(input.PartialCityName)}"
+            };
 
-            HttpResponseMessage response = await _client.GetAsync(url);
+            if (input.MinPopulation.HasValue)
+            {
+                queryParams.Add($"minPopulation={input.MinPopulation.Value}");
+            }
+
+            if (input.MaxPopulation.HasValue)
+            {
+                queryParams.Add($"maxPopulation={input.MaxPopulation.Value}");
+            }
+
+            if (!string.IsNullOrEmpty(input.Sort))
+            {
+                queryParams.Add($"sort={input.Sort}");
+            }
+
+            if (!string.IsNullOrEmpty(input.CountryCode))
+            { 
+                queryParams.Add($"countryIds={input.CountryCode}");
+            }
+
+            queryParams.Add($"limit={input.ResultLimit}");
+            queryParams.Add($"offset={input.SkipCount}");
+
+            string queryString = string.Join("&", queryParams);
+
+            string fullUrl = $"cities?{queryString}";
+
+            HttpResponseMessage response = await _client.GetAsync(fullUrl);
 
             if (response.IsSuccessStatusCode)
             {

@@ -125,9 +125,7 @@ public class GeoDbCitySearchService_Tests
 
         // Configurar el Mock para que devuelva el JSON.
         _mockGeoDbApiClient.SearchCitiesRawAsync(
-            Arg.Any<string>(), // Usamos Arg.Any para ser flexibles
-            Arg.Any<int>(),
-            Arg.Any<int>())
+            Arg.Any<CitySearchRequestDto>())
             .Returns(mockJsonResponse);
 
 
@@ -146,9 +144,7 @@ public class GeoDbCitySearchService_Tests
         result.CityNames[4].Name.ShouldBe("Concepción Department");
         result.CityNames[4].Country.ShouldBe("Argentina");
         // Verificar que la dependencia externa fue llamada.
-        await _mockGeoDbApiClient.Received(1).SearchCitiesRawAsync(
-            request.PartialCityName, request.ResultLimit, request.SkipCount
-        );
+        await _mockGeoDbApiClient.Received(1).SearchCitiesRawAsync(request);
     }
     [Fact]
     public async Task SearchCitiesByNameAsync_Should_Return_Empty_When_No_Results()
@@ -158,7 +154,7 @@ public class GeoDbCitySearchService_Tests
         string mockJsonResponse = @"{ ""data"": [], ""metadata"": {""totalCount"": 0} }"; // sin resultados
 
         _mockGeoDbApiClient
-            .SearchCitiesRawAsync(Arg.Is("Xyz"), Arg.Is(5), Arg.Is(0))
+            .SearchCitiesRawAsync(request)
             .Returns(mockJsonResponse);
 
         // ACT
@@ -169,7 +165,7 @@ public class GeoDbCitySearchService_Tests
         result.CityNames.ShouldNotBeNull();
         result.CityNames.Count.ShouldBe(0);
 
-        await _mockGeoDbApiClient.Received(1).SearchCitiesRawAsync("Xyz", 5, 0);
+        await _mockGeoDbApiClient.Received(1).SearchCitiesRawAsync(request);
     }
 
     [Theory]
@@ -184,7 +180,7 @@ public class GeoDbCitySearchService_Tests
         // ACT + ASSERT
         await Should.ThrowAsync<ArgumentException>(() => _citySearchService.SearchCitiesByNameAsync(request));
 
-        await _mockGeoDbApiClient.DidNotReceiveWithAnyArgs().SearchCitiesRawAsync(default!, default, default);
+        await _mockGeoDbApiClient.DidNotReceiveWithAnyArgs().SearchCitiesRawAsync(default!);
     }
 
     [Fact]
@@ -194,14 +190,14 @@ public class GeoDbCitySearchService_Tests
         var request = new CitySearchRequestDto { PartialCityName = "Roma" };
 
         _mockGeoDbApiClient
-        .SearchCitiesRawAsync(Arg.Is("Roma"), Arg.Is(5), Arg.Is(0))
+        .SearchCitiesRawAsync(request)
         .Returns(Task.FromException<string>(new HttpRequestException("Error fetching city data")));
 
         // ACT + ASSERT
         var ex = await Should.ThrowAsync<HttpRequestException>(() => _citySearchService.SearchCitiesByNameAsync(request));
         ex.Message.ShouldContain("Error");
 
-        await _mockGeoDbApiClient.Received(1).SearchCitiesRawAsync("Roma", 5, 0);
+        await _mockGeoDbApiClient.Received(1).SearchCitiesRawAsync(request);
     }
 
     [Fact]
@@ -212,7 +208,7 @@ public class GeoDbCitySearchService_Tests
         string malformed = @"{ ""data"": [ { ""name"": ""Tokyo"", ""country"": ""Japan"" } "; // JSON roto
 
         _mockGeoDbApiClient
-            .SearchCitiesRawAsync(Arg.Is("Tok"), Arg.Is(5), Arg.Is(0))
+            .SearchCitiesRawAsync(request)
             .Returns(malformed);
 
         // ACT + ASSERT

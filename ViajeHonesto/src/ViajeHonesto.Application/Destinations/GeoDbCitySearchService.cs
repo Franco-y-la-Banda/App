@@ -24,7 +24,7 @@ namespace ViajeHonesto.Destinations
                 throw new ArgumentException("El nombre parcial de la ciudad no puede estar vacío.");
             };
 
-            var jsonRaw = await _geoDbApiClient.SearchCitiesRawAsync(request.PartialCityName, request.ResultLimit, request.SkipCount);
+            var jsonRaw = await _geoDbApiClient.SearchCitiesRawAsync(request);
             var jsonDocument = JsonDocument.Parse(jsonRaw);
             var jsonCities = jsonDocument.RootElement.GetProperty("data");
             var jsonMetadata = jsonDocument.RootElement.GetProperty("metadata");

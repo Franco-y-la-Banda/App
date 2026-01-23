@@ -4,7 +4,7 @@ namespace ViajeHonesto.Destinations
 {
     public interface IGeoDbApiClient
     {
-        Task<string> SearchCitiesRawAsync(string partialCityName, int limit, int skipCount);
+        Task<string> SearchCitiesRawAsync(CitySearchRequestDto input);
         Task<string> SearchCityDetailsRawAsync(string wikiDataId);
     }
 }
