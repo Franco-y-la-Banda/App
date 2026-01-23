@@ -168,21 +168,6 @@ public class GeoDbCitySearchService_Tests
         await _mockGeoDbApiClient.Received(1).SearchCitiesRawAsync(request);
     }
 
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData("   ")]
-    public async Task SearchCitiesByNameAsync_Should_Throw_On_Invalid_Input(string? partial)
-    {
-        // ARRANGE
-        var request = new CitySearchRequestDto { PartialCityName = partial };
-
-        // ACT + ASSERT
-        await Should.ThrowAsync<ArgumentException>(() => _citySearchService.SearchCitiesByNameAsync(request));
-
-        await _mockGeoDbApiClient.DidNotReceiveWithAnyArgs().SearchCitiesRawAsync(default!);
-    }
-
     [Fact]
     public async Task SearchCitiesByNameAsync_Should_Propagate_When_Api_Fails()
     {

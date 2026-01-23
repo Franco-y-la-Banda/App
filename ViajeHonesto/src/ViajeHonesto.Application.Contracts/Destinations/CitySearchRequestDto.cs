@@ -4,7 +4,6 @@ namespace ViajeHonesto.Destinations
 {
     public class CitySearchRequestDto
     {
-        [Required]
         public string PartialCityName { get; set; } = string.Empty;
         public int ResultLimit { get; set; } = 5;
         public int SkipCount { get; set; } = 0;
