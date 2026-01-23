@@ -1,5 +1,6 @@
 ﻿using Elders.Iso3166;
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
@@ -24,15 +25,23 @@ namespace ViajeHonesto.Destinations
             var citySearchResultDto = new CitySearchResultDto();
             foreach (var city in jsonCities.EnumerateArray())
             {
-                citySearchResultDto.CityNames.Add(
-                    new CityDto
+                // POR QUÉ DEVUELVE SUDÁN COMO CIUDAD AAAAAAAAAAAAA
+                try
+                {
+                    var cityDto = new CityDto
                     {
                         WikiDataId = city.GetProperty("wikiDataId").ToString(),
                         Name = city.GetProperty("name").GetString(),
-                        Country = city.GetProperty("country").GetString(),
                         Region = city.GetProperty("region").GetString(),
+                        Country = city.GetProperty("country").GetString(),
                         Population = city.GetProperty("population").GetInt64(),
-                    });
+                    };
+                    citySearchResultDto.CityNames.Add(cityDto);
+                }
+                catch (KeyNotFoundException)
+                {
+                    continue;
+                }
             }
 
             citySearchResultDto.TotalCount = jsonMetadata.GetProperty("totalCount").GetInt32();
