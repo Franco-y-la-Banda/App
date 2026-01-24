@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ViajeHonesto.Destinations;
 using Volo.Abp;
 using Xunit;
+using Elders.Iso3166;
 
 namespace ViajeHonesto.Destinations;
 public class GeoDbCitySearchService_Tests
@@ -291,5 +292,140 @@ public class GeoDbCitySearchService_Tests
         ex.Message.ShouldContain("Error");
 
         await _mockGeoDbApiClient.Received(1).SearchCityDetailsRawAsync(request.WikiDataId);
+    }
+    [Fact]
+    public async Task SearchCitiesByRegionAsync_Should_Handle_Deserialization_Correctly()
+    {
+        // ARRANGE
+        var request = new CityRegionSearchRequestDto
+        {
+            CountryCode = "US",
+            RegionCode = "NY"
+        };
+
+        string mockJsonResponse = @"{
+  ""data"": [
+    {
+      ""wikiDataId"": ""Q60"",
+      ""name"": ""New York City"",
+      ""population"": 8804190
+    },
+    {
+      ""wikiDataId"": ""Q1000"",
+      ""name"": ""Albany"",
+      ""population"": 97856
+    }
+  ],
+  ""metadata"": {
+    ""totalCount"": 2
+  }
+}";
+
+        _mockGeoDbApiClient
+            .SearchCitiesRegionRawAsync(Arg.Any<CityRegionSearchRequestDto>())
+            .Returns(mockJsonResponse);
+
+        // ACT
+        var result = await _citySearchService.SearchCitiesByRegionAsync(request);
+
+        // ASSERT
+        result.ShouldNotBeNull();
+        result.TotalCount.ShouldBe(2);
+        result.CityNames.Count.ShouldBe(2);
+        result.CityNames[0].Name.ShouldBe("New York City");
+        result.CityNames[1].Name.ShouldBe("Albany");
+
+        var expectedCountry = new Country(request.CountryCode).Name;
+        var expectedRegion = new Subdivision($"{request.CountryCode}-{request.RegionCode}").Name;
+
+        result.CityNames.ShouldAllBe(c => c.Country == expectedCountry && c.Region == expectedRegion);
+
+        await _mockGeoDbApiClient.Received(1).SearchCitiesRegionRawAsync(request);
+    }
+
+    [Fact]
+    public async Task SearchCitiesByRegionAsync_Should_Return_Empty_When_No_Results()
+    {
+        // ARRANGE
+        var request = new CityRegionSearchRequestDto { CountryCode = "AR", RegionCode = "Z" };
+        string mockJsonResponse = @"{ ""data"": [], ""metadata"": { ""totalCount"": 0 } }";
+
+        _mockGeoDbApiClient
+            .SearchCitiesRegionRawAsync(request)
+            .Returns(mockJsonResponse);
+
+        // ACT
+        var result = await _citySearchService.SearchCitiesByRegionAsync(request);
+
+        // ASSERT
+        result.ShouldNotBeNull();
+        result.TotalCount.ShouldBe(0);
+        result.CityNames.ShouldNotBeNull();
+        result.CityNames.Count.ShouldBe(0);
+
+        await _mockGeoDbApiClient.Received(1).SearchCitiesRegionRawAsync(request);
+    }
+
+    [Fact]
+    public async Task SearchCitiesByRegionAsync_Should_Propagate_When_Api_Fails()
+    {
+        // ARRANGE
+        var request = new CityRegionSearchRequestDto { CountryCode = "US", RegionCode = "NY" };
+
+        _mockGeoDbApiClient
+            .SearchCitiesRegionRawAsync(Arg.Is(request))
+            .Returns(Task.FromException<string>(new HttpRequestException("Network failure")));
+
+        // ACT + ASSERT
+        await Should.ThrowAsync<HttpRequestException>(() => _citySearchService.SearchCitiesByRegionAsync(request));
+
+        await _mockGeoDbApiClient.Received(1).SearchCitiesRegionRawAsync(request);
+    }
+
+    [Fact]
+    public async Task SearchCitiesByRegionAsync_Should_Handle_Malformed_Json()
+    {
+        // ARRANGE
+        var request = new CityRegionSearchRequestDto { CountryCode = "US", RegionCode = "NY" };
+        string malformed = @"{ ""data"": [ { ""name"": ""City"" } "; // JSON roto
+
+        _mockGeoDbApiClient
+            .SearchCitiesRegionRawAsync(request)
+            .Returns(malformed);
+
+        // ACT + ASSERT
+        await Should.ThrowAsync<Exception>(() => _citySearchService.SearchCitiesByRegionAsync(request));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task SearchCitiesByRegionAsync_Should_Throw_When_RegionCode_Is_NullOrEmpty(string? regionCode)
+    {
+        // ARRANGE
+        var request = new CityRegionSearchRequestDto { CountryCode = "US", RegionCode = regionCode };
+
+        // ACT + ASSERT
+        var ex = await Should.ThrowAsync<ArgumentException>(() => _citySearchService.SearchCitiesByRegionAsync(request));
+        ex.Message.ShouldContain("RegionCode");
+
+        await _mockGeoDbApiClient.DidNotReceiveWithAnyArgs().SearchCitiesRegionRawAsync(default!);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task SearchCitiesByRegionAsync_Should_Throw_When_CountryCode_Is_NullOrEmpty(string? countryCode)
+    {
+        // ARRANGE
+        var request = new CityRegionSearchRequestDto { CountryCode = countryCode, RegionCode = "NY" };
+
+        // ACT + ASSERT
+        var ex = await Should.ThrowAsync<ArgumentException>(() => _citySearchService.SearchCitiesByRegionAsync(request));
+        ex.Message.ShouldContain("CountryCode");
+
+        await _mockGeoDbApiClient.DidNotReceiveWithAnyArgs().SearchCitiesRegionRawAsync(default!);
     }
 }
