@@ -78,7 +78,7 @@ namespace ViajeHonesto.Destinations
             return cityDetails;
         }
 
-        public async Task<CitySearchResultDto> SearchCitiesByRegion(CityRegionSearchRequestDto request)
+        public async Task<CitySearchResultDto> SearchCitiesByRegionAsync(CityRegionSearchRequestDto request)
         {
             if (request.RegionCode.IsNullOrWhiteSpace())
             {
