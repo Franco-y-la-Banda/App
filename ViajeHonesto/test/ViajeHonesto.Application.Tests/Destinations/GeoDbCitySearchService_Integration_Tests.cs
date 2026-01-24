@@ -1,11 +1,15 @@
 ﻿using Shouldly;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Modularity;
+using Volo.Abp.Validation;
+using Elders.Iso3166;
 using Xunit;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace ViajeHonesto.Destinations;
 
@@ -13,13 +17,13 @@ namespace ViajeHonesto.Destinations;
 public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> : ViajeHonestoApplicationTestBase<TStartupModule>
     where TStartupModule : IAbpModule
 {
-    private readonly IDestinationAppService _destinationAppService;
+    private readonly ICitySearchService _citySearchService;
 
     protected GeoDbCitySearchService_Integration_Tests()
     {
-        _destinationAppService = GetRequiredService<IDestinationAppService>();
+        _citySearchService = GetRequiredService<ICitySearchService>();
 
-        Task.Delay(1500).GetAwaiter().GetResult();
+       Task.Delay(1500).GetAwaiter().GetResult();
     }
 
     [Fact]
@@ -28,12 +32,12 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
     {
         // ACT
         var request = new CitySearchRequestDto { PartialCityName = "Concepción" };
-        var result = await _destinationAppService.SearchCitiesByNameAsync(request);
+        var result = await _citySearchService.SearchCitiesByNameAsync(request);
 
         // ASSERT
         result.ShouldNotBeNull();
         result.TotalCount.ShouldBeGreaterThan(0);
-        result.Items.ShouldContain(c => c.Name.Contains("Concepción", StringComparison.OrdinalIgnoreCase));
+        result.CityNames.ShouldContain(c => c.Name.Contains("Concepción", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -42,12 +46,12 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
     {
         // ACT
         var request = new CitySearchRequestDto { PartialCityName = "Paraná" };
-        var result = await _destinationAppService.SearchCitiesByNameAsync(request);
+        var result = await _citySearchService.SearchCitiesByNameAsync(request);
 
         // ASSERT
-        result.Items.ShouldNotBeEmpty();
+        result.CityNames.ShouldNotBeEmpty();
 
-        var first = result.Items[0];
+        var first = result.CityNames[0];
         first.Name.ShouldNotBeNullOrWhiteSpace();
         first.Country.ShouldNotBeNullOrWhiteSpace();
     }
@@ -107,28 +111,13 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
     {
         // ACT
         var request = new CityDetailsSearchRequestDto { WikiDataId = "Q60" };
-        var result = await _destinationAppService.SearchCityDetailsAsync(request);
+        var result = await _citySearchService.SearchCityDetailsAsync(request);
 
         // ASSERT
         result.ShouldNotBeNull();
         result.Name.ShouldBe("New York City");
         result.IsSaved.ShouldBeFalse();
         result.LocalId.ShouldBeNull();
-    }
-
-    [Fact]
-    [Trait("Category", "IntegrationTest")]
-    public async Task SearchCityDetailsAsync_Should_Return_Results_From_Local_DB_First()
-    {
-        // ACT
-        var request = new CityDetailsSearchRequestDto { WikiDataId = "Q727464" };
-        var result = await _destinationAppService.SearchCityDetailsAsync(request);
-
-        // ASSERT
-        result.ShouldNotBeNull();
-        result.Name.ShouldBe("Concepción del Uruguay");
-        result.IsSaved.ShouldBeTrue();
-        result.LocalId.ShouldNotBeNull();
     }
 
     [Fact]
@@ -155,36 +144,77 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
 
     [Fact]
     [Trait("Category", "IntegrationTest")]
-    public async Task SearchCityDetailsAsync_Should_Return_Results_From_Local_DB_If_API_Is_Down()
+    public async Task SearchCityDetailsAsync_Should_Fail_If_It_Doesnt_Find_City()
     {
         // Arrange
-        // Simulamos fallo cambiando el host
-        var brokenHttpClient = new HttpClient
+        var request = new CityDetailsSearchRequestDto { WikiDataId = "Q1" };
+
+        // Act & Assert
+        await Should.ThrowAsync<UserFriendlyException>(async () =>
         {
-            BaseAddress = new Uri("https://api.invalid-geo-db.example.com/")
-        };
-
-        var service = new GeoDbCitySearchService(
-            new GeoDbApiClient(brokenHttpClient)
-        );
-
-        // ACT
-        var request = new CityDetailsSearchRequestDto { WikiDataId = "Q727464" };
-        var result = await _destinationAppService.SearchCityDetailsAsync(request);
-
-        // ASSERT
-        result.ShouldNotBeNull();
-        result.Name.ShouldBe("Concepción del Uruguay");
-        result.IsSaved.ShouldBeTrue();
-        result.LocalId.ShouldNotBeNull();
+            await _citySearchService.SearchCityDetailsAsync(request);
+        });
     }
 
     [Fact]
     [Trait("Category", "IntegrationTest")]
-    public async Task SearchCityDetailsAsync_Should_Fail_If_It_Doesnt_Find_City()
+    public async Task SearchCitiesByRegionAsync_Should_Fail_If_RegionCode_Is_Missing()
     {
         // Arrange
-        // Simulamos fallo cambiando el host
+        var request = new CityRegionSearchRequestDto { CountryCode = "AR" };
+
+        // Act
+        var exception = await Assert.ThrowsAsync<ArgumentException>(async () =>
+        {
+            await _citySearchService.SearchCitiesByRegionAsync(request);
+        });
+
+        exception.Message.ShouldContain("RegionCode");
+    }
+
+    [Fact]
+    [Trait("Category", "IntegrationTest")]
+    public async Task SearchCitiesByRegionAsync_Should_Fail_If_CountryCode_Is_Missing()
+    {
+        // Arrange
+        var request = new CityRegionSearchRequestDto { RegionCode = "E" };
+
+        // Act
+        var exception = await Assert.ThrowsAsync<ArgumentException>(async () =>
+        {
+            await _citySearchService.SearchCitiesByRegionAsync(request);
+        });
+
+        // Assert
+        exception.Message.ShouldContain("CountryCode");
+    }
+
+    [Fact]
+    [Trait("Category", "IntegrationTest")]
+    public async Task SearchCitiesByRegionAsync_Should_Return_Real_Results()
+    {
+        // Arrange
+        var request = new CityRegionSearchRequestDto
+        {
+            CountryCode = "US",
+            RegionCode = "NY"
+        };
+
+        // Act
+        var result = await _citySearchService.SearchCitiesByRegionAsync(request);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.TotalCount.ShouldBeGreaterThan(0);
+        result.CityNames.ShouldNotBeEmpty();
+        result.CityNames.ShouldAllBe(c => c.Country.Contains("United States") && c.Region.Contains("New York"));
+    }
+
+    [Fact]
+    [Trait("Category", "IntegrationTest")]
+    public async Task SearchCitiesByRegionAsync_Should_Handle_Network_Error_Gracefully()
+    {
+        // Arrange
         var brokenHttpClient = new HttpClient
         {
             BaseAddress = new Uri("https://api.invalid-geo-db.example.com/")
@@ -194,13 +224,29 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
             new GeoDbApiClient(brokenHttpClient)
         );
 
-        // ACT
-        var request = new CityDetailsSearchRequestDto { WikiDataId = "Q1" };
-
-        // Assert
-        await Should.ThrowAsync<UserFriendlyException>(async () =>
+        // Act & Assert
+        await Should.ThrowAsync<HttpRequestException>(async () =>
         {
-            await _destinationAppService.SearchCityDetailsAsync(request);
+            await service.SearchCitiesByRegionAsync(
+                new CityRegionSearchRequestDto { CountryCode = "US", RegionCode = "NY" }
+            );
+        });
+    }
+
+    [Fact]
+    [Trait("Category", "IntegrationTest")]
+    public async Task SearchCitiesByRegionAsync_Should_Handle_Unexpected_Response()
+    {
+        // Arrange
+        var fakeClient = new HttpClient(new BrokenHandler());
+        var service = new GeoDbCitySearchService(new GeoDbApiClient(fakeClient));
+
+        // Act & Assert
+        await Should.ThrowAsync<Exception>(async () =>
+        {
+            await service.SearchCitiesByRegionAsync(
+                new CityRegionSearchRequestDto { CountryCode = "US", RegionCode = "NY" }
+            );
         });
     }
 }

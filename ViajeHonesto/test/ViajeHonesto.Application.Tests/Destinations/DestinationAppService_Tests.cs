@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ViajeHonesto.EntityFrameworkCore;
 using Volo.Abp.Application.Dtos;
@@ -358,5 +359,48 @@ public abstract class DestinationAppService_Tests<TStartupModule> : ViajeHonesto
             Assert.Null(dbContext.Destinations.First(d => d.Id == savedDestination1.Id).WikiDataId);
             Assert.Null(dbContext.Destinations.First(d => d.Id == savedDestination2.Id).WikiDataId);
         };
+    }
+
+    [Fact]
+    public async Task SearchCityDetailsAsync_Should_Return_Results_From_Local_DB_First()
+    {
+        // Arrange
+        var destination = validDestination;
+        var savedDestination = await _destinationAppService.CreateAsync(destination);
+
+        // Act
+        var request = new CityDetailsSearchRequestDto { WikiDataId = destination.WikiDataId };
+        var result = await _destinationAppService.SearchCityDetailsAsync(request);
+
+        // ASSERT
+        result.ShouldNotBeNull();
+        result.Name.ShouldBe(destination.Name);
+        result.IsSaved.ShouldBeTrue();
+        result.LocalId.ShouldBe(savedDestination.Id);
+    }
+
+    [Fact]
+    public async Task SearchCityDetailsAsync_Should_Return_Results_From_Local_DB_If_API_Is_Down()
+    {
+        // Arrange
+        // Simulamos fallo cambiando el host
+        var brokenHttpClient = new HttpClient
+        {
+            BaseAddress = new Uri("https://api.invalid-geo-db.example.com/")
+        };
+
+        var service = new GeoDbCitySearchService(
+            new GeoDbApiClient(brokenHttpClient)
+        );
+
+        // ACT
+        var request = new CityDetailsSearchRequestDto { WikiDataId = "Q727464" };
+        var result = await _destinationAppService.SearchCityDetailsAsync(request);
+
+        // ASSERT
+        result.ShouldNotBeNull();
+        result.Name.ShouldBe("Concepción del Uruguay");
+        result.IsSaved.ShouldBeTrue();
+        result.LocalId.ShouldNotBeNull();
     }
 }
