@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
@@ -71,8 +72,42 @@ public class DestinationAppService :
         return (await Repository.WithDetailsAsync(x => x.Photos));
     }
 
-    public async Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request)
+    [HttpGet]
+    public async Task<PagedResultDto<CityDto>> SearchCitiesByNameAsync([FromQuery] CitySearchRequestDto request)
     {
-        return await _citySearchService.SearchCitiesByNameAsync(request);
+        var result = await _citySearchService.SearchCitiesByNameAsync(request);
+        return new PagedResultDto<CityDto>(result.TotalCount, result.CityNames);
+    }
+
+    [HttpGet]
+    public async Task<CityDetailsDto> SearchCityDetailsAsync([FromQuery] CityDetailsSearchRequestDto request)
+    {
+        // Primero ver si la ciudad ya está guardada en la db
+        var localEntity = await _destinationRepository.FirstOrDefaultAsync(d => d.WikiDataId == request.WikiDataId);
+
+        if (localEntity != null)
+        {
+            localEntity = await GetDestinationWithDetailsAsync(localEntity.Id);
+
+            var cityDetails = ObjectMapper.Map<Destination, CityDetailsDto>(localEntity);
+
+            cityDetails.IsSaved = true;
+            cityDetails.LocalId = localEntity.Id;
+
+            return cityDetails;
+        }
+
+        var apiCityDetails = await _citySearchService.SearchCityDetailsAsync(request);
+        apiCityDetails.IsSaved = false;
+        apiCityDetails.LocalId = null;
+
+        return apiCityDetails;
+    }
+
+    [HttpGet]
+    public async Task<PagedResultDto<CityDto>> SearchCitiesByRegionAsync([FromQuery] CityRegionSearchRequestDto request)
+    {
+        var result = await _citySearchService.SearchCitiesByRegionAsync(request);
+        return new PagedResultDto<CityDto>(result.TotalCount, result.CityNames);
     }
 }

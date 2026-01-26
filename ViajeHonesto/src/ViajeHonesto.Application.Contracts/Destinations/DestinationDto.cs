@@ -5,6 +5,7 @@ namespace ViajeHonesto.Destinations;
 
 public class DestinationDto : AuditedEntityDto<Guid>
 {
+    public string? WikiDataId { get; set; }
     public string Name { get; set; }
 
     public string Country { get; set; }
