@@ -35,15 +35,25 @@ export class DestinationsListComponent {
 
   /**
    * Parámetros de búsqueda y paginación
-   * - query: Término de búsqueda libre
    * - country: Filtro por país específico
    * - skipCount: Número de registros a saltar (para paginación)
-   * - maxResultCount: Número máximo de registros por página
+   * - resultLimit: Número máximo de registros por página
+   * - partialCityName: Nombre de la ciudad
+   * - countryCode: Código de 2 caractéres de un país, según ISO 3166
+   * - maxPopulation: Población máxima
+   * - minPopulation: Población mínima
+   * - sort: Criterio de ordenamiento
+   *   - Formato: ±SORT_FIELD,±SORT_FIELD
+   *   - SORT_FIELD = countryCode | elevation | name | population
    */
   searchParams: CitySearchRequestDto = {
     skipCount: 0,
     resultLimit: 10,
     partialCityName: '',
+    countryCode: null,
+    maxPopulation: null,
+    minPopulation: null,
+    sort: null,
   };
 
   /**
@@ -110,17 +120,8 @@ export class DestinationsListComponent {
    */
 
   onSearch(): void {
-    if (!this.loading)
-    {
+    if (!this.loading) {
       this.submitted = true;
-
-      const name = this.searchParams.partialCityName?.trim() ?? '';
-      if (!name) {
-        this.errorMessage = '::Destinations:EmptySearch';
-        this.destinations = [];
-        this.totalCount = 0;
-        return;
-      }
 
       // Sin errores previos
       this.errorMessage = null;

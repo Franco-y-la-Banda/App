@@ -1,2 +1,3 @@
 import * as Destinations from './destinations';
-export { Destinations };
+import * as Reviews from './reviews';
+export { Destinations, Reviews };

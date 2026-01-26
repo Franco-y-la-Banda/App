@@ -903,6 +903,40 @@
                   }
                 },
                 {
+                  "name": "SearchCityDetailsAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "request",
+                      "typeAsString": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto, ViajeHonesto.Application.Contracts",
+                      "type": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto",
+                      "typeSimple": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "ViajeHonesto.Destinations.CityDetailsDto",
+                    "typeSimple": "ViajeHonesto.Destinations.CityDetailsDto"
+                  }
+                },
+                {
+                  "name": "SearchCitiesByRegionAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "request",
+                      "typeAsString": "ViajeHonesto.Destinations.CityRegionSearchRequestDto, ViajeHonesto.Application.Contracts",
+                      "type": "ViajeHonesto.Destinations.CityRegionSearchRequestDto",
+                      "typeSimple": "ViajeHonesto.Destinations.CityRegionSearchRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>"
+                  }
+                },
+                {
                   "name": "GetAsync",
                   "parametersOnMethod": [
                     {
@@ -1096,7 +1130,7 @@
             "SearchCitiesByNameAsyncByRequest": {
               "uniqueName": "SearchCitiesByNameAsyncByRequest",
               "name": "SearchCitiesByNameAsync",
-              "httpMethod": "POST",
+              "httpMethod": "GET",
               "url": "api/app/destination/search-cities-by-name",
               "supportedVersions": [],
               "parametersOnMethod": [
@@ -1112,15 +1146,245 @@
               "parameters": [
                 {
                   "nameOnMethod": "request",
-                  "name": "request",
+                  "name": "PartialCityName",
                   "jsonName": null,
-                  "type": "ViajeHonesto.Destinations.CitySearchRequestDto",
-                  "typeSimple": "ViajeHonesto.Destinations.CitySearchRequestDto",
+                  "type": "System.String",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "ResultLimit",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "CountryCode",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "MinPopulation",
+                  "jsonName": null,
+                  "type": "System.Int64?",
+                  "typeSimple": "number?",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "MaxPopulation",
+                  "jsonName": null,
+                  "type": "System.Int64?",
+                  "typeSimple": "number?",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "Sort",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "ViajeHonesto.Destinations.IDestinationAppService"
+            },
+            "SearchCityDetailsAsyncByRequest": {
+              "uniqueName": "SearchCityDetailsAsyncByRequest",
+              "name": "SearchCityDetailsAsync",
+              "httpMethod": "GET",
+              "url": "api/app/destination/search-city-details",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "request",
+                  "typeAsString": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto, ViajeHonesto.Application.Contracts",
+                  "type": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto",
+                  "typeSimple": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "request",
+                  "name": "WikiDataId",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                }
+              ],
+              "returnValue": {
+                "type": "ViajeHonesto.Destinations.CityDetailsDto",
+                "typeSimple": "ViajeHonesto.Destinations.CityDetailsDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "ViajeHonesto.Destinations.IDestinationAppService"
+            },
+            "SearchCitiesByRegionAsyncByRequest": {
+              "uniqueName": "SearchCitiesByRegionAsyncByRequest",
+              "name": "SearchCitiesByRegionAsync",
+              "httpMethod": "GET",
+              "url": "api/app/destination/search-cities-by-region",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "request",
+                  "typeAsString": "ViajeHonesto.Destinations.CityRegionSearchRequestDto, ViajeHonesto.Application.Contracts",
+                  "type": "ViajeHonesto.Destinations.CityRegionSearchRequestDto",
+                  "typeSimple": "ViajeHonesto.Destinations.CityRegionSearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "request",
+                  "name": "CountryCode",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "RegionCode",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "PartialCityName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "ResultLimit",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "MinPopulation",
+                  "jsonName": null,
+                  "type": "System.Int64?",
+                  "typeSimple": "number?",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "MaxPopulation",
+                  "jsonName": null,
+                  "type": "System.Int64?",
+                  "typeSimple": "number?",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                },
+                {
+                  "nameOnMethod": "request",
+                  "name": "Sort",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
                 }
               ],
               "returnValue": {
@@ -1301,6 +1565,613 @@
               },
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<ViajeHonesto.Destinations.DestinationDto,ViajeHonesto.Destinations.DestinationDto,System.Guid,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            }
+          }
+        },
+        "ViajeHonesto.Destinations.ISOCodeLookupService": {
+          "controllerName": "ISOCodeLookup",
+          "controllerGroupName": "ISOCodeLookup",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "ViajeHonesto.Destinations.ISOCodeLookupService",
+          "interfaces": [
+            {
+              "type": "ViajeHonesto.Destinations.IISOCodeLookupService",
+              "name": "IISOCodeLookupService",
+              "methods": [
+                {
+                  "name": "GetCountries",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<ViajeHonesto.Destinations.ISOCodeDto>",
+                    "typeSimple": "[ViajeHonesto.Destinations.ISOCodeDto]"
+                  }
+                },
+                {
+                  "name": "GetRegions",
+                  "parametersOnMethod": [
+                    {
+                      "name": "CountryCode",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<ViajeHonesto.Destinations.ISOCodeDto>",
+                    "typeSimple": "[ViajeHonesto.Destinations.ISOCodeDto]"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "GetCountries": {
+              "uniqueName": "GetCountries",
+              "name": "GetCountries",
+              "httpMethod": "GET",
+              "url": "api/app/iso-code-lookup/countries",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<ViajeHonesto.Destinations.ISOCodeDto>",
+                "typeSimple": "[ViajeHonesto.Destinations.ISOCodeDto]"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "ViajeHonesto.Destinations.IISOCodeLookupService"
+            },
+            "GetRegionsByCountryCode": {
+              "uniqueName": "GetRegionsByCountryCode",
+              "name": "GetRegions",
+              "httpMethod": "GET",
+              "url": "api/app/iso-code-lookup/regions",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "CountryCode",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "CountryCode",
+                  "name": "CountryCode",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<ViajeHonesto.Destinations.ISOCodeDto>",
+                "typeSimple": "[ViajeHonesto.Destinations.ISOCodeDto]"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "ViajeHonesto.Destinations.IISOCodeLookupService"
+            }
+          }
+        },
+        "ViajeHonesto.Reviews.ReviewAppService": {
+          "controllerName": "Review",
+          "controllerGroupName": "Review",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "ViajeHonesto.Reviews.ReviewAppService",
+          "interfaces": [
+            {
+              "type": "ViajeHonesto.Reviews.IReviewAppService",
+              "name": "IReviewAppService",
+              "methods": [
+                {
+                  "name": "UpdateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "destinationId",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "input",
+                      "typeAsString": "ViajeHonesto.Reviews.UpdateReviewDto, ViajeHonesto.Application.Contracts",
+                      "type": "ViajeHonesto.Reviews.UpdateReviewDto",
+                      "typeSimple": "ViajeHonesto.Reviews.UpdateReviewDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "ViajeHonesto.Reviews.ReviewDto",
+                    "typeSimple": "ViajeHonesto.Reviews.ReviewDto"
+                  }
+                },
+                {
+                  "name": "DeleteAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "destinationId",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                },
+                {
+                  "name": "GetAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "ViajeHonesto.Reviews.ReviewKey, ViajeHonesto.Application.Contracts",
+                      "type": "ViajeHonesto.Reviews.ReviewKey",
+                      "typeSimple": "ViajeHonesto.Reviews.ReviewKey",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "ViajeHonesto.Reviews.ReviewDto",
+                    "typeSimple": "ViajeHonesto.Reviews.ReviewDto"
+                  }
+                },
+                {
+                  "name": "GetListAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                      "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                      "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Reviews.ReviewDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Reviews.ReviewDto>"
+                  }
+                },
+                {
+                  "name": "CreateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "ViajeHonesto.Reviews.CreateReviewDto, ViajeHonesto.Application.Contracts",
+                      "type": "ViajeHonesto.Reviews.CreateReviewDto",
+                      "typeSimple": "ViajeHonesto.Reviews.CreateReviewDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "ViajeHonesto.Reviews.ReviewDto",
+                    "typeSimple": "ViajeHonesto.Reviews.ReviewDto"
+                  }
+                },
+                {
+                  "name": "UpdateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "ViajeHonesto.Reviews.ReviewKey, ViajeHonesto.Application.Contracts",
+                      "type": "ViajeHonesto.Reviews.ReviewKey",
+                      "typeSimple": "ViajeHonesto.Reviews.ReviewKey",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "input",
+                      "typeAsString": "ViajeHonesto.Reviews.UpdateReviewDto, ViajeHonesto.Application.Contracts",
+                      "type": "ViajeHonesto.Reviews.UpdateReviewDto",
+                      "typeSimple": "ViajeHonesto.Reviews.UpdateReviewDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "ViajeHonesto.Reviews.ReviewDto",
+                    "typeSimple": "ViajeHonesto.Reviews.ReviewDto"
+                  }
+                },
+                {
+                  "name": "DeleteAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "ViajeHonesto.Reviews.ReviewKey, ViajeHonesto.Application.Contracts",
+                      "type": "ViajeHonesto.Reviews.ReviewKey",
+                      "typeSimple": "ViajeHonesto.Reviews.ReviewKey",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/app/review",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "ViajeHonesto.Reviews.CreateReviewDto, ViajeHonesto.Application.Contracts",
+                  "type": "ViajeHonesto.Reviews.CreateReviewDto",
+                  "typeSimple": "ViajeHonesto.Reviews.CreateReviewDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "ViajeHonesto.Reviews.CreateReviewDto",
+                  "typeSimple": "ViajeHonesto.Reviews.CreateReviewDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "ViajeHonesto.Reviews.ReviewDto",
+                "typeSimple": "ViajeHonesto.Reviews.ReviewDto"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<ViajeHonesto.Reviews.ReviewDto,ViajeHonesto.Reviews.CreateReviewDto>"
+            },
+            "UpdateAsyncByDestinationIdAndInput": {
+              "uniqueName": "UpdateAsyncByDestinationIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/app/review",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "destinationId",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "ViajeHonesto.Reviews.UpdateReviewDto, ViajeHonesto.Application.Contracts",
+                  "type": "ViajeHonesto.Reviews.UpdateReviewDto",
+                  "typeSimple": "ViajeHonesto.Reviews.UpdateReviewDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "destinationId",
+                  "name": "destinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "ViajeHonesto.Reviews.UpdateReviewDto",
+                  "typeSimple": "ViajeHonesto.Reviews.UpdateReviewDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "ViajeHonesto.Reviews.ReviewDto",
+                "typeSimple": "ViajeHonesto.Reviews.ReviewDto"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "ViajeHonesto.Reviews.IReviewAppService"
+            },
+            "DeleteAsyncByDestinationId": {
+              "uniqueName": "DeleteAsyncByDestinationId",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/review",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "destinationId",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "destinationId",
+                  "name": "destinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "ViajeHonesto.Reviews.IReviewAppService"
+            },
+            "UpdateAsyncByIdAndInput": {
+              "uniqueName": "UpdateAsyncByIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/app/review/{DestinationId}/{UserId}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "ViajeHonesto.Reviews.ReviewKey, ViajeHonesto.Application.Contracts",
+                  "type": "ViajeHonesto.Reviews.ReviewKey",
+                  "typeSimple": "ViajeHonesto.Reviews.ReviewKey",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "ViajeHonesto.Reviews.UpdateReviewDto, ViajeHonesto.Application.Contracts",
+                  "type": "ViajeHonesto.Reviews.UpdateReviewDto",
+                  "typeSimple": "ViajeHonesto.Reviews.UpdateReviewDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "DestinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": "id"
+                },
+                {
+                  "nameOnMethod": "id",
+                  "name": "UserId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": "id"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "ViajeHonesto.Reviews.UpdateReviewDto",
+                  "typeSimple": "ViajeHonesto.Reviews.UpdateReviewDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "ViajeHonesto.Reviews.ReviewDto",
+                "typeSimple": "ViajeHonesto.Reviews.ReviewDto"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<ViajeHonesto.Reviews.ReviewDto,ViajeHonesto.Reviews.ReviewKey,ViajeHonesto.Reviews.UpdateReviewDto>"
+            },
+            "DeleteAsyncById": {
+              "uniqueName": "DeleteAsyncById",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/review/{DestinationId}/{UserId}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "ViajeHonesto.Reviews.ReviewKey, ViajeHonesto.Application.Contracts",
+                  "type": "ViajeHonesto.Reviews.ReviewKey",
+                  "typeSimple": "ViajeHonesto.Reviews.ReviewKey",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "DestinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": "id"
+                },
+                {
+                  "nameOnMethod": "id",
+                  "name": "UserId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": "id"
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "Volo.Abp.Application.Services.IDeleteAppService<ViajeHonesto.Reviews.ReviewKey>"
+            },
+            "GetAsyncById": {
+              "uniqueName": "GetAsyncById",
+              "name": "GetAsync",
+              "httpMethod": "GET",
+              "url": "api/app/review/{DestinationId}/{UserId}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "ViajeHonesto.Reviews.ReviewKey, ViajeHonesto.Application.Contracts",
+                  "type": "ViajeHonesto.Reviews.ReviewKey",
+                  "typeSimple": "ViajeHonesto.Reviews.ReviewKey",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "DestinationId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": "id"
+                },
+                {
+                  "nameOnMethod": "id",
+                  "name": "UserId",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": "id"
+                }
+              ],
+              "returnValue": {
+                "type": "ViajeHonesto.Reviews.ReviewDto",
+                "typeSimple": "ViajeHonesto.Reviews.ReviewDto"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<ViajeHonesto.Reviews.ReviewDto,ViajeHonesto.Reviews.ReviewDto,ViajeHonesto.Reviews.ReviewKey,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+            },
+            "GetListAsyncByInput": {
+              "uniqueName": "GetListAsyncByInput",
+              "name": "GetListAsync",
+              "httpMethod": "GET",
+              "url": "api/app/review",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
+                  "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Reviews.ReviewDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Reviews.ReviewDto>"
+              },
+              "allowAnonymous": false,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<ViajeHonesto.Reviews.ReviewDto,ViajeHonesto.Reviews.ReviewDto,ViajeHonesto.Reviews.ReviewKey,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
             }
           }
         }
@@ -3511,6 +4382,144 @@
     }
   },
   "types": {
+    "ViajeHonesto.Destinations.CityDetailsDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "WikiDataId",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Name",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Country",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Region",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Population",
+          "jsonName": null,
+          "type": "System.Int64",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Coordinate",
+          "jsonName": null,
+          "type": "ViajeHonesto.Destinations.CoordinateDto",
+          "typeSimple": "ViajeHonesto.Destinations.CoordinateDto",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Photos",
+          "jsonName": null,
+          "type": "[ViajeHonesto.Destinations.DestinationPhotoDto]",
+          "typeSimple": "[ViajeHonesto.Destinations.DestinationPhotoDto]",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "IsSaved",
+          "jsonName": null,
+          "type": "System.Boolean",
+          "typeSimple": "boolean",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "LocalId",
+          "jsonName": null,
+          "type": "System.Guid?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "ViajeHonesto.Destinations.CityDetailsSearchRequestDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "WikiDataId",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": "^[Qq][1-9]\\d*$"
+        }
+      ]
+    },
     "ViajeHonesto.Destinations.CityDto": {
       "baseType": null,
       "isEnum": false,
@@ -3580,6 +4589,111 @@
         }
       ]
     },
+    "ViajeHonesto.Destinations.CityRegionSearchRequestDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "CountryCode",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "RegionCode",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "PartialCityName",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "ResultLimit",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "SkipCount",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "MinPopulation",
+          "jsonName": null,
+          "type": "System.Int64?",
+          "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "MaxPopulation",
+          "jsonName": null,
+          "type": "System.Int64?",
+          "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Sort",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
     "ViajeHonesto.Destinations.CitySearchRequestDto": {
       "baseType": null,
       "isEnum": false,
@@ -3616,6 +4730,54 @@
           "jsonName": null,
           "type": "System.Int32",
           "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "CountryCode",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "MinPopulation",
+          "jsonName": null,
+          "type": "System.Int64?",
+          "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "MaxPopulation",
+          "jsonName": null,
+          "type": "System.Int64?",
+          "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Sort",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,
@@ -3665,6 +4827,18 @@
       "enumValues": null,
       "genericArguments": null,
       "properties": [
+        {
+          "name": "WikiDataId",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": "^[Qq][1-9]\\d*$"
+        },
         {
           "name": "Name",
           "jsonName": null,
@@ -3746,6 +4920,18 @@
       "enumValues": null,
       "genericArguments": null,
       "properties": [
+        {
+          "name": "WikiDataId",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
         {
           "name": "Name",
           "jsonName": null,
@@ -3843,6 +5029,261 @@
           "name": "Path",
           "jsonName": null,
           "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "ViajeHonesto.Destinations.ISOCodeDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "ISOCode",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": 1,
+          "maxLength": 3,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Name",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": 0,
+          "maxLength": 100,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "ViajeHonesto.Reviews.CommentDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "Comment",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": 0,
+          "maxLength": 350,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "ViajeHonesto.Reviews.CreateReviewDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Rating",
+          "jsonName": null,
+          "type": "ViajeHonesto.Reviews.RatingDto",
+          "typeSimple": "ViajeHonesto.Reviews.RatingDto",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Comment",
+          "jsonName": null,
+          "type": "ViajeHonesto.Reviews.CommentDto",
+          "typeSimple": "ViajeHonesto.Reviews.CommentDto",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "ViajeHonesto.Reviews.RatingDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "Value",
+          "jsonName": null,
+          "type": "System.Int32",
+          "typeSimple": "number",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": "0",
+          "maximum": "5",
+          "regex": null
+        }
+      ]
+    },
+    "ViajeHonesto.Reviews.ReviewDto": {
+      "baseType": "Volo.Abp.Application.Dtos.AuditedEntityDto",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "UserId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Rating",
+          "jsonName": null,
+          "type": "ViajeHonesto.Reviews.RatingDto",
+          "typeSimple": "ViajeHonesto.Reviews.RatingDto",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Comment",
+          "jsonName": null,
+          "type": "ViajeHonesto.Reviews.CommentDto",
+          "typeSimple": "ViajeHonesto.Reviews.CommentDto",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "ViajeHonesto.Reviews.ReviewKey": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "DestinationId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "UserId",
+          "jsonName": null,
+          "type": "System.Guid",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "ViajeHonesto.Reviews.UpdateReviewDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "Rating",
+          "jsonName": null,
+          "type": "ViajeHonesto.Reviews.RatingDto",
+          "typeSimple": "ViajeHonesto.Reviews.RatingDto",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "Comment",
+          "jsonName": null,
+          "type": "ViajeHonesto.Reviews.CommentDto",
+          "typeSimple": "ViajeHonesto.Reviews.CommentDto",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "LastModificationTime",
+          "jsonName": null,
+          "type": "System.DateTime",
           "typeSimple": "string",
           "isRequired": false,
           "minLength": null,
@@ -4362,6 +5803,39 @@
         }
       ]
     },
+    "Volo.Abp.Application.Dtos.AuditedEntityDto": {
+      "baseType": "Volo.Abp.Application.Dtos.CreationAuditedEntityDto",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "LastModificationTime",
+          "jsonName": null,
+          "type": "System.DateTime?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "LastModifierId",
+          "jsonName": null,
+          "type": "System.Guid?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
     "Volo.Abp.Application.Dtos.AuditedEntityDto<T0>": {
       "baseType": "Volo.Abp.Application.Dtos.CreationAuditedEntityDto<TPrimaryKey>",
       "isEnum": false,
@@ -4385,6 +5859,39 @@
         },
         {
           "name": "LastModifierId",
+          "jsonName": null,
+          "type": "System.Guid?",
+          "typeSimple": "string?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Volo.Abp.Application.Dtos.CreationAuditedEntityDto": {
+      "baseType": "Volo.Abp.Application.Dtos.EntityDto",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "CreationTime",
+          "jsonName": null,
+          "type": "System.DateTime",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "CreatorId",
           "jsonName": null,
           "type": "System.Guid?",
           "typeSimple": "string?",
