@@ -35,7 +35,6 @@ export class DestinationsListComponent {
 
   /**
    * Parámetros de búsqueda y paginación
-   * - query: Término de búsqueda libre
    * - country: Filtro por país específico
    * - skipCount: Número de registros a saltar (para paginación)
    * - resultLimit: Número máximo de registros por página
@@ -121,17 +120,8 @@ export class DestinationsListComponent {
    */
 
   onSearch(): void {
-    if (!this.loading)
-    {
+    if (!this.loading) {
       this.submitted = true;
-
-      const name = this.searchParams.partialCityName?.trim() ?? '';
-      if (!name) {
-        this.errorMessage = '::Destinations:EmptySearch';
-        this.destinations = [];
-        this.totalCount = 0;
-        return;
-      }
 
       // Sin errores previos
       this.errorMessage = null;
