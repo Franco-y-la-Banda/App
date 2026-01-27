@@ -7,6 +7,6 @@ namespace ViajeHonesto.Destinations
     { 
         Task<CitySearchResultDto> SearchCitiesByNameAsync(CitySearchRequestDto request);
         Task<CityDetailsDto> SearchCityDetailsAsync(CityDetailsSearchRequestDto request);
-        Task<CitySearchResultDto> SearchCitiesByRegionAsync(CityRegionSearchRequestDto request);
+        Task<CitySearchResultDto> SearchCitiesByRegionAsync(CitySearchRequestDto request);
     }
 }

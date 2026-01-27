@@ -6,6 +6,6 @@ namespace ViajeHonesto.Destinations
     {
         Task<string> SearchCitiesRawAsync(CitySearchRequestDto input);
         Task<string> SearchCityDetailsRawAsync(string wikiDataId);
-        Task<string> SearchCitiesRegionRawAsync(CityRegionSearchRequestDto input);
+        Task<string> SearchCitiesRegionRawAsync(CitySearchRequestDto input);
     }
 }

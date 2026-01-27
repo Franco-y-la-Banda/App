@@ -14,6 +14,6 @@ public interface IDestinationAppService :
 {
     public Task<PagedResultDto<CityDto>> SearchCitiesByNameAsync(CitySearchRequestDto request);
     public Task<CityDetailsDto> SearchCityDetailsAsync(CityDetailsSearchRequestDto request);
-    public Task<PagedResultDto<CityDto>> SearchCitiesByRegionAsync(CityRegionSearchRequestDto request);
+    public Task<PagedResultDto<CityDto>> SearchCitiesByRegionAsync(CitySearchRequestDto request);
 
 }

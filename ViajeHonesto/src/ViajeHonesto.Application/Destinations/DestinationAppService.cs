@@ -105,7 +105,7 @@ public class DestinationAppService :
     }
 
     [HttpGet]
-    public async Task<PagedResultDto<CityDto>> SearchCitiesByRegionAsync([FromQuery] CityRegionSearchRequestDto request)
+    public async Task<PagedResultDto<CityDto>> SearchCitiesByRegionAsync([FromQuery] CitySearchRequestDto request)
     {
         var result = await _citySearchService.SearchCitiesByRegionAsync(request);
         return new PagedResultDto<CityDto>(result.TotalCount, result.CityNames);
