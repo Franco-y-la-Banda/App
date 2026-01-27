@@ -161,7 +161,7 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
     public async Task SearchCitiesByRegionAsync_Should_Fail_If_RegionCode_Is_Missing()
     {
         // Arrange
-        var request = new CityRegionSearchRequestDto { CountryCode = "AR" };
+        var request = new CitySearchRequestDto { CountryCode = "AR" };
 
         // Act
         var exception = await Assert.ThrowsAsync<ArgumentException>(async () =>
@@ -177,7 +177,7 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
     public async Task SearchCitiesByRegionAsync_Should_Fail_If_CountryCode_Is_Missing()
     {
         // Arrange
-        var request = new CityRegionSearchRequestDto { RegionCode = "E" };
+        var request = new CitySearchRequestDto { RegionCode = "E" };
 
         // Act
         var exception = await Assert.ThrowsAsync<ArgumentException>(async () =>
@@ -194,7 +194,7 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
     public async Task SearchCitiesByRegionAsync_Should_Return_Real_Results()
     {
         // Arrange
-        var request = new CityRegionSearchRequestDto
+        var request = new CitySearchRequestDto
         {
             CountryCode = "US",
             RegionCode = "NY"
@@ -228,7 +228,7 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
         await Should.ThrowAsync<HttpRequestException>(async () =>
         {
             await service.SearchCitiesByRegionAsync(
-                new CityRegionSearchRequestDto { CountryCode = "US", RegionCode = "NY" }
+                new CitySearchRequestDto { CountryCode = "US", RegionCode = "NY" }
             );
         });
     }
@@ -245,7 +245,7 @@ public abstract class GeoDbCitySearchService_Integration_Tests<TStartupModule> :
         await Should.ThrowAsync<Exception>(async () =>
         {
             await service.SearchCitiesByRegionAsync(
-                new CityRegionSearchRequestDto { CountryCode = "US", RegionCode = "NY" }
+                new CitySearchRequestDto { CountryCode = "US", RegionCode = "NY" }
             );
         });
     }

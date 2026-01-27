@@ -886,7 +886,7 @@
               "name": "IDestinationAppService",
               "methods": [
                 {
-                  "name": "SearchCitiesByNameAsync",
+                  "name": "SearchCitiesAsync",
                   "parametersOnMethod": [
                     {
                       "name": "request",
@@ -917,23 +917,6 @@
                   "returnValue": {
                     "type": "ViajeHonesto.Destinations.CityDetailsDto",
                     "typeSimple": "ViajeHonesto.Destinations.CityDetailsDto"
-                  }
-                },
-                {
-                  "name": "SearchCitiesByRegionAsync",
-                  "parametersOnMethod": [
-                    {
-                      "name": "request",
-                      "typeAsString": "ViajeHonesto.Destinations.CityRegionSearchRequestDto, ViajeHonesto.Application.Contracts",
-                      "type": "ViajeHonesto.Destinations.CityRegionSearchRequestDto",
-                      "typeSimple": "ViajeHonesto.Destinations.CityRegionSearchRequestDto",
-                      "isOptional": false,
-                      "defaultValue": null
-                    }
-                  ],
-                  "returnValue": {
-                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>",
-                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>"
                   }
                 },
                 {
@@ -1127,11 +1110,48 @@
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<ViajeHonesto.Destinations.DestinationDto,System.Guid,ViajeHonesto.Destinations.CreateUpdateDestinationDto>"
             },
-            "SearchCitiesByNameAsyncByRequest": {
-              "uniqueName": "SearchCitiesByNameAsyncByRequest",
-              "name": "SearchCitiesByNameAsync",
+            "SearchCityDetailsAsyncByRequest": {
+              "uniqueName": "SearchCityDetailsAsyncByRequest",
+              "name": "SearchCityDetailsAsync",
               "httpMethod": "GET",
-              "url": "api/app/destination/search-cities-by-name",
+              "url": "api/app/destination/search-city-details",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "request",
+                  "typeAsString": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto, ViajeHonesto.Application.Contracts",
+                  "type": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto",
+                  "typeSimple": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "request",
+                  "name": "WikiDataId",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Query",
+                  "descriptorName": "request"
+                }
+              ],
+              "returnValue": {
+                "type": "ViajeHonesto.Destinations.CityDetailsDto",
+                "typeSimple": "ViajeHonesto.Destinations.CityDetailsDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "ViajeHonesto.Destinations.IDestinationAppService"
+            },
+            "SearchCitiesAsyncByRequest": {
+              "uniqueName": "SearchCitiesAsyncByRequest",
+              "name": "SearchCitiesAsync",
+              "httpMethod": "GET",
+              "url": "api/app/destination/search-cities",
               "supportedVersions": [],
               "parametersOnMethod": [
                 {
@@ -1194,156 +1214,10 @@
                 },
                 {
                   "nameOnMethod": "request",
-                  "name": "MinPopulation",
-                  "jsonName": null,
-                  "type": "System.Int64?",
-                  "typeSimple": "number?",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Query",
-                  "descriptorName": "request"
-                },
-                {
-                  "nameOnMethod": "request",
-                  "name": "MaxPopulation",
-                  "jsonName": null,
-                  "type": "System.Int64?",
-                  "typeSimple": "number?",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Query",
-                  "descriptorName": "request"
-                },
-                {
-                  "nameOnMethod": "request",
-                  "name": "Sort",
-                  "jsonName": null,
-                  "type": "System.String",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Query",
-                  "descriptorName": "request"
-                }
-              ],
-              "returnValue": {
-                "type": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>",
-                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<ViajeHonesto.Destinations.CityDto>"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "ViajeHonesto.Destinations.IDestinationAppService"
-            },
-            "SearchCityDetailsAsyncByRequest": {
-              "uniqueName": "SearchCityDetailsAsyncByRequest",
-              "name": "SearchCityDetailsAsync",
-              "httpMethod": "GET",
-              "url": "api/app/destination/search-city-details",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "request",
-                  "typeAsString": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto, ViajeHonesto.Application.Contracts",
-                  "type": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto",
-                  "typeSimple": "ViajeHonesto.Destinations.CityDetailsSearchRequestDto",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "request",
-                  "name": "WikiDataId",
-                  "jsonName": null,
-                  "type": "System.String",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Query",
-                  "descriptorName": "request"
-                }
-              ],
-              "returnValue": {
-                "type": "ViajeHonesto.Destinations.CityDetailsDto",
-                "typeSimple": "ViajeHonesto.Destinations.CityDetailsDto"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "ViajeHonesto.Destinations.IDestinationAppService"
-            },
-            "SearchCitiesByRegionAsyncByRequest": {
-              "uniqueName": "SearchCitiesByRegionAsyncByRequest",
-              "name": "SearchCitiesByRegionAsync",
-              "httpMethod": "GET",
-              "url": "api/app/destination/search-cities-by-region",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "request",
-                  "typeAsString": "ViajeHonesto.Destinations.CityRegionSearchRequestDto, ViajeHonesto.Application.Contracts",
-                  "type": "ViajeHonesto.Destinations.CityRegionSearchRequestDto",
-                  "typeSimple": "ViajeHonesto.Destinations.CityRegionSearchRequestDto",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "request",
-                  "name": "CountryCode",
-                  "jsonName": null,
-                  "type": "System.String",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Query",
-                  "descriptorName": "request"
-                },
-                {
-                  "nameOnMethod": "request",
                   "name": "RegionCode",
                   "jsonName": null,
                   "type": "System.String",
                   "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Query",
-                  "descriptorName": "request"
-                },
-                {
-                  "nameOnMethod": "request",
-                  "name": "PartialCityName",
-                  "jsonName": null,
-                  "type": "System.String",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Query",
-                  "descriptorName": "request"
-                },
-                {
-                  "nameOnMethod": "request",
-                  "name": "ResultLimit",
-                  "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Query",
-                  "descriptorName": "request"
-                },
-                {
-                  "nameOnMethod": "request",
-                  "name": "SkipCount",
-                  "jsonName": null,
-                  "type": "System.Int32",
-                  "typeSimple": "number",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,
@@ -4589,111 +4463,6 @@
         }
       ]
     },
-    "ViajeHonesto.Destinations.CityRegionSearchRequestDto": {
-      "baseType": null,
-      "isEnum": false,
-      "enumNames": null,
-      "enumValues": null,
-      "genericArguments": null,
-      "properties": [
-        {
-          "name": "CountryCode",
-          "jsonName": null,
-          "type": "System.String",
-          "typeSimple": "string",
-          "isRequired": true,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RegionCode",
-          "jsonName": null,
-          "type": "System.String",
-          "typeSimple": "string",
-          "isRequired": true,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "PartialCityName",
-          "jsonName": null,
-          "type": "System.String",
-          "typeSimple": "string",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "ResultLimit",
-          "jsonName": null,
-          "type": "System.Int32",
-          "typeSimple": "number",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "SkipCount",
-          "jsonName": null,
-          "type": "System.Int32",
-          "typeSimple": "number",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "MinPopulation",
-          "jsonName": null,
-          "type": "System.Int64?",
-          "typeSimple": "number?",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "MaxPopulation",
-          "jsonName": null,
-          "type": "System.Int64?",
-          "typeSimple": "number?",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "Sort",
-          "jsonName": null,
-          "type": "System.String",
-          "typeSimple": "string",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        }
-      ]
-    },
     "ViajeHonesto.Destinations.CitySearchRequestDto": {
       "baseType": null,
       "isEnum": false,
@@ -4739,6 +4508,18 @@
         },
         {
           "name": "CountryCode",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "RegionCode",
           "jsonName": null,
           "type": "System.String",
           "typeSimple": "string",

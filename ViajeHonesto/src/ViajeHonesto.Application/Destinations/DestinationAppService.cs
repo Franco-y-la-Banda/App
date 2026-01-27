@@ -72,8 +72,7 @@ public class DestinationAppService :
         return (await Repository.WithDetailsAsync(x => x.Photos));
     }
 
-    [HttpGet]
-    public async Task<PagedResultDto<CityDto>> SearchCitiesByNameAsync([FromQuery] CitySearchRequestDto request)
+    protected async Task<PagedResultDto<CityDto>> SearchCitiesByNameAsync(CitySearchRequestDto request)
     {
         var result = await _citySearchService.SearchCitiesByNameAsync(request);
         return new PagedResultDto<CityDto>(result.TotalCount, result.CityNames);
@@ -104,10 +103,22 @@ public class DestinationAppService :
         return apiCityDetails;
     }
 
-    [HttpGet]
-    public async Task<PagedResultDto<CityDto>> SearchCitiesByRegionAsync([FromQuery] CityRegionSearchRequestDto request)
+    protected async Task<PagedResultDto<CityDto>> SearchCitiesByRegionAsync(CitySearchRequestDto request)
     {
         var result = await _citySearchService.SearchCitiesByRegionAsync(request);
         return new PagedResultDto<CityDto>(result.TotalCount, result.CityNames);
+    }
+
+    [HttpGet]
+    public Task<PagedResultDto<CityDto>> SearchCitiesAsync([FromQuery] CitySearchRequestDto request)
+    {
+        if (request.RegionCode.IsNullOrWhiteSpace())
+        {
+            return SearchCitiesByNameAsync(request);
+        }
+        else
+        {
+            return SearchCitiesByRegionAsync(request);
+        }    
     }
 }

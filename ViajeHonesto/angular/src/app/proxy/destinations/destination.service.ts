@@ -1,4 +1,4 @@
-import type { CityDetailsDto, CityDetailsSearchRequestDto, CityDto, CityRegionSearchRequestDto, CitySearchRequestDto, CreateUpdateDestinationDto, DestinationDto } from './models';
+import type { CityDetailsDto, CityDetailsSearchRequestDto, CityDto, CitySearchRequestDto, CreateUpdateDestinationDto, DestinationDto } from './models';
 import { RestService, Rest } from '@abp/ng.core';
 import type { PagedAndSortedResultRequestDto, PagedResultDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
@@ -52,20 +52,11 @@ export class DestinationService {
     { apiName: this.apiName,...config });
   
 
-  searchCitiesByName = (request: CitySearchRequestDto, config?: Partial<Rest.Config>) =>
+  searchCities = (request: CitySearchRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<CityDto>>({
       method: 'GET',
-      url: '/api/app/destination/search-cities-by-name',
-      params: { partialCityName: request.partialCityName, resultLimit: request.resultLimit, skipCount: request.skipCount, countryCode: request.countryCode, minPopulation: request.minPopulation, maxPopulation: request.maxPopulation, sort: request.sort },
-    },
-    { apiName: this.apiName,...config });
-  
-
-  searchCitiesByRegion = (request: CityRegionSearchRequestDto, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, PagedResultDto<CityDto>>({
-      method: 'GET',
-      url: '/api/app/destination/search-cities-by-region',
-      params: { countryCode: request.countryCode, regionCode: request.regionCode, partialCityName: request.partialCityName, resultLimit: request.resultLimit, skipCount: request.skipCount, minPopulation: request.minPopulation, maxPopulation: request.maxPopulation, sort: request.sort },
+      url: '/api/app/destination/search-cities',
+      params: { partialCityName: request.partialCityName, resultLimit: request.resultLimit, skipCount: request.skipCount, countryCode: request.countryCode, regionCode: request.regionCode, minPopulation: request.minPopulation, maxPopulation: request.maxPopulation, sort: request.sort },
     },
     { apiName: this.apiName,...config });
   

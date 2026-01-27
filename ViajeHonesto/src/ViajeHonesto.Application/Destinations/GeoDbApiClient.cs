@@ -79,7 +79,7 @@ namespace ViajeHonesto.Destinations
                 throw new UserFriendlyException("Error fetching city details", response.StatusCode.ToString(), response.ToString());
             }
         }
-        public async Task<string> SearchCitiesRegionRawAsync(CityRegionSearchRequestDto input)
+        public async Task<string> SearchCitiesRegionRawAsync(CitySearchRequestDto input)
         {
             var queryParams = new List<string>
             {

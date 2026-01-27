@@ -24,22 +24,12 @@ export interface CityDto {
   population: number;
 }
 
-export interface CityRegionSearchRequestDto {
-  countryCode: string;
-  regionCode: string;
-  partialCityName?: string;
-  resultLimit: number;
-  skipCount: number;
-  minPopulation?: number;
-  maxPopulation?: number;
-  sort?: string;
-}
-
 export interface CitySearchRequestDto {
   partialCityName?: string;
   resultLimit: number;
   skipCount: number;
   countryCode?: string;
+  regionCode?: string;
   minPopulation?: number;
   maxPopulation?: number;
   sort?: string;
