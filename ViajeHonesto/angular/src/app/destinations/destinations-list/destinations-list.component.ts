@@ -51,6 +51,7 @@ export class DestinationsListComponent {
     resultLimit: 10,
     partialCityName: '',
     countryCode: null,
+    regionCode: null,
     maxPopulation: null,
     minPopulation: null,
     sort: null,
@@ -88,7 +89,7 @@ export class DestinationsListComponent {
     this.loading = true;
 
     this.destinationService
-      .searchCitiesByName(this.searchParams, {
+      .searchCities(this.searchParams, {
         skipHandleError: true,
       })
       .pipe(
