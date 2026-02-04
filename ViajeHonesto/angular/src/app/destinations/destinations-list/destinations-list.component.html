@@ -48,14 +48,6 @@
         </div>
       </div>
 
-      <!-- Indicador de carga -->
-      @if (loading) {
-        <div class="d-flex justify-content-center align-items-center text-primary mb-3">
-          <div class="spinner-border me-2" role="status" aria-hidden="true"></div>
-          <strong>{{ '::Loading' | abpLocalization }}</strong>
-        </div>
-      }
-
       <!-- Grid de destinos -->
       <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
         @for (destination of destinations; track destination) {
@@ -93,7 +85,17 @@
           </div>
         }
 
-        <!-- Paginación -->
+        <!-- Indicador de carga -->
+        @if (loading) {
+          <div
+            class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">{{ '::Loading' | abpLocalization }}</span>
+            </div>
+          </div>
+        }
+
+      <!-- Paginación -->
       </div>
       @if (destinations.length > 0) {
         <div class="mt-4 d-flex justify-content-center">
