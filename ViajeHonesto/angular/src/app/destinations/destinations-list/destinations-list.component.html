@@ -1,159 +1,104 @@
 <div class="container-fluid">
-  <div class="card">
-    <!-- Encabezado con título -->
+  <div class="card shadow-sm">
     <div class="card-header">
-      <h1 class="card-title m-0">
+      <h1 class="card-title m-0 text-primary">
         <i class="fas fa-map-marked-alt me-2"></i>
         {{ '::Menu:Destinations' | abpLocalization }}
       </h1>
     </div>
 
-    <!-- Cuerpo de la tarjeta con búsqueda y resultados -->
-    <div class="card-body">
+    <hr class="mt-2 mb-0" />
+
+    <div class="card-body m-3 mt-0">
       <!-- Barra de herramientas con búsqueda y filtros -->
-      <div class="search-container">
-        <!-- Campo de búsqueda libre -->
-        <div class="search-field">
-          <label for="search-query">{{ '::Destinations:SearchQuery' | abpLocalization }}</label>
-          <input
-            id="search-query"
-            type="text"
-            class="form-control"
-            [(ngModel)]="searchParams.partialCityName"
-            (keyup.enter)="onSearch()"
-            [placeholder]="'::Destinations:SearchPlaceholder' | abpLocalization"
-          />
-        </div>
-
-        <!-- Filtro por país -->
-        <!-- <div class="search-field">
-        <label for="search-country">{{ '::Destinations:Country' | abpLocalization }}</label>
+      <label for="search-query" class="form-label">{{
+        '::Destinations:SearchQuery' | abpLocalization
+      }}</label>
+      <div class="d-flex flex-column flex-sm-row mb-3" role="search">
         <input
-          id="search-country"
-          type="text"
-          class="form-control"
-          [(ngModel)]="searchParams.country"
+          id="search-query"
+          name="cityName"
+          type="search"
+          class="form-control flex-grow-1 me-sm-1 mb-2 mb-sm-0"
           (keyup.enter)="onSearch()"
-          [placeholder]="'::Destinations:CountryPlaceholder' | abpLocalization"
+          [(ngModel)]="searchParams.partialCityName"
+          [placeholder]="'::Destinations:SearchPlaceholder' | abpLocalization"
         />
-      </div> -->
 
-        <!-- Botones de acción -->
-        <div class="search-actions">
-          <button type="button" class="btn btn-primary" (click)="onSearch()" [disabled]="loading">
+        <div class="d-flex flex-column flex-sm-row text-nowrap">
+          <button
+            type="button"
+            class="btn btn-primary me-sm-1 mb-2 mb-sm-0"
+            (click)="onSearch()"
+            [disabled]="loading"
+          >
             <i class="fa fa-search"></i>
             {{ '::Search' | abpLocalization }}
           </button>
-          <button type="button" class="btn btn-secondary" (click)="clearSearch()">
+
+          <button
+            type="button"
+            class="btn btn-danger mb-2 mb-sm-0"
+            (click)="clearSearch()"
+            [disabled]="!searchParams.partialCityName && destinations.length === 0"
+          >
             <i class="fa fa-times"></i>
             {{ '::Clear' | abpLocalization }}
           </button>
         </div>
       </div>
 
-      <!-- Contenedor principal del listado -->
-      <div class="destinations-container">
-        <!-- Indicador de carga -->
-        <div *ngIf="loading" class="loading-overlay">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">{{ '::Loading' | abpLocalization }}</span>
-          </div>
-        </div>
-
-        <!-- Grid de destinos -->
-        <div class="destinations-grid" *ngIf="!loading && destinations.length > 0">
-          <!-- Card de cada destino -->
-          <div class="destination-card" *ngFor="let destination of destinations">
-            <!-- Imagen del destino -->
-            <!-- <div class="destination-image">
-          <img
-            [src]="getDestinationImage(destination.imageUrl)"
-            [alt]="destination.name"
-            (error)="onImageError($event)"
-            loading="lazy"
-          /> -->
-            <!-- Badge del país -->
-            <!-- <div class="country-badge">
-            <i class="fa fa-map-marker-alt me-1"></i>
-            {{ destination.country }}
-          </div>
-        </div> -->
-
-            <!-- Contenido del card -->
-            <div class="destination-content">
-              <!-- Nombre del destino -->
-              <h3 class="destination-name" [title]="destination.name">
-                {{ destination.name }}
-              </h3>
-
-              <!-- Información del destino -->
-              <div class="destination-info">
-                <!-- País -->
-                <div class="info-row">
-                  <span class="info-label">
-                    <i class="fa fa-globe me-2"></i>
-                    {{ '::Destinations:Country' | abpLocalization }}:
-                  </span>
-                  <span class="info-value">{{ destination.country }}</span>
+      <!-- Grid de destinos -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+        @for (destination of destinations; track destination) {
+          <div class="col">
+            <div class="card h-100 border shadow-sm">
+              <div class="card-body pb-1">
+                <!-- Encabezado de la tarjeta individual -->
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="card-title fw-bold text-dark mb-0">{{ destination.name }}</h5>
+                  <span class="badge bg-info text-dark rounded-pill">{{
+                    destination.country
+                  }}</span>
                 </div>
 
-                <!-- Región -->
-                <div class="info-row">
-                  <span class="info-label">
-                    <i class="fa fa-map-marker-alt me-2"></i>
-                    {{ '::Destinations:Region' | abpLocalization }}:
-                  </span>
-                  <span class="info-value">{{ destination.region }}</span>
+                <h6 class="card-subtitle text-muted mb-3">
+                  <i class="fas fa-map-pin me-1 small"></i>{{ destination.region }}
+                </h6>
+
+                <!-- Dato destacado (Población) -->
+                <div class="d-flex align-items-center mt-3 pt-3 border-top">
+                  <div class="flex-grow-1">
+                    <small class="text-uppercase text-secondary fw-bold">
+                      {{ '::Population' | abpLocalization }}
+                    </small>
+                    <div class="fs-5 fw-normal text-dark">
+                      {{ destination.population | number }}
+                    </div>
+                  </div>
+                  <div class="text-muted opacity-25">
+                    <i class="fas fa-users fa-2x"></i>
+                  </div>
                 </div>
-
-                <!-- Población -->
-                <div class="info-row">
-              <span class="info-label">
-                <i class="fa fa-users me-2"></i>
-                {{ '::Destinations:Population' | abpLocalization }}:
-              </span>
-              <span class="info-value">{{ destination.population | number }}</span>
-            </div>
-
-                <!-- Coordenadas -->
-                <!-- <div class="info-row">
-              <span class="info-label">
-                <i class="fa fa-map-pin me-2"></i>
-                {{ '::Destinations:Coordinates' | abpLocalization }}:
-              </span>
-              <span class="info-value coordinates">
-                {{ formatCoordinates(destination.latitude, destination.longitude) }}
-              </span>
-            </div>
-          </div> -->
-
-                <!-- Acciones del card -->
-                <!-- <div class="destination-actions">
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-primary"
-              (click)="openInMaps(destination)"
-              [title]="'::Destinations:ViewOnMap' | abpLocalization"
-            >
-              <i class="fa fa-map-marked-alt me-1"></i>
-              {{ '::Destinations:ViewOnMap' | abpLocalization }}
-            </button>
-          </div> -->
               </div>
             </div>
           </div>
-        </div>
-        <!-- Mensaje cuando no hay resultados -->
-        <div *ngIf="!loading && destinations.length === 0  && submitted && !errorMessage" class="empty-state">
-          <i class="fa fa-search fa-3x mb-3"></i>
-          <h4>{{ '::Destinations:NoResults' | abpLocalization }}</h4>
-          <p>{{ '::Destinations:NoResultsMessage' | abpLocalization }}</p>
-          <!-- <button type="button" class="btn btn-primary" (click)="clearSearch()">
-            {{ '::Destinations:ShowAll' | abpLocalization }}
-          </button> -->
-        </div>
-        <!-- Paginación -->
-        <div class="mt-4 d-flex justify-content-center" *ngIf="!loading && destinations.length > 0">
+        }
+
+        <!-- Indicador de carga -->
+        @if (loading) {
+          <div
+            class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">{{ '::Loading' | abpLocalization }}</span>
+            </div>
+          </div>
+        }
+
+      <!-- Paginación -->
+      </div>
+      @if (destinations.length > 0) {
+        <div class="mt-4 d-flex justify-content-center">
           <ngb-pagination
             [collectionSize]="totalCount"
             [page]="currentPage"
@@ -162,16 +107,29 @@
             [rotate]="true"
             [ellipses]="false"
             [boundaryLinks]="true"
+            [disabled]="loading"
             (pageChange)="onPageChange($event)"
           ></ngb-pagination>
         </div>
+      }
 
-        @if (errorMessage) {
+      <!-- Mensaje cuando no hay resultados -->
+      @if (!loading && destinations.length === 0 && submitted && !errorMessage) {
+        <div class="alert alert-info mt-4 d-flex flex-column">
+          <div class="d-flex align-items-center mb-2">
+            <i class="fa fa-search fa-3x me-3"></i>
+            <h2 class="mb-0">{{ '::Destinations:NoResults' | abpLocalization }}</h2>
+          </div>
+          <p class="mb-0">{{ '::Destinations:NoResultsMessage' | abpLocalization }}</p>
+        </div>
+      }
+
+      <!-- Mensajes de error -->
+      @if (errorMessage) {
         <div class="alert alert-danger mt-3">
           {{ errorMessage | abpLocalization }}
         </div>
-        }
-      </div>
+      }
     </div>
   </div>
 </div>
