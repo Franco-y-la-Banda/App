@@ -5,16 +5,15 @@ import { PagedResultDto, CoreModule } from '@abp/ng.core';
 import { DestinationService } from '../../proxy/destinations/destination.service';
 import { CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
 import { finalize, retry } from 'rxjs/operators';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule, NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-destinations-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CoreModule, NgbPaginationModule],
+  imports: [CommonModule, FormsModule, CoreModule, NgbPaginationModule, NgbCollapse],
   templateUrl: './destinations-list.component.html',
   styleUrls: ['./destinations-list.component.scss'],
 })
-
 export class DestinationsListComponent {
   // Inyección de dependencias usando la nueva sintaxis de inject()
   private readonly destinationService = inject(DestinationService);
@@ -33,6 +32,11 @@ export class DestinationsListComponent {
    * Indica si el usuario ya realizó una búsqueda
    */
   submitted = false;
+
+  /**
+   * Indica si el filtro está activo
+   */
+  isFilterCollapsed = true;
 
   /**
    * Parámetros de búsqueda y paginación
@@ -92,7 +96,7 @@ export class DestinationsListComponent {
         retry({ count: 1, delay: 1000 }),
         finalize(() => {
           this.loading = false;
-        })
+        }),
       )
       .subscribe({
         next: (result: PagedResultDto<CityDto>) => {

@@ -14,7 +14,7 @@
       <label for="search-query" class="form-label">{{
         '::Destinations:SearchQuery' | abpLocalization
       }}</label>
-      <div class="d-flex flex-column flex-sm-row mb-3" role="search">
+      <div class="d-flex flex-column flex-sm-row mb-2" role="search">
         <input
           id="search-query"
           name="cityName"
@@ -25,10 +25,21 @@
           [placeholder]="'::Destinations:SearchPlaceholder' | abpLocalization"
         />
 
-        <div class="d-flex flex-column flex-sm-row text-nowrap">
+        <div class="d-flex flex-column flex-sm-row text-nowrap mb-2 mb-sm-0">
           <button
             type="button"
-            class="btn btn-primary me-sm-1 mb-2 mb-sm-0"
+            class="btn me-sm-1"
+            [ngClass]="!isFilterCollapsed ? 'btn-outline-secondary' : 'btn-secondary'"
+            (click)="isFilterCollapsed = !isFilterCollapsed"
+            [attr.aria-expanded]="!isFilterCollapsed"
+          >
+            <i class="fa fa-filter"></i>
+            {{ '::Filter' | abpLocalization }}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary me-sm-1"
             (click)="onSearch()"
             [disabled]="loading"
           >
@@ -38,7 +49,7 @@
 
           <button
             type="button"
-            class="btn btn-danger mb-2 mb-sm-0"
+            class="btn btn-danger"
             (click)="clearSearch()"
             [disabled]="!searchParams.partialCityName && destinations.length === 0"
           >
@@ -48,8 +59,82 @@
         </div>
       </div>
 
+      <!-- Filtro de destinos -->
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="isFilterCollapsed">
+        <div class="card mb-0 pb-2">
+          <div class="card-body bg-secondary-subtle border-0">
+            <div class="row g-3">
+              <!-- País -->
+              <div class="col-md-6">
+                <label for="country-search" class="form-label">
+                  {{ '::Destinations:Country' | abpLocalization }}
+                </label>
+                <!-- TODO: Cambiar por Typeahead -->
+                <input
+                  id="country-search"
+                  type="text"
+                  class="form-control"
+                  [placeholder]="'::Destinations:AllCountries' | abpLocalization"
+                />
+              </div>
+
+              <!-- Región -->
+              <div class="col-md-6">
+                <label for="region-search" class="form-label">
+                  {{ '::Destinations:Region' | abpLocalization }}
+                </label>
+                <!-- TODO: Cambiar por Typeahead -->
+                <input
+                  id="region-search"
+                  type="text"
+                  class="form-control"
+                  [disabled]="!searchParams.countryCode"
+                  [placeholder]="'::Destinations:AllRegions' | abpLocalization"
+                />
+              </div>
+
+              <!-- Población mínima -->
+              <div class="col-md-3">
+                <label for="min-pop" class="form-label">
+                  {{ '::Destinations:MinPopulation' | abpLocalization }}
+                </label>
+                <input
+                  id="min-pop"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="searchParams.minPopulation"
+                  min="0"
+                />
+              </div>
+
+              <!-- Población máxima -->
+              <div class="col-md-3">
+                <label for="max-pop" class="form-label">
+                  {{ '::Destinations:MaxPopulation' | abpLocalization }}
+                </label>
+                <input
+                  id="max-pop"
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="searchParams.maxPopulation"
+                  min="0"
+                />
+              </div>
+
+              <!-- Mensaje de error -->
+              <div class="col-12">
+                <div class="text-danger small">
+                  <i class="fa fa-exclamation-circle me-1"></i>
+                  {{ '::Destinations:PopulationRangeError' | abpLocalization }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Grid de destinos -->
-      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 pt-1">
         @for (destination of destinations; track destination) {
           <div class="col">
             <div class="card h-100 border shadow-sm">
@@ -88,14 +173,15 @@
         <!-- Indicador de carga -->
         @if (loading) {
           <div
-            class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75">
+            class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75"
+          >
             <div class="spinner-border text-primary" role="status">
               <span class="sr-only">{{ '::Loading' | abpLocalization }}</span>
             </div>
           </div>
         }
 
-      <!-- Paginación -->
+        <!-- Paginación -->
       </div>
       @if (destinations.length > 0) {
         <div class="mt-4 d-flex justify-content-center">
