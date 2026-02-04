@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PagedResultDto, CoreModule } from '@abp/ng.core';
 import { DestinationService } from '../../proxy/destinations/destination.service';
-import { DestinationDto, CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
+import { CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
 import { finalize, retry } from 'rxjs/operators';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -14,6 +14,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './destinations-list.component.html',
   styleUrls: ['./destinations-list.component.scss'],
 })
+
 export class DestinationsListComponent {
   // Inyección de dependencias usando la nueva sintaxis de inject()
   private readonly destinationService = inject(DestinationService);
@@ -48,7 +49,7 @@ export class DestinationsListComponent {
    */
   searchParams: CitySearchRequestDto = {
     skipCount: 0,
-    resultLimit: 10,
+    resultLimit: 9,
     partialCityName: '',
     countryCode: null,
     regionCode: null,
@@ -66,11 +67,6 @@ export class DestinationsListComponent {
    * Página actual (basada en 1)
    */
   currentPage = 1;
-
-  /**
-   * Imagen por defecto cuando el destino no tiene imageUrl
-   */
-  // readonly defaultImage = 'assets/images/destination-placeholder.svg';
 
   /**
    * Manejo de errores
@@ -119,7 +115,6 @@ export class DestinationsListComponent {
    * Maneja el evento de búsqueda
    * Reinicia la paginación y recarga los datos
    */
-
   onSearch(): void {
     if (!this.loading) {
       this.submitted = true;
@@ -148,50 +143,6 @@ export class DestinationsListComponent {
   }
 
   /**
-   * Maneja errores de carga de imágenes
-   * Asigna la imagen por defecto cuando falla la carga
-   *
-   * @param event - Evento del error de imagen
-   */
-  // onImageError(event: any): void {
-  //   event.target.src = this.defaultImage;
-  // }
-
-  /**
-   * Formatea las coordenadas para mostrar
-   *
-   * @param latitude - Latitud del destino
-   * @param longitude - Longitud del destino
-   * @returns String con formato "lat, lng"
-   */
-  // formatCoordinates(latitude: number, longitude: number): string {
-  //   return `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
-  // }
-
-  /**
-   * Formatea el número de población con separadores de miles
-   *
-   * @param population - Número de habitantes
-   * @returns String formateado o mensaje si no hay datos
-   */
-  // formatPopulation(population?: number): string {
-  //   if (!population) {
-  //     return 'N/A';
-  //   }
-  //   return population.toLocaleString('es-ES');
-  // }
-
-  /**
-   * Abre el destino en Google Maps usando las coordenadas
-   *
-   * @param destination - Destino turístico
-   */
-  // openInMaps(destination: DestinationDto): void {
-  //   const url = `https://www.google.com/maps/search/?api=1&query=${destination.latitude},${destination.longitude}`;
-  //   window.open(url, '_blank');
-  // }
-
-  /**
    * Maneja el cambio de página
    *
    * @param page - Número de la nueva página (basada en 1)
@@ -202,12 +153,4 @@ export class DestinationsListComponent {
     this.searchParams.skipCount = (page - 1) * this.searchParams.resultLimit;
     this.loadDestinations();
   }
-
-  /**
-   * Devuelve la URL de la imagen de un destino.
-   * @param imageUrl - URL relativa de la imagen
-   */
-  // getDestinationImage(imageUrl: string): string {
-  //   return imageUrl ? environment.apis.default.url + imageUrl : this.defaultImage;
-  // }
 }
