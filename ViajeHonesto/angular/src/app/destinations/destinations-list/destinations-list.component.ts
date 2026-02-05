@@ -1,14 +1,14 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PagedResultDto, CoreModule } from '@abp/ng.core';
 import { DestinationService } from '../../proxy/destinations/destination.service';
 import { CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
-import { debounceTime, distinctUntilChanged, finalize, map, retry } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, retry } from 'rxjs/operators';
 import { NgbPaginationModule, NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { ISOCodeDto } from '../../proxy/destinations/models';
 import { ISOCodeLookupService } from 'src/app/proxy/destinations';
-import { Observable, OperatorFunction } from 'rxjs';
+import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -182,23 +182,27 @@ export class DestinationsListComponent implements OnInit {
   /**
    * Devuelve solo el nombre de un ISOCodeDto
    */
-  isoNameFormatter = (x: { name: string }) => x.name;
+  isoNameFormatter = (x: ISOCodeDto) => x.name;
 
   /**
    * Filtra todos los países según lo que se escriba
    */
-  searchCountries: OperatorFunction<string, readonly ISOCodeDto[]> = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
+  searchCountries: OperatorFunction<string, readonly ISOCodeDto[]> = (
+    text$: Observable<string>,
+  ) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
+    const inputFocus$ = this.focus$;
+
+    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
       map(term =>
-        term.length < 2
-          ? []
-          : this.allCountries
-              .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
-              .slice(0, 10),
+        (term === ''
+          ? this.allCountries
+          : this.allCountries.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
+        ),
       ),
     );
+  };
 
   /**
    * Evento al seleccionar país
@@ -219,4 +223,11 @@ export class DestinationsListComponent implements OnInit {
       this.searchParams.regionCode = null;
     }
   }
+
+  /**
+   * Necesario para mostrar la lista de países al hacer click, ni idea que hace
+   */
+  @ViewChild('instance', { static: true }) instance: NgbTypeahead;
+  focus$ = new Subject<string>();
+  click$ = new Subject<string>();
 }

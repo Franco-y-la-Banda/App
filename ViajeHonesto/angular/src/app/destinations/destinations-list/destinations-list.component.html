@@ -81,6 +81,9 @@
                   [editable]="false"
                   (selectItem)="onCountrySelect($event)"
                   (blur)="checkCountryClear()"
+                  (focus)="focus$.next($any($event).target.value)"
+                  (click)="click$.next($any($event).target.value)"
+                  #instance="ngbTypeahead"
                 />
               </div>
 
@@ -218,7 +221,7 @@
 
       <!-- Mensajes de error -->
       @if (errorMessage) {
-        <div class="alert alert-danger mt-3">
+        <div class="alert alert-danger mt-4">
           {{ errorMessage | abpLocalization }}
         </div>
       }
