@@ -81,9 +81,8 @@
                   [editable]="false"
                   (selectItem)="onCountrySelect($event)"
                   (blur)="checkCountryClear()"
-                  (focus)="focus$.next($any($event).target.value)"
-                  (click)="click$.next($any($event).target.value)"
-                  #instance="ngbTypeahead"
+                  (focus)="countryFocus$.next($any($event).target.value)"
+                  (click)="countryClick$.next($any($event).target.value)"
                 />
               </div>
 
@@ -92,13 +91,21 @@
                 <label for="region-search" class="form-label">
                   {{ '::Destinations:Region' | abpLocalization }}
                 </label>
-                <!-- TODO: Cambiar por Typeahead -->
                 <input
                   id="region-search"
-                  type="text"
+                  type="search"
                   class="form-control"
                   [disabled]="!searchParams.countryCode"
                   [placeholder]="'::Destinations:AllRegions' | abpLocalization"
+                  [(ngModel)]="selectedRegion"
+                  [ngbTypeahead]="searchRegions"
+                  [resultFormatter]="isoNameFormatter"
+                  [inputFormatter]="isoNameFormatter"
+                  [editable]="false"
+                  (selectItem)="onRegionSelect($event)"
+                  (blur)="checkRegionClear()"
+                  (focus)="regionFocus$.next($any($event).target.value)"
+                  (click)="regionClick$.next($any($event).target.value)"
                 />
               </div>
 

@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PagedResultDto, CoreModule } from '@abp/ng.core';
 import { DestinationService } from '../../proxy/destinations/destination.service';
 import { CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
-import { debounceTime, distinctUntilChanged, filter, finalize, map, retry } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, map, retry } from 'rxjs/operators';
 import { NgbPaginationModule, NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { ISOCodeDto } from '../../proxy/destinations/models';
 import { ISOCodeLookupService } from 'src/app/proxy/destinations';
@@ -68,6 +68,7 @@ export class DestinationsListComponent implements OnInit {
   };
 
   allCountries: ISOCodeDto[] = [];
+  allRegionsForCountry: ISOCodeDto[] = [];
 
   /**
    * Total de registros disponibles (para paginación)
@@ -88,6 +89,20 @@ export class DestinationsListComponent implements OnInit {
    * País seleccionado en el filtro
    */
   selectedCountry: ISOCodeDto = null;
+
+  /**
+   * Región seleccionada en el filtro
+   */
+  selectedRegion: ISOCodeDto = null;
+
+  /**
+   * Necesario para mostrar la lista de países al hacer click, ni idea que hace
+   */
+  countryFocus$ = new Subject<string>();
+  countryClick$ = new Subject<string>();
+
+  regionFocus$ = new Subject<string>();
+  regionClick$ = new Subject<string>();
 
   ngOnInit(): void {
     this.isoCodeLookupService
@@ -165,6 +180,7 @@ export class DestinationsListComponent implements OnInit {
     this.totalCount = 0;
     this.submitted = false;
     this.selectedCountry = null;
+    this.selectedRegion = null;
   }
 
   /**
@@ -191,15 +207,28 @@ export class DestinationsListComponent implements OnInit {
     text$: Observable<string>,
   ) => {
     const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
-    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
-    const inputFocus$ = this.focus$;
+    const inputEvents$ = merge(this.countryFocus$, this.countryClick$).pipe(map(() => ''));
 
-    return merge(debouncedText$, inputFocus$, clicksWithClosedPopup$).pipe(
+    return merge(debouncedText$, inputEvents$).pipe(
       map(term =>
-        (term === ''
+        term === ''
           ? this.allCountries
-          : this.allCountries.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
-        ),
+          : this.allCountries.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1),
+      ),
+    );
+  };
+
+  searchRegions: OperatorFunction<string, readonly ISOCodeDto[]> = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const inputEvents$ = merge(this.regionFocus$, this.regionClick$).pipe(map(() => ''));
+
+    return merge(debouncedText$, inputEvents$).pipe(
+      map(term =>
+        term === ''
+          ? this.allRegionsForCountry
+          : this.allRegionsForCountry.filter(
+              v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1,
+            ),
       ),
     );
   };
@@ -212,6 +241,20 @@ export class DestinationsListComponent implements OnInit {
     this.searchParams.countryCode = country.isoCode;
 
     this.searchParams.regionCode = null;
+    this.selectedRegion = null;
+    this.isoCodeLookupService.getRegionsByCountryCode(country.isoCode).subscribe({
+      next: (result: ISOCodeDto[]) => {
+        this.allRegionsForCountry = result;
+      },
+    });
+  }
+
+  /**
+   * Evento al seleccionar región
+   */
+  onRegionSelect(event: any) {
+    const region = event.item as ISOCodeDto;
+    this.searchParams.regionCode = region.isoCode;
   }
 
   /**
@@ -221,13 +264,17 @@ export class DestinationsListComponent implements OnInit {
     if (!this.selectedCountry) {
       this.searchParams.countryCode = null;
       this.searchParams.regionCode = null;
+      this.selectedCountry = null;
+      this.selectedRegion = null;
     }
   }
 
   /**
-   * Necesario para mostrar la lista de países al hacer click, ni idea que hace
+   * Evento al borrar el input de país manualmente
    */
-  @ViewChild('instance', { static: true }) instance: NgbTypeahead;
-  focus$ = new Subject<string>();
-  click$ = new Subject<string>();
+  checkRegionClear(): void {
+    if (!this.selectedRegion && this.searchParams.countryCode) {
+      this.searchParams.regionCode = null;
+    }
+  }
 }
