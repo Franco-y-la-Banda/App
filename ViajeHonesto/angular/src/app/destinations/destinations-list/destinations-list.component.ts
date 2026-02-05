@@ -209,4 +209,14 @@ export class DestinationsListComponent implements OnInit {
 
     this.searchParams.regionCode = null;
   }
+
+  /**
+   * Evento al borrar el input de país manualmente
+   */
+  checkCountryClear(): void {
+    if (!this.selectedCountry) {
+      this.searchParams.countryCode = null;
+      this.searchParams.regionCode = null;
+    }
+  }
 }

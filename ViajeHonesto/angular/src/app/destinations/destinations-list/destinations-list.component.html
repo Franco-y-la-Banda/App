@@ -71,13 +71,16 @@
                 </label>
                 <input
                   id="country-search"
-                  type="text"
+                  type="search"
                   class="form-control"
+                  [placeholder]="'::Destinations:AllCountries' | abpLocalization"
                   [(ngModel)]="selectedCountry"
                   [ngbTypeahead]="searchCountries"
                   [resultFormatter]="isoNameFormatter"
                   [inputFormatter]="isoNameFormatter"
+                  [editable]="false"
                   (selectItem)="onCountrySelect($event)"
+                  (blur)="checkCountryClear()"
                 />
               </div>
 
