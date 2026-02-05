@@ -69,12 +69,15 @@
                 <label for="country-search" class="form-label">
                   {{ '::Destinations:Country' | abpLocalization }}
                 </label>
-                <!-- TODO: Cambiar por Typeahead -->
                 <input
                   id="country-search"
                   type="text"
                   class="form-control"
-                  [placeholder]="'::Destinations:AllCountries' | abpLocalization"
+                  [(ngModel)]="selectedCountry"
+                  [ngbTypeahead]="searchCountries"
+                  [resultFormatter]="isoNameFormatter"
+                  [inputFormatter]="isoNameFormatter"
+                  (selectItem)="onCountrySelect($event)"
                 />
               </div>
 

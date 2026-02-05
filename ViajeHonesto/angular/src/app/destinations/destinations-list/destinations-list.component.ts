@@ -4,19 +4,24 @@ import { FormsModule } from '@angular/forms';
 import { PagedResultDto, CoreModule } from '@abp/ng.core';
 import { DestinationService } from '../../proxy/destinations/destination.service';
 import { CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
-import { finalize, retry } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, map, retry } from 'rxjs/operators';
 import { NgbPaginationModule, NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
+import { ISOCodeDto } from '../../proxy/destinations/models';
+import { ISOCodeLookupService } from 'src/app/proxy/destinations';
+import { Observable, OperatorFunction } from 'rxjs';
+import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-destinations-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CoreModule, NgbPaginationModule, NgbCollapse],
+  imports: [CommonModule, FormsModule, CoreModule, NgbPaginationModule, NgbCollapse, NgbTypeahead],
   templateUrl: './destinations-list.component.html',
   styleUrls: ['./destinations-list.component.scss'],
 })
-export class DestinationsListComponent {
+export class DestinationsListComponent implements OnInit {
   // Inyección de dependencias usando la nueva sintaxis de inject()
   private readonly destinationService = inject(DestinationService);
+  private readonly isoCodeLookupService = inject(ISOCodeLookupService);
 
   /**
    * Lista de destinos obtenidos de la API
@@ -62,6 +67,8 @@ export class DestinationsListComponent {
     sort: null,
   };
 
+  allCountries: ISOCodeDto[] = [];
+
   /**
    * Total de registros disponibles (para paginación)
    */
@@ -77,10 +84,21 @@ export class DestinationsListComponent {
    */
   errorMessage: string | null = null;
 
-  // ngOnInit(): void {
-  //   // Cargar los destinos al inicializar el componente
-  //   this.loadDestinations();
-  // }
+  /**
+   * País seleccionado en el filtro
+   */
+  selectedCountry: ISOCodeDto = null;
+
+  ngOnInit(): void {
+    this.isoCodeLookupService
+      .getCountries()
+      .pipe()
+      .subscribe({
+        next: (result: ISOCodeDto[]) => {
+          this.allCountries = result;
+        },
+      });
+  }
 
   /**
    * Carga los destinos desde la API
@@ -140,10 +158,13 @@ export class DestinationsListComponent {
    */
   clearSearch(): void {
     this.searchParams.partialCityName = '';
+    this.searchParams.countryCode = '';
+    this.searchParams.regionCode = '';
     this.errorMessage = null;
     this.destinations = [];
     this.totalCount = 0;
     this.submitted = false;
+    this.selectedCountry = null;
   }
 
   /**
@@ -156,5 +177,36 @@ export class DestinationsListComponent {
     // Calcular el skipCount basado en la página actual
     this.searchParams.skipCount = (page - 1) * this.searchParams.resultLimit;
     this.loadDestinations();
+  }
+
+  /**
+   * Devuelve solo el nombre de un ISOCodeDto
+   */
+  isoNameFormatter = (x: { name: string }) => x.name;
+
+  /**
+   * Filtra todos los países según lo que se escriba
+   */
+  searchCountries: OperatorFunction<string, readonly ISOCodeDto[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term =>
+        term.length < 2
+          ? []
+          : this.allCountries
+              .filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
+              .slice(0, 10),
+      ),
+    );
+
+  /**
+   * Evento al seleccionar país
+   */
+  onCountrySelect(event: any) {
+    const country = event.item as ISOCodeDto;
+    this.searchParams.countryCode = country.isoCode;
+
+    this.searchParams.regionCode = null;
   }
 }
