@@ -56,16 +56,20 @@ export class DestinationsListComponent implements OnInit {
    *   - Formato: ±SORT_FIELD,±SORT_FIELD
    *   - SORT_FIELD = countryCode | elevation | name | population
    */
-  searchParams: CitySearchRequestDto = {
-    skipCount: 0,
-    resultLimit: 9,
-    partialCityName: '',
-    countryCode: null,
-    regionCode: null,
-    maxPopulation: null,
-    minPopulation: null,
-    sort: null,
-  };
+  searchParams = this.defaultSearchParams;
+
+  private get defaultSearchParams(): CitySearchRequestDto {
+    return {
+      skipCount: 0,
+      resultLimit: 9,
+      partialCityName: '',
+      countryCode: null,
+      regionCode: null,
+      minPopulation: null,
+      maxPopulation: null,
+      sort: null,
+    };
+  }
 
   allCountries: ISOCodeDto[] = [];
   allRegionsForCountry: ISOCodeDto[] = [];
@@ -172,15 +176,20 @@ export class DestinationsListComponent implements OnInit {
    * Limpia los filtros de búsqueda y recarga todos los destinos
    */
   clearSearch(): void {
-    this.searchParams.partialCityName = '';
-    this.searchParams.countryCode = '';
-    this.searchParams.regionCode = '';
+    this.searchParams = this.defaultSearchParams;
+
+    this.selectedCountry = null;
+    this.selectedRegion = null;
+
+    this.resetGridState();
+  }
+
+  private resetGridState(): void {
     this.errorMessage = null;
     this.destinations = [];
     this.totalCount = 0;
     this.submitted = false;
-    this.selectedCountry = null;
-    this.selectedRegion = null;
+    this.loading = false;
   }
 
   /**
