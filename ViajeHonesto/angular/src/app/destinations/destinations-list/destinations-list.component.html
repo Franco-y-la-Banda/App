@@ -41,7 +41,7 @@
             type="button"
             class="btn btn-primary me-sm-1"
             (click)="onSearch()"
-            [disabled]="loading"
+            [disabled]="loading || !isPopulationValid"
           >
             <i class="fa fa-search"></i>
             {{ '::Search' | abpLocalization }}
@@ -119,6 +119,7 @@
                   type="number"
                   class="form-control"
                   [(ngModel)]="searchParams.minPopulation"
+                  [class.is-invalid]="!isPopulationValid"
                   min="0"
                 />
               </div>
@@ -133,17 +134,20 @@
                   type="number"
                   class="form-control"
                   [(ngModel)]="searchParams.maxPopulation"
+                  [class.is-invalid]="!isPopulationValid"
                   min="0"
                 />
               </div>
 
               <!-- Mensaje de error -->
-              <div class="col-12">
-                <div class="text-danger small">
-                  <i class="fa fa-exclamation-circle me-1"></i>
-                  {{ '::Destinations:PopulationRangeError' | abpLocalization }}
+              @if (!isPopulationValid) {
+                <div class="col-12">
+                  <div class="text-danger small">
+                    <i class="fa fa-exclamation-circle me-1"></i>
+                    {{ '::Destinations:PopulationRangeError' | abpLocalization }}
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           </div>
         </div>

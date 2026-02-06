@@ -277,4 +277,20 @@ export class DestinationsListComponent implements OnInit {
       this.searchParams.regionCode = null;
     }
   }
+
+  /**
+   * Valida el filtrado por población
+   */
+  get isPopulationValid(): boolean {
+    const { minPopulation, maxPopulation } = this.searchParams;
+
+    if (minPopulation < 0 || maxPopulation < 0) {
+      return false;
+    }
+
+    if (minPopulation != null && maxPopulation != null) {
+      return minPopulation <= maxPopulation;
+    }
+    return true;
+  }
 }
