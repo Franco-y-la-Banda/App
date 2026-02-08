@@ -5,9 +5,8 @@
         <i class="fas fa-map-marked-alt me-2"></i>
         {{ '::Menu:Destinations' | abpLocalization }}
       </h1>
+      <hr class="mt-2 mb-0" />
     </div>
-
-    <hr class="mt-2 mb-0" />
 
     <div class="card-body m-3 mt-0">
       <!-- Barra de herramientas con búsqueda y filtros -->
@@ -189,20 +188,9 @@
             </div>
           </div>
         }
-
-        <!-- Indicador de carga -->
-        @if (loading) {
-          <div
-            class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75"
-          >
-            <div class="spinner-border text-primary" role="status">
-              <span class="sr-only">{{ '::Loading' | abpLocalization }}</span>
-            </div>
-          </div>
-        }
-
-        <!-- Paginación -->
       </div>
+
+      <!-- Paginación -->
       @if (destinations.length > 0) {
         <div class="mt-4 d-flex justify-content-center">
           <ngb-pagination
@@ -234,6 +222,18 @@
       @if (errorMessage) {
         <div class="alert alert-danger mt-4">
           {{ errorMessage | abpLocalization }}
+        </div>
+      }
+
+
+      <!-- Indicador de carga -->
+      @if (loading) {
+        <div
+          class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75 rounded"
+        >
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">{{ '::Loading' | abpLocalization }}</span>
+          </div>
         </div>
       }
     </div>
