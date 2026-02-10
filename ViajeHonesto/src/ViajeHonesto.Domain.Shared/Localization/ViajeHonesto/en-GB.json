@@ -29,6 +29,11 @@
     "Destinations:AllRegions": "All Regions",
     "Destinations:MinPopulation": "Minimum Population",
     "Destinations:MaxPopulation": "Maximum Population",
-    "Destinations:PopulationRangeError": "Minimum value cannot be greater than maximum value."
+    "Destinations:PopulationRangeError": "Minimum value cannot be greater than maximum value.",
+    "Destinations:SortBy": "Sort by",
+    "Destinations:SortPopulationDesc": "Population (High to Low)",
+    "Destinations:SortPopulationAsc": "Population (Low to High)",
+    "Destinations:SortNameAsc": "Name (A-Z)",
+    "Destinations:SortNameDesc": "Name (Z-A)"
   }
 }

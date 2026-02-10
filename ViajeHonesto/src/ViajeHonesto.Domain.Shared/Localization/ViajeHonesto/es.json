@@ -62,6 +62,11 @@
     "Destinations:AllRegions": "Todas las regiones",
     "Destinations:MinPopulation": "Población Mínima",
     "Destinations:MaxPopulation": "Población Máxima",
-    "Destinations:PopulationRangeError": "El valor mínimo no puede ser mayor que el máximo."
+    "Destinations:PopulationRangeError": "El valor mínimo no puede ser mayor que el máximo.",
+    "Destinations:SortBy": "Ordenar por",
+    "Destinations:SortPopulationDesc": "Población (Mayor a menor)",
+    "Destinations:SortPopulationAsc": "Población (Menor a mayor)",
+    "Destinations:SortNameAsc": "Nombre (A-Z)",
+    "Destinations:SortNameDesc": "Nombre (Z-A)"
   }
 }
