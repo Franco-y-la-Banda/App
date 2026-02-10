@@ -10,6 +10,7 @@
 
     <div class="card-body m-3 mt-0">
       <div class="row g-2 align-items-end mb-3" role="search">
+        <!-- Búsqueda -->
         <div class="col-12 col-md">
           <label for="search-query" class="form-label text-truncate">
             {{ '::Destinations:SearchQuery' | abpLocalization }}
@@ -25,6 +26,7 @@
           />
         </div>
 
+        <!-- Ordenamiento -->
         <div class="col-12 col-md-3">
           <label for="sort-select" class="form-label text-truncate">
             {{ '::Destinations:SortBy' | abpLocalization }}
@@ -43,6 +45,7 @@
           </select>
         </div>
 
+        <!-- Botones -->
         <div class="col-12 col-md-auto">
           <div class="d-flex gap-1 text-nowrap">
             <button
