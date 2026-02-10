@@ -67,12 +67,19 @@ export class DestinationsListComponent implements OnInit {
       regionCode: null,
       minPopulation: null,
       maxPopulation: null,
-      sort: null,
+      sort: '-population',
     };
   }
 
   allCountries: ISOCodeDto[] = [];
   allRegionsForCountry: ISOCodeDto[] = [];
+
+  sortOptions = [
+    { label: '::Destinations:SortPopulationDesc', value: '-population' },
+    { label: '::Destinations:SortPopulationAsc', value: 'population' },
+    { label: '::Destinations:SortNameAsc', value: 'name' },
+    { label: '::Destinations:SortNameDesc', value: '-name' },
+  ];
 
   /**
    * Total de registros disponibles (para paginación)
