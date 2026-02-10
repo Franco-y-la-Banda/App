@@ -9,52 +9,76 @@
     </div>
 
     <div class="card-body m-3 mt-0">
-      <!-- Barra de herramientas con búsqueda y filtros -->
-      <label for="search-query" class="form-label">{{
-        '::Destinations:SearchQuery' | abpLocalization
-      }}</label>
-      <div class="d-flex flex-column flex-sm-row mb-2" role="search">
-        <input
-          id="search-query"
-          name="cityName"
-          type="search"
-          class="form-control flex-grow-1 me-sm-1 mb-2 mb-sm-0"
-          (keyup.enter)="onSearch()"
-          [(ngModel)]="searchParams.partialCityName"
-          [placeholder]="'::Destinations:SearchPlaceholder' | abpLocalization"
-        />
+      <div class="row g-2 align-items-end mb-3" role="search">
+        <div class="col-12 col-md">
+          <label for="search-query" class="form-label text-truncate">
+            {{ '::Destinations:SearchQuery' | abpLocalization }}
+          </label>
+          <input
+            id="search-query"
+            name="cityName"
+            type="search"
+            class="form-control"
+            (keyup.enter)="onSearch()"
+            [(ngModel)]="searchParams.partialCityName"
+            [placeholder]="'::Destinations:SearchPlaceholder' | abpLocalization"
+          />
+        </div>
 
-        <div class="d-flex flex-column flex-sm-row text-nowrap mb-2 mb-sm-0">
-          <button
-            type="button"
-            class="btn me-sm-1"
-            [ngClass]="!isFilterCollapsed ? 'btn-outline-secondary' : 'btn-secondary'"
-            (click)="isFilterCollapsed = !isFilterCollapsed"
-            [attr.aria-expanded]="!isFilterCollapsed"
+        <div class="col-12 col-md-3">
+          <label for="sort-select" class="form-label text-truncate">
+            {{ '::Destinations:SortBy' | abpLocalization }}
+          </label>
+          <select
+            id="sort-select"
+            class="form-select"
+            [(ngModel)]="searchParams.sort"
+            (change)="onSearch()"
           >
-            <i class="fa fa-filter"></i>
-            {{ '::Filter' | abpLocalization }}
-          </button>
+            @for (option of sortOptions; track option) {
+              <option [value]="option.value">
+                {{ option.label | abpLocalization }}
+              </option>
+            }
+          </select>
+        </div>
 
-          <button
-            type="button"
-            class="btn btn-primary me-sm-1"
-            (click)="onSearch()"
-            [disabled]="loading || !isPopulationValid"
-          >
-            <i class="fa fa-search"></i>
-            {{ '::Search' | abpLocalization }}
-          </button>
+        <div class="col-12 col-md-auto">
+          <div class="d-flex gap-1 text-nowrap">
+            <button
+              type="button"
+              class="btn"
+              [ngClass]="!isFilterCollapsed ? 'btn-outline-secondary' : 'btn-secondary'"
+              (click)="isFilterCollapsed = !isFilterCollapsed"
+              [attr.aria-expanded]="!isFilterCollapsed"
+              title="{{ '::Filter' | abpLocalization }}"
+            >
+              <i class="fa fa-filter"></i>
+              <span class="d-none d-lg-inline ms-1">{{ '::Filter' | abpLocalization }}</span>
+            </button>
 
-          <button
-            type="button"
-            class="btn btn-danger"
-            (click)="clearSearch()"
-            [disabled]="!searchParams.partialCityName && destinations.length === 0"
-          >
-            <i class="fa fa-times"></i>
-            {{ '::Clear' | abpLocalization }}
-          </button>
+            <button
+              type="button"
+              class="btn btn-primary flex-grow-1"
+              (click)="onSearch()"
+              [disabled]="loading || !isPopulationValid"
+              title="{{ '::Search' | abpLocalization }}"
+            >
+              <i class="fa fa-search"></i>
+              <span class="ms-1">{{ '::Search' | abpLocalization }}</span>
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="clearSearch()"
+              [disabled]="!searchParams.partialCityName && destinations.length === 0"
+              title="{{ '::Clear' | abpLocalization }}"
+            >
+              <i class="fa fa-times"></i>
+              <span class="d-none d-lg-inline ms-1">{{ '::Clear' | abpLocalization }}</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -224,7 +248,6 @@
           {{ errorMessage | abpLocalization }}
         </div>
       }
-
 
       <!-- Indicador de carga -->
       @if (loading) {
