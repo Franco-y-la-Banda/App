@@ -300,13 +300,28 @@ export class DestinationsListComponent implements OnInit {
   get isPopulationValid(): boolean {
     const { minPopulation, maxPopulation } = this.searchParams;
 
-    if (minPopulation < 0 || maxPopulation < 0) {
-      return false;
-    }
-
     if (minPopulation != null && maxPopulation != null) {
       return minPopulation <= maxPopulation;
     }
     return true;
+  }
+
+  /**
+   * Maneja el input de la población y asigna los parámetros de búsqueda
+   */
+  onPopulationInput(field: 'min' | 'max', event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const originalValue = inputElement.value;
+
+    const sanitizedValue = originalValue.replace(/[^0-9]/g, '');
+    const numberValue = sanitizedValue === '' ? null : parseInt(sanitizedValue, 10);
+
+    inputElement.value = sanitizedValue === '' ? '' : numberValue.toString();
+
+    if (field === 'min') {
+      this.searchParams.minPopulation = numberValue;
+    } else {
+      this.searchParams.maxPopulation = numberValue;
+    }
   }
 }

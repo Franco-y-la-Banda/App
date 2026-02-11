@@ -142,9 +142,10 @@
                 </label>
                 <input
                   id="min-pop"
-                  type="number"
+                  type="text"
+                  inputmode="numeric"
                   class="form-control"
-                  [(ngModel)]="searchParams.minPopulation"
+                  (input)="onPopulationInput('min', $event)"
                   [class.is-invalid]="!isPopulationValid"
                   min="0"
                 />
@@ -157,9 +158,10 @@
                 </label>
                 <input
                   id="max-pop"
-                  type="number"
+                  type="text"
+                  inputmode="numeric"
                   class="form-control"
-                  [(ngModel)]="searchParams.maxPopulation"
+                  (input)="onPopulationInput('max', $event)"
                   [class.is-invalid]="!isPopulationValid"
                   min="0"
                 />
