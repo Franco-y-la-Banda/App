@@ -3,20 +3,25 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PagedResultDto, CoreModule } from '@abp/ng.core';
 import { DestinationService } from '../../proxy/destinations/destination.service';
-import { DestinationDto, CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
-import { finalize, retry } from 'rxjs/operators';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
+import { debounceTime, distinctUntilChanged, finalize, map, retry } from 'rxjs/operators';
+import { NgbPaginationModule, NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
+import { ISOCodeDto } from '../../proxy/destinations/models';
+import { ISOCodeLookupService } from 'src/app/proxy/destinations';
+import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
+import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-destinations-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CoreModule, NgbPaginationModule],
+  imports: [CommonModule, FormsModule, CoreModule, NgbPaginationModule, NgbCollapse, NgbTypeahead],
   templateUrl: './destinations-list.component.html',
   styleUrls: ['./destinations-list.component.scss'],
 })
-export class DestinationsListComponent {
+export class DestinationsListComponent implements OnInit {
   // Inyección de dependencias usando la nueva sintaxis de inject()
   private readonly destinationService = inject(DestinationService);
+  private readonly isoCodeLookupService = inject(ISOCodeLookupService);
 
   /**
    * Lista de destinos obtenidos de la API
@@ -34,6 +39,11 @@ export class DestinationsListComponent {
   submitted = false;
 
   /**
+   * Indica si el filtro está activo
+   */
+  isFilterCollapsed = true;
+
+  /**
    * Parámetros de búsqueda y paginación
    * - country: Filtro por país específico
    * - skipCount: Número de registros a saltar (para paginación)
@@ -46,16 +56,30 @@ export class DestinationsListComponent {
    *   - Formato: ±SORT_FIELD,±SORT_FIELD
    *   - SORT_FIELD = countryCode | elevation | name | population
    */
-  searchParams: CitySearchRequestDto = {
-    skipCount: 0,
-    resultLimit: 10,
-    partialCityName: '',
-    countryCode: null,
-    regionCode: null,
-    maxPopulation: null,
-    minPopulation: null,
-    sort: null,
-  };
+  searchParams = this.defaultSearchParams;
+
+  private get defaultSearchParams(): CitySearchRequestDto {
+    return {
+      skipCount: 0,
+      resultLimit: 9,
+      partialCityName: '',
+      countryCode: null,
+      regionCode: null,
+      minPopulation: null,
+      maxPopulation: null,
+      sort: '-population',
+    };
+  }
+
+  allCountries: ISOCodeDto[] = [];
+  allRegionsForCountry: ISOCodeDto[] = [];
+
+  sortOptions = [
+    { label: '::Destinations:SortPopulationDesc', value: '-population' },
+    { label: '::Destinations:SortPopulationAsc', value: 'population' },
+    { label: '::Destinations:SortNameAsc', value: 'name' },
+    { label: '::Destinations:SortNameDesc', value: '-name' },
+  ];
 
   /**
    * Total de registros disponibles (para paginación)
@@ -68,19 +92,39 @@ export class DestinationsListComponent {
   currentPage = 1;
 
   /**
-   * Imagen por defecto cuando el destino no tiene imageUrl
-   */
-  // readonly defaultImage = 'assets/images/destination-placeholder.svg';
-
-  /**
    * Manejo de errores
    */
   errorMessage: string | null = null;
 
-  // ngOnInit(): void {
-  //   // Cargar los destinos al inicializar el componente
-  //   this.loadDestinations();
-  // }
+  /**
+   * País seleccionado en el filtro
+   */
+  selectedCountry: ISOCodeDto = null;
+
+  /**
+   * Región seleccionada en el filtro
+   */
+  selectedRegion: ISOCodeDto = null;
+
+  /**
+   * Necesario para mostrar la lista de países al hacer click, ni idea que hace
+   */
+  countryFocus$ = new Subject<string>();
+  countryClick$ = new Subject<string>();
+
+  regionFocus$ = new Subject<string>();
+  regionClick$ = new Subject<string>();
+
+  ngOnInit(): void {
+    this.isoCodeLookupService
+      .getCountries()
+      .pipe()
+      .subscribe({
+        next: (result: ISOCodeDto[]) => {
+          this.allCountries = result;
+        },
+      });
+  }
 
   /**
    * Carga los destinos desde la API
@@ -96,7 +140,7 @@ export class DestinationsListComponent {
         retry({ count: 1, delay: 1000 }),
         finalize(() => {
           this.loading = false;
-        })
+        }),
       )
       .subscribe({
         next: (result: PagedResultDto<CityDto>) => {
@@ -119,7 +163,6 @@ export class DestinationsListComponent {
    * Maneja el evento de búsqueda
    * Reinicia la paginación y recarga los datos
    */
-
   onSearch(): void {
     if (!this.loading) {
       this.submitted = true;
@@ -140,56 +183,21 @@ export class DestinationsListComponent {
    * Limpia los filtros de búsqueda y recarga todos los destinos
    */
   clearSearch(): void {
-    this.searchParams.partialCityName = '';
+    this.searchParams = this.defaultSearchParams;
+
+    this.selectedCountry = null;
+    this.selectedRegion = null;
+
+    this.resetGridState();
+  }
+
+  private resetGridState(): void {
     this.errorMessage = null;
     this.destinations = [];
     this.totalCount = 0;
     this.submitted = false;
+    this.loading = false;
   }
-
-  /**
-   * Maneja errores de carga de imágenes
-   * Asigna la imagen por defecto cuando falla la carga
-   *
-   * @param event - Evento del error de imagen
-   */
-  // onImageError(event: any): void {
-  //   event.target.src = this.defaultImage;
-  // }
-
-  /**
-   * Formatea las coordenadas para mostrar
-   *
-   * @param latitude - Latitud del destino
-   * @param longitude - Longitud del destino
-   * @returns String con formato "lat, lng"
-   */
-  // formatCoordinates(latitude: number, longitude: number): string {
-  //   return `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
-  // }
-
-  /**
-   * Formatea el número de población con separadores de miles
-   *
-   * @param population - Número de habitantes
-   * @returns String formateado o mensaje si no hay datos
-   */
-  // formatPopulation(population?: number): string {
-  //   if (!population) {
-  //     return 'N/A';
-  //   }
-  //   return population.toLocaleString('es-ES');
-  // }
-
-  /**
-   * Abre el destino en Google Maps usando las coordenadas
-   *
-   * @param destination - Destino turístico
-   */
-  // openInMaps(destination: DestinationDto): void {
-  //   const url = `https://www.google.com/maps/search/?api=1&query=${destination.latitude},${destination.longitude}`;
-  //   window.open(url, '_blank');
-  // }
 
   /**
    * Maneja el cambio de página
@@ -204,10 +212,116 @@ export class DestinationsListComponent {
   }
 
   /**
-   * Devuelve la URL de la imagen de un destino.
-   * @param imageUrl - URL relativa de la imagen
+   * Devuelve solo el nombre de un ISOCodeDto
    */
-  // getDestinationImage(imageUrl: string): string {
-  //   return imageUrl ? environment.apis.default.url + imageUrl : this.defaultImage;
-  // }
+  isoNameFormatter = (x: ISOCodeDto) => x.name;
+
+  /**
+   * Filtra todos los países según lo que se escriba
+   */
+  searchCountries: OperatorFunction<string, readonly ISOCodeDto[]> = (
+    text$: Observable<string>,
+  ) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const inputEvents$ = merge(this.countryFocus$, this.countryClick$).pipe(map(() => ''));
+
+    return merge(debouncedText$, inputEvents$).pipe(
+      map(term =>
+        term === ''
+          ? this.allCountries
+          : this.allCountries.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1),
+      ),
+    );
+  };
+
+  searchRegions: OperatorFunction<string, readonly ISOCodeDto[]> = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
+    const inputEvents$ = merge(this.regionFocus$, this.regionClick$).pipe(map(() => ''));
+
+    return merge(debouncedText$, inputEvents$).pipe(
+      map(term =>
+        term === ''
+          ? this.allRegionsForCountry
+          : this.allRegionsForCountry.filter(
+              v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1,
+            ),
+      ),
+    );
+  };
+
+  /**
+   * Evento al seleccionar país
+   */
+  onCountrySelect(event: any) {
+    const country = event.item as ISOCodeDto;
+    this.searchParams.countryCode = country.isoCode;
+
+    this.searchParams.regionCode = null;
+    this.selectedRegion = null;
+    this.isoCodeLookupService.getRegionsByCountryCode(country.isoCode).subscribe({
+      next: (result: ISOCodeDto[]) => {
+        this.allRegionsForCountry = result;
+      },
+    });
+  }
+
+  /**
+   * Evento al seleccionar región
+   */
+  onRegionSelect(event: any) {
+    const region = event.item as ISOCodeDto;
+    this.searchParams.regionCode = region.isoCode;
+  }
+
+  /**
+   * Evento al borrar el input de país manualmente
+   */
+  checkCountryClear(): void {
+    if (!this.selectedCountry) {
+      this.searchParams.countryCode = null;
+      this.searchParams.regionCode = null;
+      this.selectedCountry = null;
+      this.selectedRegion = null;
+    }
+  }
+
+  /**
+   * Evento al borrar el input de país manualmente
+   */
+  checkRegionClear(): void {
+    if (!this.selectedRegion && this.searchParams.countryCode) {
+      this.searchParams.regionCode = null;
+    }
+  }
+
+  /**
+   * Valida el filtrado por población
+   */
+  get isPopulationValid(): boolean {
+    const { minPopulation, maxPopulation } = this.searchParams;
+
+    if (minPopulation != null && maxPopulation != null) {
+      return minPopulation <= maxPopulation;
+    }
+    return true;
+  }
+
+  /**
+   * Maneja el input de la población y asigna los parámetros de búsqueda
+   */
+  onPopulationInput(field: 'min' | 'max', event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const originalValue = inputElement.value;
+
+    const sanitizedValue = originalValue.replace(/[^0-9]/g, '');
+    const numberValue = sanitizedValue === '' ? null : parseInt(sanitizedValue, 10);
+
+    inputElement.value = sanitizedValue === '' ? '' : numberValue.toString();
+
+    if (field === 'min') {
+      this.searchParams.minPopulation = numberValue;
+    } else {
+      this.searchParams.maxPopulation = numberValue;
+    }
+  }
 }

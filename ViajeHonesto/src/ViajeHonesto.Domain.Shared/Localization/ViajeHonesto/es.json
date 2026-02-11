@@ -39,13 +39,16 @@
     "TakePhoto": "Tomar foto",
     "ChoosePhoto": "Escoge una foto",
 
+    "Clear": "Limpiar",
+    "Loading": "Cargando...",
+    "Filter": "Filtrar",
+
     "Menu:Destinations": "Destinos",
+
     "Destinations:SearchQuery": "Buscar destino",
     "Destinations:SearchPlaceholder": "Ingrese el nombre de la ciudad",
     "Destinations:Country": "País",
     "Destinations:CountryPlaceholder": "Ingrese el país",
-    "Clear": "Limpiar",
-    "Loading": "Cargando...",
     "Destinations:Population": "Población",
     "Destinations:Coordinates": "Coordenadas",
     "Destinations:ViewOnMap": "Ver en el mapa",
@@ -54,6 +57,16 @@
     "Destinations:ShowAll": "Mostrar todos",
     "Destinations:EmptySearch": "Por favor ingrese un nombre de ciudad antes de buscar",
     "Destinations:LoadError": "No se pudieron cargar los destinos. Por favor intente nuevamente",
-    "Destinations:Region": "Región"
+    "Destinations:Region": "Región",
+    "Destinations:AllCountries": "Todos los países",
+    "Destinations:AllRegions": "Todas las regiones",
+    "Destinations:MinPopulation": "Población Mínima",
+    "Destinations:MaxPopulation": "Población Máxima",
+    "Destinations:PopulationRangeError": "El valor mínimo no puede ser mayor que el máximo.",
+    "Destinations:SortBy": "Ordenar por",
+    "Destinations:SortPopulationDesc": "Población (Mayor a menor)",
+    "Destinations:SortPopulationAsc": "Población (Menor a mayor)",
+    "Destinations:SortNameAsc": "Nombre (A-Z)",
+    "Destinations:SortNameDesc": "Nombre (Z-A)"
   }
 }
