@@ -6,3 +6,14 @@
   padding-right: 20px;
   background-image: none;
 }
+
+.destination-card {
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+    border-color: var(--bs-primary) !important;
+  }
+}
