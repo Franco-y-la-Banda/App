@@ -135,6 +135,10 @@ export class DestinationsListComponent implements OnInit {
       this.totalCount = savedState.totalCount;
       this.currentPage = savedState.currentPage;
       this.submitted = true;
+      this.selectedCountry = savedState.selectedCountry;
+      this.selectedRegion = savedState.selectedRegion;
+      this.isFilterCollapsed = savedState.isFilterCollapsed;
+
     }
 }
 
@@ -167,6 +171,9 @@ export class DestinationsListComponent implements OnInit {
             totalCount: this.totalCount,
             currentPage: this.currentPage,
             hasData: true,
+            selectedCountry: this.selectedCountry,
+            selectedRegion: this.selectedRegion,
+            isFilterCollapsed: this.isFilterCollapsed
           });
         },
         error: error => {

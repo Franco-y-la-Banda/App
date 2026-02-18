@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CitySearchRequestDto, CityDto } from '../../proxy/destinations/models';
+import { CitySearchRequestDto, CityDto, ISOCodeDto } from '../../proxy/destinations/models';
 
 export interface DestinationListState {
   searchParams: CitySearchRequestDto;
@@ -7,6 +7,9 @@ export interface DestinationListState {
   totalCount: number;
   currentPage: number;
   hasData: boolean;
+  selectedCountry: ISOCodeDto;
+  selectedRegion: ISOCodeDto;
+  isFilterCollapsed: boolean;
 }
 
 @Injectable({
