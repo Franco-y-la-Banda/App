@@ -10,6 +10,7 @@ import { ISOCodeDto } from '../../proxy/destinations/models';
 import { ISOCodeLookupService } from 'src/app/proxy/destinations';
 import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { DestinationStateService } from './destination-state.service';
 
 @Component({
   selector: 'app-destinations-list',
@@ -22,6 +23,7 @@ export class DestinationsListComponent implements OnInit {
   // Inyección de dependencias usando la nueva sintaxis de inject()
   private readonly destinationService = inject(DestinationService);
   private readonly isoCodeLookupService = inject(ISOCodeLookupService);
+  private readonly stateService = inject(DestinationStateService);
 
   /**
    * Lista de destinos obtenidos de la API
@@ -124,7 +126,17 @@ export class DestinationsListComponent implements OnInit {
           this.allCountries = result;
         },
       });
-  }
+
+    const savedState = this.stateService.getState();
+
+    if (savedState && savedState.hasData) {
+      this.searchParams = { ...savedState.searchParams };
+      this.destinations = savedState.destinations;
+      this.totalCount = savedState.totalCount;
+      this.currentPage = savedState.currentPage;
+      this.submitted = true;
+    }
+}
 
   /**
    * Carga los destinos desde la API
@@ -148,6 +160,14 @@ export class DestinationsListComponent implements OnInit {
           this.destinations = result.items || [];
           this.totalCount = result.totalCount || 0;
           this.errorMessage = null;
+
+          this.stateService.setState({
+            searchParams: this.searchParams,
+            destinations: this.destinations,
+            totalCount: this.totalCount,
+            currentPage: this.currentPage,
+            hasData: true,
+          });
         },
         error: error => {
           // Manejar errores de la API
@@ -189,6 +209,7 @@ export class DestinationsListComponent implements OnInit {
     this.selectedRegion = null;
 
     this.resetGridState();
+    this.stateService.clearState();
   }
 
   private resetGridState(): void {
