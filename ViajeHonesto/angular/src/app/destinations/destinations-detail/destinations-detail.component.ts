@@ -45,4 +45,13 @@ export class DestinationsDetailComponent implements OnInit {
       },
     });
   }
+
+  goBack(): void {
+    if (history.length > 1) {
+      history.back();
+    }
+    else {
+      window.open(window.location.origin + '/destinations', '_self');
+    }
+  }
 }
