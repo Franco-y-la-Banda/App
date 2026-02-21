@@ -30,6 +30,7 @@ export class DestinationsDetailComponent implements OnInit {
   language: string;
   embedMapUrl: SafeResourceUrl | null = null;
   mapUrl: SafeUrl | null = null;
+  errorMessage: string | null = null;
 
   ngOnInit(): void {
     this.request.wikiDataId = this.route.snapshot.paramMap.get('id');
@@ -44,7 +45,7 @@ export class DestinationsDetailComponent implements OnInit {
   private loadDetails(id: string): void {
     this.loading = true;
 
-    this.destinationService.searchCityDetails(this.request).subscribe({
+    this.destinationService.searchCityDetails(this.request, {skipHandleError: true}).subscribe({
       next: result => {
         this.destination = result;
         this.loading = false;
@@ -54,7 +55,8 @@ export class DestinationsDetailComponent implements OnInit {
         }
       },
       error: err => {
-        console.error(err);
+        console.error('Error al cargar detalles de destino:', err);
+        this.errorMessage = '::Destinations:DetailsLoadError';
         this.loading = false;
       },
     });

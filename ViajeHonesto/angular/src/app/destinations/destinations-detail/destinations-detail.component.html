@@ -25,7 +25,7 @@
             type="button"
             class="btn card-header-btn"
             [ngClass]="destination?.isSaved ? 'btn-danger' : 'btn-outline-danger'"
-            [disabled]="loading"
+            [disabled]="loading || errorMessage"
           >
             <i class="fas" [ngClass]="destination?.isSaved ? 'fa-trash' : 'fa-heart'"></i>
             <span class="ms-2 d-none d-md-inline">
@@ -53,6 +53,19 @@
     <div class="card-body m-3 mt-2">
       <!-- Indicador de carga -->
       <app-loading-spinner [loading]="loading"></app-loading-spinner>
+
+      <!-- Error -->
+      @if (errorMessage) {
+        <div class="alert alert-danger mt-4 d-flex flex-wrap align-items-center justify-content-between">
+          <h2 class="m-0">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            {{ errorMessage | abpLocalization }}
+          </h2>
+          <button type="button" class="btn btn-danger" onClick="window.location.reload()">
+            {{ '::Retry' | abpLocalization }}
+          </button>
+        </div>
+      }
 
       @if (destination) {
         <div class="row g-4">
