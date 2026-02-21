@@ -1,134 +1,175 @@
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-    <!-- Título Principal -->
-    <div>
-      <h1 class="display-5 fw-bold mb-0 text-dark">{{ destination?.name }}</h1>
-      <span class="badge rounded-pill bg-primary mt-2">
-        <i class="fas fa-flag me-1"></i> {{ destination?.country }}
-      </span>
-    </div>
+<div class="container-fluid">
+  <div class="card shadow-sm">
+    <!-- HEADER -->
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-middle">
+        <!-- Título Principal -->
+        <div>
+          <h1 class="card-title m-0 text-primary me-2 fs-2">
+            <i class="fas fa-city me-2"></i>
+            {{ destination?.name }}
+          </h1>
+        </div>
 
-    <!-- Botones -->
-    <div class="d-flex gap-2">
-      <button class="btn btn-outline-secondary" (click)="goBack()">
-        <i class="fas fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
-      </button>
-      <!-- TODO: Verificar si está en la Watchlist (falta lógica back) -->
-      <button class="btn" [ngClass]="true ? 'btn-danger' : 'btn-outline-danger'">
-        <i class="fas" [ngClass]="true ? 'fa-trash' : 'fa-heart'"></i>
-        <span class="ms-2 d-none d-md-inline">
-          {{
-            (destination?.isSaved
-              ? '::Destinations::RemoveFromWatchlist'
-              : '::Destinations::AddToWatchlist'
-            ) | abpLocalization
-          }}
+        <!-- Botones -->
+        <div class="d-flex gap-2 fs-5">
+          <button
+            type="button"
+            class="btn btn-outline-secondary card-header-btn"
+            (click)="goBack()"
+          >
+            <i class="fas fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
+          </button>
+
+          <button
+            type="button"
+            class="btn card-header-btn"
+            [ngClass]="destination?.isSaved ? 'btn-danger' : 'btn-outline-danger'"
+            [disabled]="loading"
+          >
+            <i class="fas" [ngClass]="destination?.isSaved ? 'fa-trash' : 'fa-heart'"></i>
+            <span class="ms-2 d-none d-md-inline">
+              {{
+                (destination?.isSaved
+                  ? '::Destinations:RemoveFromWatchlist'
+                  : '::Destinations:AddToWatchlist'
+                ) | abpLocalization
+              }}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Badge -->
+      @if (destination?.country) {
+        <span class="card-subtitle badge rounded-pill bg-info text-dark align-text-bottom mt-1">
+          <i class="fas fa-flag me-1"></i> {{ destination?.country }}
         </span>
-      </button>
+      }
+      <hr class="mt-2 mb-0" />
     </div>
-  </div>
 
-  <div class="row g-4">
-    <!-- Columna principal -->
-    <div class="col-lg-8 order-2 order-lg-1">
-      <!-- Mapa -->
-      <div class="card border-0 shadow-sm mb-5">
-        <div class="card-body p-0">
-          <div class="ratio ratio-21x9 bg-light rounded overflow-hidden border">
-            @if (embedMapUrl)
-            {
-              <iframe
-                title="{{ '::Destinations:MapTitle' | abpLocalization }}"
-                loading="lazy"
-                width="100%"
-                height="100%"
-                [src]="embedMapUrl"
-              ></iframe>
-            }
+    <!-- BODY -->
+    <div class="card-body m-3 mt-2 position-relative">
+      <!-- Indicador de carga -->
+      @if (loading) {
+        <div
+          class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75 rounded"
+        >
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">{{ '::Loading' | abpLocalization }}</span>
           </div>
         </div>
-        <div
-          class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center py-2"
-        >
-          <small class="text-muted"
-            ><i class="fas fa-map-marked-alt me-1"></i>
-            {{ '::Destinations:ExactLocation' | abpLocalization }}</small
-          >
-          <a [href]="mapUrl" target="_blank" class="btn btn-link btn-sm text-decoration-none">
-            {{ '::Destinations:OpenGoogleMaps' | abpLocalization }}
-            <i class="fas fa-external-link-alt ms-1"></i>
-          </a>
-        </div>
-      </div>
+      }
 
-      <!-- Sección de reviews -->
-      <!-- TODO -->
-    </div>
-
-    <!-- Barra lateral -->
-    <div class="col-lg-4 order-1 order-lg-2">
-      <!-- Ficha -->
-      <div class="card border shadow-sm sticky-top">
-        <div class="card-header bg-white fw-bold py-3 border-bottom">
-          {{ '::Destinations:Summary' | abpLocalization }}
-        </div>
-
-        <div class="card-body p-0">
-          <ul class="list-group list-group-flush">
-            <!-- Población -->
-            <li class="list-group-item py-3">
-              <div class="d-flex align-items-center">
-                <div class="bg-primary bg-opacity-10 text-primary rounded p-2 me-3">
-                  <i class="fas fa-users fa-lg"></i>
-                </div>
-                <div>
-                  <small class="text-muted text-uppercase d-block">{{
-                    '::Destinations:Population' | abpLocalization
-                  }}</small>
-                  <span class="fs-5 fw-bold text-dark">{{ destination?.population | number }}</span>
+      @if (destination) {
+        <div class="row g-4">
+          <!-- Columna principal -->
+          <div class="col-lg-8 order-2 order-lg-1">
+            <!-- Mapa -->
+            <div class="card border-0 shadow-sm mb-4">
+              <div class="card-body p-0">
+                <div class="ratio ratio-21x9 bg-light overflow-hidden border rounded">
+                  @if (embedMapUrl) {
+                    <iframe
+                      title="{{ '::Destinations:MapTitle' | abpLocalization }}"
+                      loading="lazy"
+                      width="100%"
+                      height="100%"
+                      [src]="embedMapUrl"
+                    ></iframe>
+                  }
                 </div>
               </div>
-            </li>
-
-            <!-- Región -->
-            <li class="list-group-item py-3">
-              <div class="d-flex align-items-center">
-                <div class="bg-warning bg-opacity-10 text-warning rounded p-2 me-3">
-                  <i class="fas fa-globe-americas fa-lg"></i>
-                </div>
-                <div>
-                  <small class="text-muted text-uppercase d-block">{{
-                    '::Destinations:Region' | abpLocalization
-                  }}</small>
-                  <span class="fw-medium text-dark">{{ destination?.region }}</span>
-                </div>
-              </div>
-            </li>
-
-            <!-- Wikidata -->
-            <li class="list-group-item py-3">
-              <div class="d-grid">
-                <a
-                  [href]="'https://www.wikidata.org/wiki/' + request.wikiDataId"
-                  target="_blank"
-                  class="btn btn-light border text-start"
+              <div
+                class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center py-2 rounded"
+              >
+                <small class="text-muted"
+                  ><i class="fas fa-map-marked-alt me-1"></i>
+                  {{ '::Destinations:ExactLocation' | abpLocalization }}</small
                 >
-                  <i class="fas fa-database me-2 text-secondary"></i>
-                  {{ '::Destinations:ReadOnWikidata' | abpLocalization }}
+                <a [href]="mapUrl" target="_blank" class="btn btn-link btn-sm text-decoration-none">
+                  {{ '::Destinations:OpenGoogleMaps' | abpLocalization }}
+                  <i class="fas fa-external-link-alt ms-1"></i>
                 </a>
               </div>
-            </li>
-          </ul>
-        </div>
+            </div>
 
-        <!-- Coordenadas discretas en el footer -->
-        <div class="card-footer bg-light text-center py-2">
-          <small class="text-muted font-monospace">
-            LAT: {{ destination?.coordinate?.latitude | number: '1.2-2' }} | LNG:
-            {{ destination?.coordinate?.longitude | number: '1.2-2' }}
-          </small>
+            <!-- Sección de reviews -->
+            <!-- TODO -->
+            <div class="alert alert-light border text-center text-muted">
+              <i class="far fa-comments me-2"></i> TODO
+            </div>
+          </div>
+
+          <!-- Barra lateral -->
+          <div class="col-lg-4 order-1 order-lg-2">
+            <div class="card border shadow-sm">
+              <div class="card-header bg-white fw-bold py-3 border-bottom">
+                {{ '::Destinations:Summary' | abpLocalization }}
+              </div>
+
+              <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                  <!-- Población -->
+                  <li class="list-group-item py-3">
+                    <div class="d-flex align-items-center">
+                      <div class="bg-primary bg-opacity-10 text-primary rounded p-2 me-3">
+                        <i class="fas fa-users fa-lg"></i>
+                      </div>
+                      <div>
+                        <small class="text-muted text-uppercase d-block">
+                          {{ '::Destinations:Population' | abpLocalization }}
+                        </small>
+                        <span class="fs-5 fw-bold text-dark">{{
+                          destination.population | number
+                        }}</span>
+                      </div>
+                    </div>
+                  </li>
+
+                  <!-- Región -->
+                  <li class="list-group-item py-3">
+                    <div class="d-flex align-items-center">
+                      <div class="bg-warning bg-opacity-10 text-warning rounded p-2 me-3">
+                        <i class="fas fa-globe-americas fa-lg"></i>
+                      </div>
+                      <div>
+                        <small class="text-muted text-uppercase d-block">
+                          {{ '::Destinations:Region' | abpLocalization }}
+                        </small>
+                        <span class="fw-medium text-dark">{{ destination.region }}</span>
+                      </div>
+                    </div>
+                  </li>
+
+                  <!-- Wikidata -->
+                  <li class="list-group-item py-3">
+                    <div class="d-grid">
+                      <a
+                        [href]="'https://www.wikidata.org/wiki/' + destination.wikiDataId"
+                        target="_blank"
+                        class="btn btn-light border text-start"
+                      >
+                        <i class="fas fa-database me-2 text-secondary"></i>
+                        {{ '::Destinations:ReadOnWikidata' | abpLocalization }}
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Coordenadas -->
+              <div class="card-footer bg-light text-center py-2">
+                <small class="text-muted font-monospace">
+                  LAT: {{ destination.coordinate?.latitude | number: '1.2-2' }} | LNG:
+                  {{ destination.coordinate?.longitude | number: '1.2-2' }}
+                </small>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>
