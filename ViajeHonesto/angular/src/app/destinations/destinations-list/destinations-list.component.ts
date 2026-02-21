@@ -11,11 +11,12 @@ import { ISOCodeLookupService } from 'src/app/proxy/destinations';
 import { merge, Observable, OperatorFunction, Subject } from 'rxjs';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { DestinationStateService } from './destination-state.service';
+import { LoadingSpinner } from 'src/app/shared/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-destinations-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CoreModule, NgbPaginationModule, NgbCollapse, NgbTypeahead],
+  imports: [CommonModule, FormsModule, CoreModule, NgbPaginationModule, NgbCollapse, NgbTypeahead, LoadingSpinner],
   templateUrl: './destinations-list.component.html',
   styleUrls: ['./destinations-list.component.scss'],
 })

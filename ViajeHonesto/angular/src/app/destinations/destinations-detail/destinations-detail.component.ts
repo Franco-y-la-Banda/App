@@ -9,11 +9,12 @@ import {
 } from 'src/app/proxy/destinations';
 import { CoreModule, SessionStateService } from '@abp/ng.core';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import { LoadingSpinner } from 'src/app/shared/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-destination-detail',
   standalone: true,
-  imports: [CommonModule, CoreModule],
+  imports: [CommonModule, CoreModule, LoadingSpinner],
   templateUrl: './destinations-detail.component.html',
   styleUrls: ['./destinations-detail.component.scss'],
 })
