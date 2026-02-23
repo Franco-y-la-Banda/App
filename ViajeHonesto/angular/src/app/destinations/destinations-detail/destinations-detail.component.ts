@@ -31,6 +31,7 @@ export class DestinationsDetailComponent implements OnInit {
   embedMapUrl: SafeResourceUrl | null = null;
   mapUrl: SafeUrl | null = null;
   errorMessage: string | null = null;
+  isHoveringFollowBtn = false;
 
   ngOnInit(): void {
     this.request.wikiDataId = this.route.snapshot.paramMap.get('id');

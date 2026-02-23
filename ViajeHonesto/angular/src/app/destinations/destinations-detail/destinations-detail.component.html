@@ -23,15 +23,27 @@
 
           <button
             type="button"
-            class="btn card-header-btn"
+            class="btn card-header-btn transition-all"
             [ngClass]="destination?.isSaved ? 'btn-danger' : 'btn-outline-danger'"
             [disabled]="loading || errorMessage"
+            (mouseenter)="isHoveringFollowBtn = true"
+            (mouseleave)="isHoveringFollowBtn = false"
           >
-            <i class="fas" [ngClass]="destination?.isSaved ? 'fa-trash' : 'fa-heart'"></i>
+            <i
+              [class]="
+                destination?.isSaved
+                  ? isHoveringFollowBtn
+                    ? 'fas fa-heart-crack'
+                    : 'fas fa-heart'
+                  : 'far fa-heart'
+              "
+            ></i>
             <span class="ms-2 d-none d-md-inline">
               {{
                 (destination?.isSaved
-                  ? '::Destinations:RemoveFromWatchlist'
+                  ? isHoveringFollowBtn
+                    ? '::Destinations:RemoveFromWatchlist'
+                    : '::Destinations:Following'
                   : '::Destinations:AddToWatchlist'
                 ) | abpLocalization
               }}
@@ -56,7 +68,9 @@
 
       <!-- Error -->
       @if (errorMessage) {
-        <div class="alert alert-danger mt-4 d-flex flex-wrap align-items-center justify-content-between">
+        <div
+          class="alert alert-danger mt-4 d-flex flex-wrap align-items-center justify-content-between"
+        >
           <h2 class="m-0">
             <i class="fa-solid fa-triangle-exclamation"></i>
             {{ errorMessage | abpLocalization }}
