@@ -10,6 +10,8 @@
     "Clear": "Reset",
     "Loading": "Loading...",
     "Filter": "Filter",
+    "Back": "Back",
+    "Retry": "Retry",
 
     "Menu:Destinations": "Destinations",
     "Destinations:SearchQuery": "Search destination",
@@ -34,6 +36,16 @@
     "Destinations:SortPopulationDesc": "Population (High to Low)",
     "Destinations:SortPopulationAsc": "Population (Low to High)",
     "Destinations:SortNameAsc": "Name (A-Z)",
-    "Destinations:SortNameDesc": "Name (Z-A)"
+    "Destinations:SortNameDesc": "Name (Z-A)",
+
+    "Destinations:DetailsLoadError": "Could not load destination details.",
+    "Destinations:AddToWatchlist": "Follow destination",
+    "Destinations:RemoveFromWatchlist": "Unfollow",
+    "Destinations:Following": "Following",
+    "Destinations:MapTitle": "Location map",
+    "Destinations:ExactLocation": "Exact location",
+    "Destinations:OpenGoogleMaps": "Open in Google Maps",
+    "Destinations:Summary": "Destination Summary",
+    "Destinations:ReadOnWikidata": "Read on Wikidata"
   }
 }
