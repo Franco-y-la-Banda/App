@@ -42,6 +42,8 @@
     "Clear": "Limpiar",
     "Loading": "Cargando...",
     "Filter": "Filtrar",
+    "Back": "Volver",
+    "Retry": "Reintentar",
 
     "Menu:Destinations": "Destinos",
 
@@ -67,6 +69,16 @@
     "Destinations:SortPopulationDesc": "Población (Mayor a menor)",
     "Destinations:SortPopulationAsc": "Población (Menor a mayor)",
     "Destinations:SortNameAsc": "Nombre (A-Z)",
-    "Destinations:SortNameDesc": "Nombre (Z-A)"
+    "Destinations:SortNameDesc": "Nombre (Z-A)",
+
+    "Destinations:DetailsLoadError": "No se pudieron cargar los detalles del destino.",
+    "Destinations:AddToWatchlist": "Seguir destino",
+    "Destinations:RemoveFromWatchlist": "Dejar de seguir",
+    "Destinations:Following": "Siguiendo",
+    "Destinations:MapTitle": "Mapa de ubicación",
+    "Destinations:ExactLocation": "Ubicación exacta",
+    "Destinations:OpenGoogleMaps": "Abrir en Google Maps",
+    "Destinations:Summary": "Resumen del Destino",
+    "Destinations:ReadOnWikidata": "Leer en Wikidata"
   }
 }
