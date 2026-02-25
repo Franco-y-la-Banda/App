@@ -1,13 +1,17 @@
-﻿using NSubstitute;
+﻿using Azure.Core;
+using Elders.Iso3166;
+using NSubstitute;
 using Shouldly;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using ViajeHonesto.Destinations;
 using Volo.Abp;
 using Xunit;
-using Elders.Iso3166;
 
 namespace ViajeHonesto.Destinations;
 public class GeoDbCitySearchService_Tests
@@ -427,5 +431,62 @@ public class GeoDbCitySearchService_Tests
         ex.Message.ShouldContain("CountryCode");
 
         await _mockGeoDbApiClient.DidNotReceiveWithAnyArgs().SearchCitiesRegionRawAsync(default!);
+    }
+
+    [Fact]
+    public async Task CitySearch_Should_Respect_RateLimit_When_Called_Concurrently()
+    {
+        // ARRANGE
+        var fakeHandler = new FakeHttpMessageHandler(new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("{}") // JSON vacío válido
+        });
+
+        var httpClient = new HttpClient(fakeHandler)
+        {
+            BaseAddress = new Uri("http://dummy-api.com/")
+        };
+
+        var service = new GeoDbApiClient(httpClient);
+
+        var input = new CitySearchRequestDto
+        {
+            PartialCityName = "Test",
+            ResultLimit = 1,
+            SkipCount = 0
+        };
+
+        // ACT
+        var stopwatch = Stopwatch.StartNew();
+
+        var task1 = service.SearchCitiesRawAsync(input);
+        var task2 = service.SearchCitiesRawAsync(input);
+
+        await Task.WhenAll(task1, task2);
+
+        stopwatch.Stop();
+
+        // ASSERT
+        var elapsedMs = stopwatch.ElapsedMilliseconds;
+
+        Assert.True(elapsedMs >= 1200,
+            $"El Rate Limit falló. Tiempo total: {elapsedMs}ms. Se esperaban al menos 1500ms.");
+        Assert.True(elapsedMs < 4000, "El test tardó demasiado, posible deadlock.");
+    }
+
+    private class FakeHttpMessageHandler : HttpMessageHandler
+    {
+        private readonly HttpResponseMessage _response;
+
+        public FakeHttpMessageHandler(HttpResponseMessage response)
+        {
+            _response = response;
+        }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(_response);
+        }
     }
 }
