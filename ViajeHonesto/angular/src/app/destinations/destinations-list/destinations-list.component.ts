@@ -16,7 +16,15 @@ import { LoadingSpinner } from 'src/app/shared/loading-spinner/loading-spinner';
 @Component({
   selector: 'app-destinations-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CoreModule, NgbPaginationModule, NgbCollapse, NgbTypeahead, LoadingSpinner],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CoreModule,
+    NgbPaginationModule,
+    NgbCollapse,
+    NgbTypeahead,
+    LoadingSpinner,
+  ],
   templateUrl: './destinations-list.component.html',
   styleUrls: ['./destinations-list.component.scss'],
 })
@@ -139,9 +147,8 @@ export class DestinationsListComponent implements OnInit {
       this.selectedCountry = savedState.selectedCountry;
       this.selectedRegion = savedState.selectedRegion;
       this.isFilterCollapsed = savedState.isFilterCollapsed;
-
     }
-}
+  }
 
   /**
    * Carga los destinos desde la API
@@ -165,17 +172,6 @@ export class DestinationsListComponent implements OnInit {
           this.destinations = result.items || [];
           this.totalCount = result.totalCount || 0;
           this.errorMessage = null;
-
-          this.stateService.setState({
-            searchParams: this.searchParams,
-            destinations: this.destinations,
-            totalCount: this.totalCount,
-            currentPage: this.currentPage,
-            hasData: true,
-            selectedCountry: this.selectedCountry,
-            selectedRegion: this.selectedRegion,
-            isFilterCollapsed: this.isFilterCollapsed
-          });
         },
         error: error => {
           // Manejar errores de la API
@@ -352,5 +348,18 @@ export class DestinationsListComponent implements OnInit {
     } else {
       this.searchParams.maxPopulation = numberValue;
     }
+  }
+
+  onDestinationClick(): void {
+    this.stateService.setState({
+      searchParams: this.searchParams,
+      destinations: this.destinations,
+      totalCount: this.totalCount,
+      currentPage: this.currentPage,
+      hasData: true,
+      selectedCountry: this.selectedCountry,
+      selectedRegion: this.selectedRegion,
+      isFilterCollapsed: this.isFilterCollapsed,
+    });
   }
 }
