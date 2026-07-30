@@ -190,6 +190,7 @@
             <a
               class="card h-100 border shadow-sm destination-card link-underline link-underline-opacity-0"
               [routerLink]="['/destinations', destination.wikiDataId]"
+              (click)="onDestinationClick()"
             >
               <div class="card-body pb-1">
                 <!-- Encabezado de la tarjeta individual -->
